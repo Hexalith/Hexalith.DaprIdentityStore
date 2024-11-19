@@ -29,6 +29,7 @@
     <GrpcVersion>2.66.0</GrpcVersion>
     <ISO3166Version>1.0.4</ISO3166Version>
     <HumanizerVersion>2.14.1</HumanizerVersion>
+    <HexalithVersion>1.0.36</HexalithVersion>
     <MailKitVersion>4.8.0</MailKitVersion>
     <MicrosoftAzureCosmosVersion>3.45.2</MicrosoftAzureCosmosVersion>
     <MicrosoftBotBuilderVersion>4.22.7</MicrosoftBotBuilderVersion>

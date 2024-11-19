@@ -13,12 +13,20 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "buildFiles", "buildFiles", 
 		.stylecop.ruleset = .stylecop.ruleset
 		buildFiles\Dependencies.props = buildFiles\Dependencies.props
 		Directory.Build.props = Directory.Build.props
+		.github\workflows\hexalith.yml = .github\workflows\hexalith.yml
+		.github\workflows\hexalith_sonar_qube.yml = .github\workflows\hexalith_sonar_qube.yml
 		LICENSE = LICENSE
 		buildFiles\Project.Common.props = buildFiles\Project.Common.props
 		README.md = README.md
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hexalith.DaprIdentityStore", "src\Hexalith.DaprIdentityStore\Hexalith.DaprIdentityStore.csproj", "{387B4F92-535E-39C7-5E7B-25AACE7FB304}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hexalith.DaprIdentityStore.Abstractions", "src\Hexalith.DaprIdentityStore.Abstractions\Hexalith.DaprIdentityStore.Abstractions.csproj", "{869B9197-B1E8-1011-400F-842E4FB2A2C3}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hexalith.DaprIdentityStore.UnitTests", "test\Hexalith.DaprIdentityStore.UnitTests\Hexalith.DaprIdentityStore.UnitTests.csproj", "{46AFDC3E-B0A2-3985-F10A-9ABBA391E529}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -30,11 +38,24 @@ Global
 		{387B4F92-535E-39C7-5E7B-25AACE7FB304}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{387B4F92-535E-39C7-5E7B-25AACE7FB304}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{387B4F92-535E-39C7-5E7B-25AACE7FB304}.Release|Any CPU.Build.0 = Release|Any CPU
+		{869B9197-B1E8-1011-400F-842E4FB2A2C3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{869B9197-B1E8-1011-400F-842E4FB2A2C3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{869B9197-B1E8-1011-400F-842E4FB2A2C3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{869B9197-B1E8-1011-400F-842E4FB2A2C3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{46AFDC3E-B0A2-3985-F10A-9ABBA391E529}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{46AFDC3E-B0A2-3985-F10A-9ABBA391E529}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{46AFDC3E-B0A2-3985-F10A-9ABBA391E529}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{46AFDC3E-B0A2-3985-F10A-9ABBA391E529}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{387B4F92-535E-39C7-5E7B-25AACE7FB304} = {FA384188-299A-4939-82DB-7754D3F0FDAB}
+		{869B9197-B1E8-1011-400F-842E4FB2A2C3} = {FA384188-299A-4939-82DB-7754D3F0FDAB}
+		{46AFDC3E-B0A2-3985-F10A-9ABBA391E529} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B3839BF8-C859-4D67-9555-36CB27006355}
 	EndGlobalSection
 EndGlobal

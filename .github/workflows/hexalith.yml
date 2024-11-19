@@ -1,0 +1,88 @@
+name: Hexalith Security Build
+on:
+  push:
+    paths-ignore:
+      - '**/*.md'
+      - 'mkdocs.yml'
+      - 'docs/**/*'
+    branches: 
+      - main
+      - release-*
+    tags:
+      - 'v*'
+  pull_request:
+    branches: 
+      - main
+      - release-*
+permissions:
+  contents: read
+  packages: write
+  id-token: write
+  security-events: write
+env:
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
+  DOTNET_CLI_TELEMETRY_OPTOUT: true
+  DOTNET_NOLOGO: true  # To reduce noise
+  NUGET_PACKAGES: ${{ github.workspace }}/.nuget/packages  # Cache NuGet packages
+jobs:
+  build-test-publish:
+    runs-on: ubuntu-latest
+    name: Build, Test, Publish
+    timeout-minutes: 30  # Added timeout for safety
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    - name: Initialize HexalithApp submodule
+      run: |
+          git submodule init HexalithApp
+          git submodule update HexalithApp
+          cd HexalithApp
+          git checkout main
+    - name: Setup .NET 9.0
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 9.0.x
+        cache: true  
+    - name: Cache NuGet Packages
+      uses: actions/cache@v3
+      with:
+        path: ${{ github.workspace }}/.nuget/packages
+        key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
+        restore-keys: |
+          ${{ runner.os }}-nuget-
+    - name: Add Aspire Workloads
+      run: |
+        dotnet workload install aspire
+        dotnet workload restore
+    - name: Build Version
+      run: |
+        dotnet tool install --global minver-cli --version 5.0.0
+        version=$(minver -t v -v e -d preview)
+        echo "MINVERVERSIONOVERRIDE=$version" >> $GITHUB_ENV
+        echo "VERSION=$version" >> $GITHUB_ENV
+        echo "VERSION=$version"
+    - name: Run Security Scanner
+      run: |
+        dotnet new tool-manifest
+        dotnet tool install security.scan
+        dotnet security-scan
+    - name: Build all projects
+      shell: pwsh
+      run: |
+        Get-ChildItem -Path src -Filter *.csproj -Recurse | ForEach-Object {
+          Write-Host "Building $($_.FullName)"
+          dotnet build $_.FullName --configuration Release -p:Version=${{ env.VERSION }}
+        }
+    - name: Unit Tests
+      run: |
+        dotnet test --configuration Release -p:Version=${{ env.VERSION }} ./test/${{ vars.HEXALITH_MODULE_NAME }}.UnitTests/${{ vars.HEXALITH_MODULE_NAME }}.UnitTests.csproj
+    - name: Publish final release packages to Nuget
+      if: startswith(github.ref, 'refs/tags/v') 
+      run: |
+        dotnet nuget push './src/**/*.nupkg' --api-key ${{secrets.NUGET_API_KEY}} --source https://api.nuget.org/v3/index.json --skip-duplicate    
+    - name: Publish preview packages to GitHub
+      if: ${{ !startswith(github.ref, 'refs/tags/') }}
+      run: |
+        dotnet nuget push './src/**/*.nupkg' --source https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json --api-key ${{ secrets.GITHUB_TOKEN }} --skip-duplicate

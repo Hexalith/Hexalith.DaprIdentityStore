@@ -5,12 +5,15 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <LangVersion>latest</LangVersion>
+    <NoWarn>$(NoWarn);VSTHRD002;</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Hexalith.Infrastructure.DaprRuntime" Version="1.0.33" />
-    <PackageReference Include="Dapr.Actors" Version="1.14.0" />
-    <PackageReference Include="Microsoft.Extensions.Identity.Stores" Version="9.0.0" />
+    <PackageReference Include="Hexalith.Infrastructure.DaprRuntime" Version="$(HexalithVersion)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Hexalith.DaprIdentityStore.Abstractions\Hexalith.DaprIdentityStore.Abstractions.csproj" />
   </ItemGroup>
 
 </Project>

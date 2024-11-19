@@ -18,12 +18,6 @@ public class UserIdentityActor : Actor, IUserIdentityActor
     {
     }
 
-    public static string ActorCollectionTypeName => "UserIdentities";
-    public static string AllUsersCollectionId => "AllUsers";
-    public static string DefaultActorTypeName => "UserIdentity";
-    public static string UserEmailIndexTypeName => "UserEmailIndex";
-    public static string UserNameIndexTypeName => "UserNameIndex";
-
     public async Task<bool> CreateAsync(UserIdentity user)
     {
         if (user.Id != Id.ToUnescapeString())

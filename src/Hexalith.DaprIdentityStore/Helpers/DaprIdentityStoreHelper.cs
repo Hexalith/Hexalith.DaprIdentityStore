@@ -1,28 +1,22 @@
-﻿namespace Hexalith.DaprIdentityStore.Helpers;
+﻿// <copyright file="DaprIdentityStoreHelper.cs" company="ITANEO">
+// Copyright (c) ITANEO (https://www.itaneo.com). All rights reserved.
+// Licensed under the MIT license. See LICENSE file in the project root for full license information.
+// </copyright>
+
+namespace Hexalith.DaprIdentityStore.Helpers;
 
 using System;
 
-using Dapr.Actors.Client;
 using Dapr.Actors.Runtime;
 
 using Hexalith.DaprIdentityStore.Actors;
 using Hexalith.Infrastructure.DaprRuntime.Actors;
-using Hexalith.Infrastructure.DaprRuntime.Helpers;
 
 /// <summary>
 /// Provides helper methods for partition actors.
 /// </summary>
 public static class DaprIdentityStoreHelper
 {
-    public static IKeyHashActor CreateAllUsersProxy(this IActorProxyFactory actorProxyFactory)
-        => actorProxyFactory.CreateActorProxy<IKeyHashActor>(UserIdentityActor.AllUsersCollectionId.ToActorId(), UserIdentityActor.ActorCollectionTypeName);
-
-    public static IKeyValueActor CreateUserEmailIndexProxy(this IActorProxyFactory actorProxyFactory, string normalizedEmail)
-        => actorProxyFactory.CreateActorProxy<IKeyValueActor>(normalizedEmail.ToActorId(), UserIdentityActor.UserEmailIndexTypeName);
-
-    public static IKeyValueActor CreateUserNameIndexProxy(this IActorProxyFactory actorProxyFactory, string normalizedName)
-        => actorProxyFactory.CreateActorProxy<IKeyValueActor>(normalizedName.ToActorId(), UserIdentityActor.UserNameIndexTypeName);
-
     /// <summary>
     /// Registers partition actors with the specified ActorRegistrationCollection.
     /// </summary>
@@ -31,9 +25,9 @@ public static class DaprIdentityStoreHelper
     public static void RegisterPartitionActors(this ActorRegistrationCollection actorRegistrationCollection)
     {
         ArgumentNullException.ThrowIfNull(actorRegistrationCollection);
-        actorRegistrationCollection.RegisterActor<UserIdentityActor>(UserIdentityActor.DefaultActorTypeName);
-        actorRegistrationCollection.RegisterActor<KeyHashActor>(UserIdentityActor.ActorCollectionTypeName);
-        actorRegistrationCollection.RegisterActor<KeyValueActor>(UserIdentityActor.UserEmailIndexTypeName);
-        actorRegistrationCollection.RegisterActor<KeyValueActor>(UserIdentityActor.UserNameIndexTypeName);
+        actorRegistrationCollection.RegisterActor<UserIdentityActor>(DaprIdentityStoreConstants.DefaultUserActorTypeName);
+        actorRegistrationCollection.RegisterActor<KeyHashActor>(DaprIdentityStoreConstants.UserCollectionActorTypeName);
+        actorRegistrationCollection.RegisterActor<KeyValueActor>(DaprIdentityStoreConstants.UserEmailIndexActorTypeName);
+        actorRegistrationCollection.RegisterActor<KeyValueActor>(DaprIdentityStoreConstants.UserNameIndexActorTypeName);
     }
 }

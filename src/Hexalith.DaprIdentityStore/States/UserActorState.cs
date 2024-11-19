@@ -9,12 +9,25 @@ using Hexalith.DaprIdentityStore.Models;
 
 /// <summary>
 /// Represents the state of a user actor in the Dapr identity store.
-/// Contains the user's identity information.
+/// This class maintains the user's identity information and state within the Dapr actor system.
 /// </summary>
-public class UserActorState
+/// <remarks>
+/// The UserActorState is used by Dapr actors to persist user-related information
+/// across actor invocations. It serves as the primary state container for user data
+/// in the distributed actor system.
+/// </remarks>
+internal class UserActorState
 {
     /// <summary>
     /// Gets or sets the user identity information.
     /// </summary>
+    /// <value>
+    /// An instance of <see cref="UserIdentity"/> containing the user's identity details.
+    /// Defaults to a new instance if not explicitly set.
+    /// </value>
+    /// <remarks>
+    /// This property stores core user identity information such as user credentials,
+    /// profile data, and authentication details.
+    /// </remarks>
     public UserIdentity User { get; set; } = new();
 }

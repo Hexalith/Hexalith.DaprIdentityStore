@@ -69,6 +69,19 @@ public static class DaprIdentityStoreConstants
     public static string UserEmailIndexActorTypeName => "UserEmailIndex";
 
     /// <summary>
+    /// Gets the state name for user identity.
+    /// This constant defines the state name used for storing user identity information.
+    /// </summary>
+    /// <value>
+    /// The string "State", which identifies the state name for user identity.
+    /// </value>
+    /// <remarks>
+    /// This state name is used in operations that need to access or modify the state of user identities,
+    /// such as authentication, profile management, and credential validation.
+    /// </remarks>
+    public static string UserIdentityStateName => "State";
+
+    /// <summary>
     /// Gets the index type name for username lookups.
     /// This constant defines the actor type used for username-based user lookups.
     /// </summary>

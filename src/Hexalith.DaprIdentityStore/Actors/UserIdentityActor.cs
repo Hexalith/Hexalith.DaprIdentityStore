@@ -25,18 +25,26 @@ using Hexalith.Infrastructure.DaprRuntime.Helpers;
 /// Initializes a new instance of the <see cref="UserIdentityActor"/> class.
 /// Initializes a new instance of the UserIdentityActor.
 /// </remarks>
-/// <param name="host">The actor host that provides runtime context.</param>
-public class UserIdentityActor(ActorHost host) : Actor(host), IUserIdentityActor
+public class UserIdentityActor : Actor, IUserIdentityActor
 {
-    /// <summary>
-    /// The key used to store the actor's state in Dapr's state store.
-    /// </summary>
-    private const string _stateKey = "State";
-
     /// <summary>
     /// Cached state of the user actor to minimize state store access.
     /// </summary>
     private UserActorState? _state;
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="UserIdentityActor"/> class.
+    /// </summary>
+    /// <param name="host">The actor host that provides runtime context.</param>
+    /// <param name="stateManager">The state manager for managing actor state.</param>
+    public UserIdentityActor(ActorHost host, IActorStateManager? stateManager = null)
+        : base(host)
+    {
+        if (stateManager is not null)
+        {
+            StateManager = stateManager;
+        }
+    }
 
     /// <summary>
     /// Adds claims to the user identity.
@@ -81,7 +89,7 @@ public class UserIdentityActor(ActorHost host) : Actor(host), IUserIdentityActor
         _state = new UserActorState { User = user };
 
         // Save user state
-        await StateManager.AddStateAsync(_stateKey, _state, CancellationToken.None);
+        await StateManager.AddStateAsync(DaprIdentityStoreConstants.UserIdentityStateName, _state, CancellationToken.None);
         await StateManager.SaveStateAsync(CancellationToken.None);
 
         // Create indexes for user lookup
@@ -131,7 +139,7 @@ public class UserIdentityActor(ActorHost host) : Actor(host), IUserIdentityActor
 
             // Clear state
             _state = null;
-            await StateManager.RemoveStateAsync(_stateKey, CancellationToken.None);
+            await StateManager.RemoveStateAsync(DaprIdentityStoreConstants.UserIdentityStateName, CancellationToken.None);
             await StateManager.SaveStateAsync(CancellationToken.None);
         }
 
@@ -186,7 +194,7 @@ public class UserIdentityActor(ActorHost host) : Actor(host), IUserIdentityActor
         // Add claims to user state and remove duplicates
         IEnumerable<ApplicationUserClaim> newClaims = _state.Claims.Where(p => p.ClaimType != claim.Type);
         _state.Claims = _state.Claims.Union([new ApplicationUserClaim { UserId = Id.ToUnescapeString(), ClaimType = newClaim.ValueType, ClaimValue = newClaim.Value }]);
-        await StateManager.SetStateAsync(_stateKey, _state, CancellationToken.None);
+        await StateManager.SetStateAsync(DaprIdentityStoreConstants.UserIdentityStateName, _state, CancellationToken.None);
         await StateManager.SaveStateAsync(CancellationToken.None);
     }
 
@@ -207,7 +215,7 @@ public class UserIdentityActor(ActorHost host) : Actor(host), IUserIdentityActor
         // Update user state
         _ = _state.User;
         _state.User = user;
-        await StateManager.SetStateAsync(_stateKey, _state, CancellationToken.None);
+        await StateManager.SetStateAsync(DaprIdentityStoreConstants.UserIdentityStateName, _state, CancellationToken.None);
         await StateManager.SaveStateAsync(CancellationToken.None);
 
         // Update indexes
@@ -238,7 +246,7 @@ public class UserIdentityActor(ActorHost host) : Actor(host), IUserIdentityActor
     {
         if (_state is null)
         {
-            ConditionalValue<UserActorState> result = await StateManager.TryGetStateAsync<UserActorState>(_stateKey, cancellationToken);
+            ConditionalValue<UserActorState> result = await StateManager.TryGetStateAsync<UserActorState>(DaprIdentityStoreConstants.UserIdentityStateName, cancellationToken);
             if (result.HasValue)
             {
                 _state = result.Value;

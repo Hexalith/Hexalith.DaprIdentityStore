@@ -1,6 +1,6 @@
 # Hexalith.DaprIdentityStore
 
-Dapr Actor implementation of Microsoft Identity Store
+Dapr Actor implementation of Microsoft Identity Store - a distributed, scalable identity management solution built on Dapr actors.
 
 ## Build status
 
@@ -24,3 +24,33 @@ Dapr Actor implementation of Microsoft Identity Store
 [![Duplicated Lines (%)](https://sonarcloud.io/api/project_badges/measure?project=Hexalith_Hexalith.DaprIdentityStore&metric=duplicated_lines_density)](https://sonarcloud.io/summary/new_code?id=Hexalith_Hexalith.DaprIdentityStore)
 [![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=Hexalith_Hexalith.DaprIdentityStore&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=Hexalith_Hexalith.DaprIdentityStore)
 [![Bugs](https://sonarcloud.io/api/project_badges/measure?project=Hexalith_Hexalith.DaprIdentityStore&metric=bugs)](https://sonarcloud.io/summary/new_code?id=Hexalith_Hexalith.DaprIdentityStore)
+
+## Overview
+
+Hexalith.DaprIdentityStore provides a distributed implementation of ASP.NET Core Identity storage using Dapr actors. This approach offers high scalability, resilience, and consistency for managing user identities across distributed applications.
+
+## Features
+
+- **Distributed Identity Storage**: Leverages Dapr actors for reliable, distributed identity management
+- **ASP.NET Core Identity Compatible**: Implements standard Identity interfaces for seamless integration
+- **Scalable Architecture**: Built on Dapr's actor model for horizontal scalability
+- **High Availability**: Supports distributed deployment scenarios
+- **Consistent Data**: Actor-based state management ensures data consistency
+- **Cloud-Native**: Designed for modern cloud environments
+- **Platform Agnostic**: Works across different cloud providers and on-premises
+
+## Getting Started
+
+### Prerequisites
+
+- .NET 8.0 or later
+- Dapr runtime installed
+- Visual Studio 2022 or later (recommended)
+
+### Installation
+
+Install via NuGet Package Manager
+
+## Packages
+
+- [Hexalith.DaprIdentityStore](Hexalith.DaprIdentityStore/README.md)

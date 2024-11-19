@@ -1,57 +1,22 @@
-# Hexalith.DaprIdentityStore
+# Hexalith.DaprIdentityStore Core Library
 
-## Overview
+This folder contains the core implementation of the Hexalith.DaprIdentityStore library.
 
-Hexalith.DaprIdentityStore is a custom identity store implementation using Dapr (Distributed Application Runtime) for ASP.NET Core Identity. It leverages Dapr's actor model and state management capabilities to provide a scalable and distributed identity solution.
+For complete documentation, installation instructions, and usage examples, please refer to the [main project README](../../README.md).
 
-## Features
+## Project Structure
 
-- Distributed user management using Dapr Actors
-- Scalable identity storage with Dapr state management
-- Compatible with ASP.NET Core Identity
-- Support for claims and role-based authentication
-- Built-in concurrency handling
-- Cloud-agnostic implementation
+- **Actors/**: Contains the Dapr actor implementations for identity management
+- **States/**: Contains actor state definitions and models
+- **Interfaces/**: Contains service and repository interfaces
+- **Services/**: Contains concrete implementations of identity services
 
-## Architecture
+## Development
 
-### Components
+This library is part of the Hexalith.DaprIdentityStore solution. For development guidelines and contribution information, please see the main project documentation.
 
-1. **User Actor**
-   - Manages individual user state and operations
-   - Handles user claims and roles
-   - Provides atomic operations for user data updates
+## Quick Links
 
-2. **User Actor State**
-   - Stores user information including:
-     - Basic profile data
-     - Security stamps
-     - Login information
-     - Claims and roles
-
-### Integration with ASP.NET Core Identity
-
-The store implements standard Identity interfaces:
-
-- `IUserStore<TUser>`
-- `IUserLoginStore<TUser>`
-- `IUserClaimStore<TUser>`
-- `IUserPasswordStore<TUser>`
-- `IUserSecurityStampStore<TUser>`
-- `IUserEmailStore<TUser>`
-- `IUserPhoneNumberStore<TUser>`
-- `IUserTwoFactorStore<TUser>`
-- `IUserLockoutStore<TUser>`
-- `IQueryableUserStore<TUser>`
-
-## Setup and Configuration
-
-### Prerequisites
-
-- .NET 9.0 or later
-- Dapr runtime installed
-- A compatible Dapr state store component (e.g., Redis, Azure CosmosDB)
-
-### Installation
-
-Add the package reference to your project:
+- [Main Documentation](../../README.md)
+- [NuGet Package](https://www.nuget.org/packages/Hexalith.DaprIdentityStore.Server)
+- [Issue Tracker](https://github.com/Hexalith/Hexalith.DaprIdentityStore/issues)

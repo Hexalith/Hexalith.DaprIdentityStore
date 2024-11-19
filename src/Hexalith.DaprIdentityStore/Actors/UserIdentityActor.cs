@@ -8,13 +8,11 @@ namespace Hexalith.DaprIdentityStore.Actors;
 using System.Collections.Generic;
 using System.Security.Claims;
 
-using Dapr.Actors.Client;
 using Dapr.Actors.Runtime;
 
-using Hexalith.DaprIdentityStore.Helpers;
 using Hexalith.DaprIdentityStore.Models;
+using Hexalith.DaprIdentityStore.Services;
 using Hexalith.DaprIdentityStore.States;
-using Hexalith.Infrastructure.DaprRuntime.Actors;
 using Hexalith.Infrastructure.DaprRuntime.Helpers;
 
 /// <summary>
@@ -27,6 +25,10 @@ using Hexalith.Infrastructure.DaprRuntime.Helpers;
 /// </remarks>
 public class UserIdentityActor : Actor, IUserIdentityActor
 {
+    private readonly IUserIdentityCollectionService _collectionService;
+    private readonly IUserIdentityEmailCollectionService _emailCollectionService;
+    private readonly IUserIdentityNameCollectionService _nameCollectionService;
+
     /// <summary>
     /// Cached state of the user actor to minimize state store access.
     /// </summary>
@@ -36,14 +38,26 @@ public class UserIdentityActor : Actor, IUserIdentityActor
     /// Initializes a new instance of the <see cref="UserIdentityActor"/> class.
     /// </summary>
     /// <param name="host">The actor host that provides runtime context.</param>
+    /// <param name="collectionService"></param>
+    /// <param name="emailCollectionService"></param>
+    /// <param name="nameCollectionService"></param>
     /// <param name="stateManager">The state manager for managing actor state.</param>
-    public UserIdentityActor(ActorHost host, IActorStateManager? stateManager = null)
+    public UserIdentityActor(
+        ActorHost host,
+        IUserIdentityCollectionService collectionService,
+        IUserIdentityEmailCollectionService emailCollectionService,
+        IUserIdentityNameCollectionService nameCollectionService,
+        IActorStateManager? stateManager = null)
         : base(host)
     {
         if (stateManager is not null)
         {
             StateManager = stateManager;
         }
+
+        _collectionService = collectionService;
+        _emailCollectionService = emailCollectionService;
+        _nameCollectionService = nameCollectionService;
     }
 
     /// <summary>
@@ -92,22 +106,18 @@ public class UserIdentityActor : Actor, IUserIdentityActor
         await StateManager.AddStateAsync(DaprIdentityStoreConstants.UserIdentityStateName, _state, CancellationToken.None);
         await StateManager.SaveStateAsync(CancellationToken.None);
 
-        // Create indexes for user lookup
-        IKeyHashActor collection = ActorProxy.DefaultProxyFactory.CreateAllUsersProxy();
-        _ = await collection.AddAsync(user.Id);
+        await _collectionService.AddUserAsync(user.Id);
 
         // Create email index if email exists
         if (!string.IsNullOrWhiteSpace(user.NormalizedEmail))
         {
-            IKeyValueActor emailIndex = ActorProxy.DefaultProxyFactory.CreateUserEmailIndexProxy(user.NormalizedEmail);
-            await emailIndex.SetAsync(user.Id);
+            await _emailCollectionService.AddUserEmailAsync(user.Id, user.NormalizedEmail);
         }
 
         // Create username index if username exists
         if (!string.IsNullOrWhiteSpace(user.NormalizedUserName))
         {
-            IKeyValueActor nameIndex = ActorProxy.DefaultProxyFactory.CreateUserNameIndexProxy(user.NormalizedUserName);
-            await nameIndex.SetAsync(user.Id);
+            await _nameCollectionService.AddUserNameAsync(user.Id, user.NormalizedUserName);
         }
 
         return true;
@@ -126,15 +136,13 @@ public class UserIdentityActor : Actor, IUserIdentityActor
             // Remove email index
             if (!string.IsNullOrWhiteSpace(_state.User.NormalizedEmail))
             {
-                IKeyValueActor emailIndex = ActorProxy.DefaultProxyFactory.CreateUserEmailIndexProxy(_state.User.NormalizedEmail);
-                await emailIndex.RemoveAsync();
+                await _emailCollectionService.RemoveUserEmailAsync(id, _state.User.NormalizedEmail);
             }
 
             // Remove username index
             if (!string.IsNullOrWhiteSpace(_state.User.NormalizedUserName))
             {
-                IKeyValueActor nameIndex = ActorProxy.DefaultProxyFactory.CreateUserNameIndexProxy(_state.User.NormalizedUserName);
-                await nameIndex.RemoveAsync();
+                await _nameCollectionService.RemoveUserNameAsync(id, _state.User.NormalizedUserName);
             }
 
             // Clear state
@@ -144,8 +152,7 @@ public class UserIdentityActor : Actor, IUserIdentityActor
         }
 
         // Remove from indexes
-        IKeyHashActor collection = ActorProxy.DefaultProxyFactory.CreateAllUsersProxy();
-        await collection.RemoveAsync(id);
+        await _collectionService.RemoveUserAsync(id);
     }
 
     /// <summary>
@@ -213,27 +220,37 @@ public class UserIdentityActor : Actor, IUserIdentityActor
         }
 
         // Update user state
-        _ = _state.User;
+        UserIdentity oldUser = _state.User;
         _state.User = user;
         await StateManager.SetStateAsync(DaprIdentityStoreConstants.UserIdentityStateName, _state, CancellationToken.None);
         await StateManager.SaveStateAsync(CancellationToken.None);
 
-        // Update indexes
-        IKeyHashActor collection = ActorProxy.DefaultProxyFactory.CreateAllUsersProxy();
-        await collection.RemoveAsync(user.Id);
-
         // Update email index
-        if (!string.IsNullOrWhiteSpace(user.NormalizedEmail))
+        if (oldUser.NormalizedEmail != user.NormalizedEmail)
         {
-            IKeyValueActor emailIndex = ActorProxy.DefaultProxyFactory.CreateUserEmailIndexProxy(user.NormalizedEmail);
-            await emailIndex.RemoveAsync();
+            if (!string.IsNullOrWhiteSpace(oldUser.NormalizedEmail))
+            {
+                await _emailCollectionService.RemoveUserEmailAsync(user.Id, oldUser.NormalizedEmail);
+            }
+
+            if (!string.IsNullOrWhiteSpace(user.NormalizedEmail))
+            {
+                await _emailCollectionService.AddUserEmailAsync(user.Id, user.NormalizedEmail);
+            }
         }
 
         // Update username index
-        if (!string.IsNullOrWhiteSpace(user.NormalizedUserName))
+        if (oldUser.NormalizedUserName != user.NormalizedUserName)
         {
-            IKeyValueActor nameIndex = ActorProxy.DefaultProxyFactory.CreateUserNameIndexProxy(user.NormalizedUserName);
-            await nameIndex.RemoveAsync();
+            if (!string.IsNullOrWhiteSpace(oldUser.NormalizedUserName))
+            {
+                await _nameCollectionService.RemoveUserNameAsync(user.Id, oldUser.NormalizedUserName);
+            }
+
+            if (!string.IsNullOrWhiteSpace(user.NormalizedUserName))
+            {
+                await _nameCollectionService.AddUserNameAsync(user.Id, user.NormalizedUserName);
+            }
         }
     }
 

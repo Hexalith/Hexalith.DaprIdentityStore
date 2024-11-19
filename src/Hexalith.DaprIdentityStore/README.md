@@ -1,9 +1,11 @@
 # Hexalith.DaprIdentityStore
 
 ## Overview
+
 Hexalith.DaprIdentityStore is a custom identity store implementation using Dapr (Distributed Application Runtime) for ASP.NET Core Identity. It leverages Dapr's actor model and state management capabilities to provide a scalable and distributed identity solution.
 
 ## Features
+
 - Distributed user management using Dapr Actors
 - Scalable identity storage with Dapr state management
 - Compatible with ASP.NET Core Identity
@@ -14,6 +16,7 @@ Hexalith.DaprIdentityStore is a custom identity store implementation using Dapr 
 ## Architecture
 
 ### Components
+
 1. **User Actor**
    - Manages individual user state and operations
    - Handles user claims and roles
@@ -27,7 +30,9 @@ Hexalith.DaprIdentityStore is a custom identity store implementation using Dapr 
      - Claims and roles
 
 ### Integration with ASP.NET Core Identity
+
 The store implements standard Identity interfaces:
+
 - `IUserStore<TUser>`
 - `IUserLoginStore<TUser>`
 - `IUserClaimStore<TUser>`
@@ -42,6 +47,7 @@ The store implements standard Identity interfaces:
 ## Setup and Configuration
 
 ### Prerequisites
+
 - .NET 9.0 or later
 - Dapr runtime installed
 - A compatible Dapr state store component (e.g., Redis, Azure CosmosDB)

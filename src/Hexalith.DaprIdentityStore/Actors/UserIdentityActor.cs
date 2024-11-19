@@ -4,6 +4,7 @@ using Dapr.Actors.Client;
 using Dapr.Actors.Runtime;
 
 using Hexalith.DaprIdentityStore.Helpers;
+using Hexalith.DaprIdentityStore.Models;
 using Hexalith.DaprIdentityStore.States;
 using Hexalith.Infrastructure.DaprRuntime.Actors;
 using Hexalith.Infrastructure.DaprRuntime.Helpers;
@@ -18,10 +19,12 @@ public class UserIdentityActor : Actor, IUserIdentityActor
     }
 
     public static string ActorCollectionTypeName => "UserIdentities";
-    public static string AllCollectionId => "All";
+    public static string AllUsersCollectionId => "AllUsers";
     public static string DefaultActorTypeName => "UserIdentity";
+    public static string UserEmailIndexTypeName => "UserEmailIndex";
+    public static string UserNameIndexTypeName => "UserNameIndex";
 
-    public async Task<bool> CreateAsync(ApplicationUserIdentity user)
+    public async Task<bool> CreateAsync(UserIdentity user)
     {
         if (user.Id != Id.ToUnescapeString())
         {
@@ -39,10 +42,21 @@ public class UserIdentityActor : Actor, IUserIdentityActor
         IKeyHashActor collection = ActorProxy.DefaultProxyFactory.CreateAllUsersProxy();
         _ = await collection.AddAsync(user.Id);
 
+        if (!string.IsNullOrWhiteSpace(user.NormalizedEmail))
+        {
+            IKeyValueActor emailIndex = ActorProxy.DefaultProxyFactory.CreateUserEmailIndexProxy(user.NormalizedEmail);
+            await emailIndex.SetAsync(user.Id);
+        }
+        if (!string.IsNullOrWhiteSpace(user.NormalizedUserName))
+        {
+            IKeyValueActor nameIndex = ActorProxy.DefaultProxyFactory.CreateUserNameIndexProxy(user.NormalizedUserName);
+            await nameIndex.SetAsync(user.Id);
+        }
+
         return true;
     }
 
-    public async Task DeleteAsync(ApplicationUserIdentity user)
+    public async Task DeleteAsync(UserIdentity user)
     {
         if (await GetStateAsync(CancellationToken.None) != null)
         {
@@ -51,15 +65,55 @@ public class UserIdentityActor : Actor, IUserIdentityActor
             await StateManager.SaveStateAsync(CancellationToken.None);
             IKeyHashActor collection = ActorProxy.DefaultProxyFactory.CreateAllUsersProxy();
             await collection.RemoveAsync(user.Id);
+            if (!string.IsNullOrWhiteSpace(user.NormalizedEmail))
+            {
+                IKeyValueActor emailIndex = ActorProxy.DefaultProxyFactory.CreateUserEmailIndexProxy(user.NormalizedEmail);
+                await emailIndex.RemoveAsync();
+            }
+            if (!string.IsNullOrWhiteSpace(user.NormalizedUserName))
+            {
+                IKeyValueActor nameIndex = ActorProxy.DefaultProxyFactory.CreateUserNameIndexProxy(user.NormalizedUserName);
+                await nameIndex.RemoveAsync();
+            }
         }
     }
 
     public async Task<bool> ExistsAsync() => await GetStateAsync(CancellationToken.None) != null;
 
-    public async Task<ApplicationUserIdentity?> FindAsync()
+    public async Task<UserIdentity?> FindAsync()
     {
         _state = await GetStateAsync(CancellationToken.None);
         return _state?.User;
+    }
+
+    public Task<UserIdentity?> FindByEmailAsync() => throw new NotImplementedException();
+
+    public Task<UserIdentity?> FindByNameAsync() => throw new NotImplementedException();
+
+    public async Task UpdateAsync(UserIdentity user)
+    {
+        _state = await GetStateAsync(CancellationToken.None);
+        if (_state is null)
+        {
+            throw new InvalidOperationException($"User '{user.Id}' not found.");
+        }
+
+        _ = _state.User;
+        _state.User = user;
+        await StateManager.SetStateAsync(StateKey, _state, CancellationToken.None);
+        await StateManager.SaveStateAsync(CancellationToken.None);
+        IKeyHashActor collection = ActorProxy.DefaultProxyFactory.CreateAllUsersProxy();
+        await collection.RemoveAsync(user.Id);
+        if (!string.IsNullOrWhiteSpace(user.NormalizedEmail))
+        {
+            IKeyValueActor emailIndex = ActorProxy.DefaultProxyFactory.CreateUserEmailIndexProxy(user.NormalizedEmail);
+            await emailIndex.RemoveAsync();
+        }
+        if (!string.IsNullOrWhiteSpace(user.NormalizedUserName))
+        {
+            IKeyValueActor nameIndex = ActorProxy.DefaultProxyFactory.CreateUserNameIndexProxy(user.NormalizedUserName);
+            await nameIndex.RemoveAsync();
+        }
     }
 
     private async Task<UserActorState?> GetStateAsync(CancellationToken cancellationToken)

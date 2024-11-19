@@ -15,7 +15,13 @@ using Hexalith.Infrastructure.DaprRuntime.Helpers;
 public static class DaprIdentityStoreHelper
 {
     public static IKeyHashActor CreateAllUsersProxy(this IActorProxyFactory actorProxyFactory)
-        => actorProxyFactory.CreateActorProxy<IKeyHashActor>(UserIdentityActor.AllCollectionId.ToActorId(), UserIdentityActor.ActorCollectionTypeName);
+        => actorProxyFactory.CreateActorProxy<IKeyHashActor>(UserIdentityActor.AllUsersCollectionId.ToActorId(), UserIdentityActor.ActorCollectionTypeName);
+
+    public static IKeyValueActor CreateUserEmailIndexProxy(this IActorProxyFactory actorProxyFactory, string normalizedEmail)
+        => actorProxyFactory.CreateActorProxy<IKeyValueActor>(normalizedEmail.ToActorId(), UserIdentityActor.UserEmailIndexTypeName);
+
+    public static IKeyValueActor CreateUserNameIndexProxy(this IActorProxyFactory actorProxyFactory, string normalizedName)
+        => actorProxyFactory.CreateActorProxy<IKeyValueActor>(normalizedName.ToActorId(), UserIdentityActor.UserNameIndexTypeName);
 
     /// <summary>
     /// Registers partition actors with the specified ActorRegistrationCollection.
@@ -27,5 +33,7 @@ public static class DaprIdentityStoreHelper
         ArgumentNullException.ThrowIfNull(actorRegistrationCollection);
         actorRegistrationCollection.RegisterActor<UserIdentityActor>(UserIdentityActor.DefaultActorTypeName);
         actorRegistrationCollection.RegisterActor<KeyHashActor>(UserIdentityActor.ActorCollectionTypeName);
+        actorRegistrationCollection.RegisterActor<KeyValueActor>(UserIdentityActor.UserEmailIndexTypeName);
+        actorRegistrationCollection.RegisterActor<KeyValueActor>(UserIdentityActor.UserNameIndexTypeName);
     }
 }

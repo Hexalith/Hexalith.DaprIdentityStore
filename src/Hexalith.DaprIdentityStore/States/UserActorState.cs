@@ -1,6 +1,8 @@
 namespace Hexalith.DaprIdentityStore.States;
 
+using Hexalith.DaprIdentityStore.Models;
+
 public class UserActorState
 {
-    public ApplicationUserIdentity User { get; set; } = new();
+    public UserIdentity User { get; set; } = new();
 }

@@ -1,19 +1,24 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.13.35507.96
+VisualStudioVersion = 17.12.35506.116
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hexalith.DaprIdentityStore", "src\Hexalith.DaprIdentityStore\Hexalith.DaprIdentityStore.csproj", "{AF090659-E003-55D8-D4CC-4C8DC53975A2}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{FA384188-299A-4939-82DB-7754D3F0FDAB}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_project", "_project", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "buildFiles", "buildFiles", "{2B804066-4066-4792-84D3-B3E4381D832B}"
 	ProjectSection(SolutionItems) = preProject
+		.cursorrules = .cursorrules
 		.editorconfig = .editorconfig
 		.gitignore = .gitignore
 		.stylecop.json = .stylecop.json
 		.stylecop.ruleset = .stylecop.ruleset
+		buildFiles\Dependencies.props = buildFiles\Dependencies.props
 		Directory.Build.props = Directory.Build.props
 		LICENSE = LICENSE
+		buildFiles\Project.Common.props = buildFiles\Project.Common.props
 		README.md = README.md
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hexalith.DaprIdentityStore", "src\Hexalith.DaprIdentityStore\Hexalith.DaprIdentityStore.csproj", "{387B4F92-535E-39C7-5E7B-25AACE7FB304}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,15 +26,15 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{AF090659-E003-55D8-D4CC-4C8DC53975A2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{AF090659-E003-55D8-D4CC-4C8DC53975A2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{AF090659-E003-55D8-D4CC-4C8DC53975A2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{AF090659-E003-55D8-D4CC-4C8DC53975A2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{387B4F92-535E-39C7-5E7B-25AACE7FB304}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{387B4F92-535E-39C7-5E7B-25AACE7FB304}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{387B4F92-535E-39C7-5E7B-25AACE7FB304}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{387B4F92-535E-39C7-5E7B-25AACE7FB304}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
-	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {6AD8A88E-6509-4129-9290-B66C34053325}
+	GlobalSection(NestedProjects) = preSolution
+		{387B4F92-535E-39C7-5E7B-25AACE7FB304} = {FA384188-299A-4939-82DB-7754D3F0FDAB}
 	EndGlobalSection
 EndGlobal

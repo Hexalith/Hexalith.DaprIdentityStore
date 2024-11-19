@@ -5,6 +5,9 @@
 
 namespace Hexalith.DaprIdentityStore.Actors;
 
+using System.Collections.Generic;
+using System.Security.Claims;
+
 using Dapr.Actors;
 
 using Hexalith.DaprIdentityStore.Models;
@@ -14,6 +17,8 @@ using Hexalith.DaprIdentityStore.Models;
 /// </summary>
 public interface IUserIdentityActor : IActor
 {
+    Task AddClaimsAsync(IEnumerable<Claim> claims);
+
     /// <summary>
     /// Creates a new user identity asynchronously.
     /// </summary>
@@ -24,9 +29,8 @@ public interface IUserIdentityActor : IActor
     /// <summary>
     /// Deletes a user identity asynchronously.
     /// </summary>
-    /// <param name="user">The user identity to delete.</param>
     /// <returns>A task representing the asynchronous operation.</returns>
-    Task DeleteAsync(UserIdentity user);
+    Task DeleteAsync();
 
     /// <summary>
     /// Checks if a user identity exists asynchronously.
@@ -40,17 +44,11 @@ public interface IUserIdentityActor : IActor
     /// <returns>The user identity if found; otherwise, null.</returns>
     Task<UserIdentity?> FindAsync();
 
-    /// <summary>
-    /// Finds a user identity by email address asynchronously.
-    /// </summary>
-    /// <returns>The user identity if found; otherwise, null.</returns>
-    Task<UserIdentity?> FindByEmailAsync();
+    Task<IList<Claim>> GetClaimsAsync();
 
-    /// <summary>
-    /// Finds a user identity by username asynchronously.
-    /// </summary>
-    /// <returns>The user identity if found; otherwise, null.</returns>
-    Task<UserIdentity?> FindByNameAsync();
+    Task RemoveClaimsAsync(IEnumerable<Claim> claims);
+
+    Task ReplaceClaimAsync(Claim claim1, Claim newClaim);
 
     /// <summary>
     /// Updates an existing user identity asynchronously.

@@ -5,6 +5,8 @@
 
 namespace Hexalith.DaprIdentityStore.States;
 
+using System.Security.Claims;
+
 using Hexalith.DaprIdentityStore.Models;
 
 /// <summary>
@@ -18,6 +20,8 @@ using Hexalith.DaprIdentityStore.Models;
 /// </remarks>
 internal class UserActorState
 {
+    public IEnumerable<ApplicationUserClaim> Claims { get; set; } = new List<ApplicationUserClaim>();
+
     /// <summary>
     /// Gets or sets the user identity information.
     /// </summary>

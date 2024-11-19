@@ -1,4 +1,4 @@
-// <copyright file="DaprActorUserStore.cs" company="ITANEO">
+// <copyright file="DaprActorUserStore{User}.cs" company="ITANEO">
 // Copyright (c) ITANEO (https://www.itaneo.com). All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 // </copyright>
@@ -7,7 +7,6 @@ namespace Hexalith.DaprIdentityStore.Stores;
 
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -24,7 +23,7 @@ using Microsoft.AspNetCore.Identity;
 /// <summary>
 /// Represents a user store that uses Dapr actors for user management.
 /// </summary>
-public class DaprActorUserStore
+public partial class DaprActorUserStore
     : UserStoreBase<UserIdentity, string, ApplicationUserClaim, ApplicationUserLogin, ApplicationUserToken>
 {
     /// <summary>
@@ -39,12 +38,6 @@ public class DaprActorUserStore
     public override IQueryable<UserIdentity> Users => GetUsersAsync().GetAwaiter().GetResult().AsQueryable();
 
     /// <inheritdoc/>
-    public override Task AddClaimsAsync(UserIdentity user, IEnumerable<Claim> claims, CancellationToken cancellationToken = default) => throw new NotImplementedException();
-
-    /// <inheritdoc/>
-    public override Task AddLoginAsync(UserIdentity user, UserLoginInfo login, CancellationToken cancellationToken = default) => throw new NotImplementedException();
-
-    /// <inheritdoc/>
     public override async Task<IdentityResult> CreateAsync(UserIdentity user, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(user);
@@ -53,7 +46,7 @@ public class DaprActorUserStore
 
         IUserIdentityActor actor = ActorProxy.DefaultProxyFactory.CreateUserIdentityActor(user.Id);
         bool created = await actor.CreateAsync(user);
-        return created ? IdentityResult.Success : IdentityResult.Failed(ErrorDescriber.DuplicateUserName(user.NormalizedUserName));
+        return created ? IdentityResult.Success : IdentityResult.Failed(ErrorDescriber.DuplicateUserName(user?.NormalizedUserName ?? "Unknown"));
     }
 
     /// <inheritdoc/>
@@ -64,7 +57,7 @@ public class DaprActorUserStore
         ThrowIfDisposed();
 
         IUserIdentityActor actor = ActorProxy.DefaultProxyFactory.CreateUserIdentityActor(user.Id);
-        await actor.DeleteAsync(user);
+        await actor.DeleteAsync();
         return IdentityResult.Success;
     }
 
@@ -104,24 +97,6 @@ public class DaprActorUserStore
     }
 
     /// <inheritdoc/>
-    public override Task<IList<Claim>> GetClaimsAsync(UserIdentity user, CancellationToken cancellationToken = default) => throw new NotImplementedException();
-
-    /// <inheritdoc/>
-    public override Task<IList<UserLoginInfo>> GetLoginsAsync(UserIdentity user, CancellationToken cancellationToken = default) => throw new NotImplementedException();
-
-    /// <inheritdoc/>
-    public override Task<IList<UserIdentity>> GetUsersForClaimAsync(Claim claim, CancellationToken cancellationToken = default) => throw new NotImplementedException();
-
-    /// <inheritdoc/>
-    public override Task RemoveClaimsAsync(UserIdentity user, IEnumerable<Claim> claims, CancellationToken cancellationToken = default) => throw new NotImplementedException();
-
-    /// <inheritdoc/>
-    public override Task RemoveLoginAsync(UserIdentity user, string loginProvider, string providerKey, CancellationToken cancellationToken = default) => throw new NotImplementedException();
-
-    /// <inheritdoc/>
-    public override Task ReplaceClaimAsync(UserIdentity user, Claim claim, Claim newClaim, CancellationToken cancellationToken = default) => throw new NotImplementedException();
-
-    /// <inheritdoc/>
     public override async Task<IdentityResult> UpdateAsync(UserIdentity user, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(user);
@@ -138,22 +113,13 @@ public class DaprActorUserStore
     }
 
     /// <inheritdoc/>
-    protected override Task AddUserTokenAsync(ApplicationUserToken token) => throw new NotImplementedException();
-
-    /// <inheritdoc/>
-    protected override Task<ApplicationUserToken?> FindTokenAsync(UserIdentity user, string loginProvider, string name, CancellationToken cancellationToken) => throw new NotImplementedException();
-
-    /// <inheritdoc/>
-    protected override Task<UserIdentity?> FindUserAsync(string userId, CancellationToken cancellationToken) => throw new NotImplementedException();
-
-    /// <inheritdoc/>
-    protected override Task<ApplicationUserLogin?> FindUserLoginAsync(string userId, string loginProvider, string providerKey, CancellationToken cancellationToken) => throw new NotImplementedException();
-
-    /// <inheritdoc/>
-    protected override Task<ApplicationUserLogin?> FindUserLoginAsync(string loginProvider, string providerKey, CancellationToken cancellationToken) => throw new NotImplementedException();
-
-    /// <inheritdoc/>
-    protected override Task RemoveUserTokenAsync(ApplicationUserToken token) => throw new NotImplementedException();
+    protected override async Task<UserIdentity?> FindUserAsync(string userId, CancellationToken cancellationToken)
+    {
+        ArgumentNullException.ThrowIfNull(userId);
+        cancellationToken.ThrowIfCancellationRequested();
+        ThrowIfDisposed();
+        return await FindByIdAsync(userId, cancellationToken);
+    }
 
     /// <summary>
     /// Gets the list of all users asynchronously.

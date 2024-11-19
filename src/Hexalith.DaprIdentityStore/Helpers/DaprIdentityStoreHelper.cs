@@ -10,13 +10,29 @@ using System;
 using Dapr.Actors.Runtime;
 
 using Hexalith.DaprIdentityStore.Actors;
+using Hexalith.DaprIdentityStore.Services;
 using Hexalith.Infrastructure.DaprRuntime.Actors;
+
+using Microsoft.Extensions.DependencyInjection;
 
 /// <summary>
 /// Provides helper methods for partition actors.
 /// </summary>
 public static class DaprIdentityStoreHelper
 {
+    /// <summary>
+    /// Adds Dapr identity store services to the specified IServiceCollection.
+    /// </summary>
+    /// <param name="services">The IServiceCollection to add services to.</param>
+    /// <returns>The IServiceCollection with the added services.</returns>
+    public static IServiceCollection AddDaprIdentityStore(this IServiceCollection services)
+    {
+        _ = services.AddSingleton<IUserIdentityCollectionService, UserIdentityCollectionService>();
+        _ = services.AddSingleton<IUserIdentityNameCollectionService, UserIdentityNameCollectionService>();
+        _ = services.AddSingleton<IUserIdentityEmailCollectionService, UserIdentityEmailCollectionService>();
+        return services;
+    }
+
     /// <summary>
     /// Registers partition actors with the specified ActorRegistrationCollection.
     /// </summary>

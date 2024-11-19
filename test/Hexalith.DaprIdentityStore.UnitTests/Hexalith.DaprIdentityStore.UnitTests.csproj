@@ -14,4 +14,7 @@
   <ItemGroup>
     <PackageReference Include="Hexalith.TestMocks" Version="$(HexalithVersion)" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Hexalith.DaprIdentityStore\Hexalith.DaprIdentityStore.csproj" />
+  </ItemGroup>
 </Project>

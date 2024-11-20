@@ -17,7 +17,7 @@ using Hexalith.Infrastructure.DaprRuntime.Helpers;
 
 /// <summary>
 /// Actor responsible for managing user identity operations in a Dapr-based identity store.
-/// Handles CRUD operations for user identities and maintains associated indexes.
+/// This actor handles CRUD operations for user identities and maintains associated indexes.
 /// </summary>
 /// <remarks>
 /// Initializes a new instance of the <see cref="UserIdentityActor"/> class.
@@ -25,12 +25,17 @@ using Hexalith.Infrastructure.DaprRuntime.Helpers;
 /// </remarks>
 public class UserIdentityActor : Actor, IUserIdentityActor
 {
-    private readonly IUserIdentityCollectionService _collectionService;
-    private readonly IUserIdentityEmailCollectionService _emailCollectionService;
-    private readonly IUserIdentityNameCollectionService _nameCollectionService;
+    /// <summary>
+    /// Collection services for managing different aspects of user identity.
+    /// </summary>
+    private readonly IUserIdentityCollectionService _collectionService;         // Manages the main user collection
+
+    private readonly IUserIdentityEmailCollectionService _emailCollectionService; // Manages email-based indexing
+    private readonly IUserIdentityNameCollectionService _nameCollectionService;   // Manages username-based indexing
 
     /// <summary>
     /// Cached state of the user actor to minimize state store access.
+    /// State is lazily loaded and cached for performance.
     /// </summary>
     private UserActorState? _state;
 
@@ -38,10 +43,10 @@ public class UserIdentityActor : Actor, IUserIdentityActor
     /// Initializes a new instance of the <see cref="UserIdentityActor"/> class.
     /// </summary>
     /// <param name="host">The actor host that provides runtime context.</param>
-    /// <param name="collectionService"></param>
-    /// <param name="emailCollectionService"></param>
-    /// <param name="nameCollectionService"></param>
-    /// <param name="stateManager">The state manager for managing actor state.</param>
+    /// <param name="collectionService">Service for managing the user collection.</param>
+    /// <param name="emailCollectionService">Service for managing email-based user indexing.</param>
+    /// <param name="nameCollectionService">Service for managing username-based user indexing.</param>
+    /// <param name="stateManager">Optional state manager for managing actor state (primarily used for testing).</param>
     public UserIdentityActor(
         ActorHost host,
         IUserIdentityCollectionService collectionService,
@@ -62,8 +67,9 @@ public class UserIdentityActor : Actor, IUserIdentityActor
 
     /// <summary>
     /// Adds claims to the user identity.
+    /// Claims are unique combinations of ClaimType and ClaimValue associated with a user.
     /// </summary>
-    /// <param name="claims">The claims to add.</param>
+    /// <param name="claims">Collection of claims to add to the user.</param>
     /// <returns>A task representing the asynchronous operation.</returns>
     /// <exception cref="InvalidOperationException">Thrown when the user state is not found.</exception>
     public async Task AddClaimsAsync(IEnumerable<Claim> claims)
@@ -78,10 +84,14 @@ public class UserIdentityActor : Actor, IUserIdentityActor
         IEnumerable<ApplicationUserClaim> newClaims = claims
             .Select(p => new ApplicationUserClaim { UserId = Id.ToUnescapeString(), ClaimType = p.Type, ClaimValue = p.Value });
         _state.Claims = _state.Claims.Union(newClaims).Distinct();
+
+        await StateManager.SetStateAsync(DaprIdentityStoreConstants.UserIdentityStateName, _state, CancellationToken.None);
+        await StateManager.SaveStateAsync(CancellationToken.None);
     }
 
     /// <summary>
-    /// Creates a new user identity and associated indexes.
+    /// Creates a new user identity and establishes all necessary indexes.
+    /// This includes adding the user to the main collection and creating email/username indexes if provided.
     /// </summary>
     /// <param name="user">The user identity to create.</param>
     /// <returns>True if creation was successful, false if user already exists.</returns>
@@ -124,9 +134,10 @@ public class UserIdentityActor : Actor, IUserIdentityActor
     }
 
     /// <summary>
-    /// Deletes a user identity and removes associated indexes.
+    /// Deletes a user identity and removes all associated indexes.
+    /// This includes removing the user from email and username indexes if they exist.
     /// </summary>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A task representing the asynchronous operation.</returns>
     public async Task DeleteAsync()
     {
         string id = Id.ToUnescapeString();
@@ -156,13 +167,13 @@ public class UserIdentityActor : Actor, IUserIdentityActor
     }
 
     /// <summary>
-    /// Checks if the user exists.
+    /// Checks if the user exists in the state store.
     /// </summary>
     /// <returns>True if user exists, false otherwise.</returns>
     public async Task<bool> ExistsAsync() => await GetStateAsync(CancellationToken.None) != null;
 
     /// <summary>
-    /// Finds a user by their ID.
+    /// Retrieves a user's identity information.
     /// </summary>
     /// <returns>The user identity if found, null otherwise.</returns>
     public async Task<UserIdentity?> FindAsync()
@@ -206,11 +217,12 @@ public class UserIdentityActor : Actor, IUserIdentityActor
     }
 
     /// <summary>
-    /// Updates an existing user's information and associated indexes.
+    /// Updates an existing user's information and maintains associated indexes.
+    /// This includes updating email and username indexes if they have changed.
     /// </summary>
     /// <param name="user">The updated user information.</param>
     /// <exception cref="InvalidOperationException">Thrown when user doesn't exist.</exception>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A task representing the asynchronous operation.</returns>
     public async Task UpdateAsync(UserIdentity user)
     {
         _state = await GetStateAsync(CancellationToken.None);
@@ -256,8 +268,9 @@ public class UserIdentityActor : Actor, IUserIdentityActor
 
     /// <summary>
     /// Retrieves the actor's state from the state store if not already cached.
+    /// Uses lazy loading pattern to minimize state store access.
     /// </summary>
-    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <param name="cancellationToken">Token to cancel the operation.</param>
     /// <returns>The actor's state if it exists, null otherwise.</returns>
     private async Task<UserActorState?> GetStateAsync(CancellationToken cancellationToken)
     {

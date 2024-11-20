@@ -29,35 +29,41 @@ public class UserIdentityCollectionServiceTest
     public async Task AddNewUserToTheCollectionShouldSucceed()
     {
         // Arrange
-        Mock<IKeyHashActor> actorMoq = new();
-        Mock<IActorProxyFactory> proxyFactoryMoq = new();
-        _ = proxyFactoryMoq.Setup(p => p.CreateActorProxy<IKeyHashActor>(
-            It.IsAny<ActorId>(),
-            It.IsAny<string>(),
-            It.IsAny<ActorProxyOptions>()))
-        .Returns(actorMoq.Object);
+        HashSet<string> storedUsers = [];
+        Mock<IKeyHashActor> actorMock = new(MockBehavior.Strict);
+        Mock<IActorProxyFactory> proxyFactoryMock = new(MockBehavior.Strict);
 
-        // Create a test actor host for the KeyHashActor with the UserCollection actor type
+        // Setup the mock to store users when AddAsync is called
+        actorMock
+            .Setup(x => x.AddAsync(It.IsAny<string>()))
+            .Callback<string>(id => storedUsers.Add(id))
+            .ReturnsAsync(1)
+            .Verifiable(Times.Once);
+
+        proxyFactoryMock
+            .Setup(p => p.CreateActorProxy<IKeyHashActor>(
+                It.IsAny<ActorId>(),
+                It.IsAny<string>(),
+                It.IsAny<ActorProxyOptions>()))
+            .Returns(actorMock.Object)
+            .Verifiable(Times.Once);
+
+        // Create a test actor host for the KeyHashActor
         ActorHost host = ActorHost.CreateForTest<KeyHashActor>(
             DaprIdentityStoreConstants.UserCollectionActorTypeName,
             new ActorTestOptions
             {
-                ProxyFactory = proxyFactoryMoq.Object,
+                ProxyFactory = proxyFactoryMock.Object,
             });
 
-        // Initialize the service with the test actor host
         UserIdentityCollectionService service = new(host);
-
-        // Generate a random GUID to use as the test user ID
         string id = Guid.NewGuid().ToString();
 
         // Act
-        // Attempt to add the new user ID to the collection
         await service.AddUserAsync(id);
 
-        // Assert
-        // Retrieve all users and verify the new ID is present in the collection
-        IEnumerable<string> all = await service.AllAsync();
-        Assert.Contains(id, all);
+        // Verify the actor methods were called
+        actorMock.Verify();
+        proxyFactoryMock.Verify();
     }
 }

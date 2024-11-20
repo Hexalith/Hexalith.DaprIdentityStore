@@ -7,6 +7,8 @@ namespace Hexalith.DaprIdentityStore.States;
 
 using Hexalith.DaprIdentityStore.Models;
 
+using Microsoft.AspNetCore.Identity;
+
 /// <summary>
 /// Represents the state of a user actor in the Dapr identity store.
 /// This class maintains the user's identity information and state within the Dapr actor system.
@@ -25,6 +27,22 @@ internal class UserActorState
     /// A collection of <see cref="ApplicationUserClaim"/> representing the user's claims.
     /// </value>
     internal IEnumerable<ApplicationUserClaim> Claims { get; set; } = [];
+
+    /// <summary>
+    /// Gets or sets the logins associated with the user.
+    /// </summary>
+    /// <value>
+    /// A collection of <see cref="UserLoginInfo"/> representing the user's logins.
+    /// </value>
+    internal IEnumerable<ApplicationUserLogin> Logins { get; set; } = [];
+
+    /// <summary>
+    /// Gets or sets the tokens associated with the user.
+    /// </summary>
+    /// <value>
+    /// A collection of <see cref="ApplicationUserToken"/> representing the user's tokens.
+    /// </value>
+    internal IEnumerable<ApplicationUserToken> Tokens { get; set; } = [];
 
     /// <summary>
     /// Gets or sets the user identity information.

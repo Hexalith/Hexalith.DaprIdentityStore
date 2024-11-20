@@ -199,7 +199,7 @@ public class UserIdentityActor(
     }
 
     /// <inheritdoc/>
-    public Task<ApplicationUserLogin?> FindLoginAsync(string userId, string loginProvider, string providerKey) => throw new NotImplementedException();
+    public Task<ApplicationUserLogin?> FindLoginAsync(string loginProvider, string providerKey) => throw new NotImplementedException();
 
     /// <summary>
     /// Gets all claims associated with the user.
@@ -216,7 +216,13 @@ public class UserIdentityActor(
     }
 
     /// <inheritdoc/>
-    public Task<IEnumerable<UserLoginInfo>> GetLoginsAsync() => throw new NotImplementedException();
+    public async Task<IEnumerable<UserLoginInfo>> GetLoginsAsync()
+    {
+        _state = await GetStateAsync(CancellationToken.None);
+        return (IEnumerable<UserLoginInfo>)(_state is null
+            ? throw new InvalidOperationException($"Get logins Failed : User '{Id.ToUnescapeString()}' not found.")
+            : _state.Logins);
+    }
 
     /// <inheritdoc/>
     public Task<ApplicationUserToken?> GetTokenAsync(string loginProvider, string name) => throw new NotImplementedException();
@@ -227,7 +233,7 @@ public class UserIdentityActor(
         _state = await GetStateAsync(CancellationToken.None);
         if (_state is null)
         {
-            throw new InvalidOperationException($"Add state Failed : User '{Id.ToUnescapeString()}' not found.");
+            throw new InvalidOperationException($"Remove claims Failed : User '{Id.ToUnescapeString()}' not found.");
         }
 
         // Add claims to user state and remove duplicates
@@ -237,10 +243,33 @@ public class UserIdentityActor(
     }
 
     /// <inheritdoc/>
-    public Task RemoveLoginAsync(string id, string loginProvider, string providerKey) => throw new NotImplementedException();
+    public async Task RemoveLoginAsync(string loginProvider, string providerKey)
+    {
+        _state = await GetStateAsync(CancellationToken.None);
+        if (_state is null)
+        {
+            throw new InvalidOperationException($"Remove login Failed : User '{Id.ToUnescapeString()}' not found.");
+        }
+
+        _state.Logins = _state.Logins.Where(p => p.ProviderKey != providerKey || p.LoginProvider != loginProvider);
+        await StateManager.SetStateAsync(DaprIdentityStoreConstants.UserIdentityStateName, _state, CancellationToken.None);
+        await StateManager.SaveStateAsync(CancellationToken.None);
+    }
 
     /// <inheritdoc/>
-    public Task RemoveTokenAsync(string loginProvider, string name) => throw new NotImplementedException();
+    public async Task RemoveTokenAsync(string loginProvider, string name)
+    {
+        _state = await GetStateAsync(CancellationToken.None);
+        if (_state is null)
+        {
+            throw new InvalidOperationException($"Remove login Failed : User '{Id.ToUnescapeString()}' not found.");
+        }
+
+        _state.Tokens = _state.Tokens.Where(p => p.Name != name || p.LoginProvider != loginProvider);
+
+        await StateManager.SetStateAsync(DaprIdentityStoreConstants.UserIdentityStateName, _state, CancellationToken.None);
+        await StateManager.SaveStateAsync(CancellationToken.None);
+    }
 
     /// <inheritdoc/>
     public async Task ReplaceClaimAsync(Claim claim, Claim newClaim)

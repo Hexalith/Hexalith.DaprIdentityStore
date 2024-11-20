@@ -68,11 +68,10 @@ public interface IUserIdentityActor : IActor
     /// <summary>
     /// Finds a login for a user identity asynchronously.
     /// </summary>
-    /// <param name="userId">The user ID.</param>
     /// <param name="loginProvider">The login provider.</param>
     /// <param name="providerKey">The provider key.</param>
     /// <returns>The user login information if found; otherwise, null.</returns>
-    Task<ApplicationUserLogin?> FindLoginAsync(string userId, string loginProvider, string providerKey);
+    Task<ApplicationUserLogin?> FindLoginAsync(string loginProvider, string providerKey);
 
     /// <summary>
     /// Retrieves all claims associated with the user identity asynchronously.
@@ -104,11 +103,10 @@ public interface IUserIdentityActor : IActor
     /// <summary>
     /// Removes a login from the user identity asynchronously.
     /// </summary>
-    /// <param name="id">The user ID.</param>
     /// <param name="loginProvider">The login provider.</param>
     /// <param name="providerKey">The provider key.</param>
     /// <returns>A task representing the asynchronous operation.</returns>
-    Task RemoveLoginAsync(string id, string loginProvider, string providerKey);
+    Task RemoveLoginAsync(string loginProvider, string providerKey);
 
     /// <summary>
     /// Removes a token from the user identity asynchronously.

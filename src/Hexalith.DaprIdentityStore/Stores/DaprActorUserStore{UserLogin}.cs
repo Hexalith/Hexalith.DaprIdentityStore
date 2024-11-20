@@ -57,7 +57,7 @@ public partial class DaprActorUserStore
         ArgumentException.ThrowIfNullOrWhiteSpace(user.Id);
         ThrowIfDisposed();
         IUserIdentityActor actor = ActorProxy.DefaultProxyFactory.CreateUserIdentityActor(user.Id);
-        await actor.RemoveLoginAsync(user.Id, loginProvider, providerKey);
+        await actor.RemoveLoginAsync(loginProvider, providerKey);
     }
 
     /// <inheritdoc/>
@@ -68,7 +68,7 @@ public partial class DaprActorUserStore
         ArgumentException.ThrowIfNullOrWhiteSpace(userId);
         ThrowIfDisposed();
         IUserIdentityActor actor = ActorProxy.DefaultProxyFactory.CreateUserIdentityActor(userId);
-        return await actor.FindLoginAsync(userId, loginProvider, providerKey);
+        return await actor.FindLoginAsync(loginProvider, providerKey);
     }
 
     /// <inheritdoc/>
@@ -85,6 +85,6 @@ public partial class DaprActorUserStore
         }
 
         IUserIdentityActor actor = ActorProxy.DefaultProxyFactory.CreateUserIdentityActor(userId);
-        return await actor.FindLoginAsync(userId, loginProvider, providerKey);
+        return await actor.FindLoginAsync(loginProvider, providerKey);
     }
 }

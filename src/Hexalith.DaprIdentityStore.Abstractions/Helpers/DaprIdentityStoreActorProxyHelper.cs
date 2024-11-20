@@ -86,4 +86,67 @@ public static class DaprIdentityStoreActorProxyHelper
         ArgumentException.ThrowIfNullOrWhiteSpace(normalizedName);
         return actorProxyFactory.CreateActorProxy<IKeyValueActor>(normalizedName.ToActorId(), DaprIdentityStoreConstants.UserNameIndexActorTypeName);
     }
+
+    /// <summary>
+    /// Creates a proxy for the actor that manages the user login index.
+    /// This actor maintains a mapping between login provider/key combinations and user IDs.
+    /// </summary>
+    /// <param name="actorProxyFactory">The actor proxy factory used to create actor proxies.</param>
+    /// <param name="loginProvider">The login provider name.</param>
+    /// <param name="providerKey">The provider-specific key for the user.</param>
+    /// <returns>A proxy implementing IKeyValueActor interface to interact with the user login index actor.</returns>
+    /// <exception cref="ArgumentNullException">Thrown when actorProxyFactory, loginProvider, or providerKey is null.</exception>
+    /// <remarks>
+    /// The login index actor enables quick user lookup by external login information, supporting third-party authentication scenarios.
+    /// </remarks>
+    public static IKeyValueActor CreateUserLoginIndexProxy(this IActorProxyFactory actorProxyFactory, string loginProvider, string providerKey)
+    {
+        ArgumentNullException.ThrowIfNull(actorProxyFactory);
+        ArgumentException.ThrowIfNullOrWhiteSpace(loginProvider);
+        ArgumentException.ThrowIfNullOrWhiteSpace(providerKey);
+        string actorId = $"{loginProvider}:{providerKey}";
+        return actorProxyFactory.CreateActorProxy<IKeyValueActor>(actorId.ToActorId(), DaprIdentityStoreConstants.UserLoginIndexActorTypeName);
+    }
+
+    /// <summary>
+    /// Creates a proxy for the actor that manages the user claim index.
+    /// This actor maintains a mapping between claim type/value combinations and user IDs.
+    /// </summary>
+    /// <param name="actorProxyFactory">The actor proxy factory used to create actor proxies.</param>
+    /// <param name="claimType">The type of the claim.</param>
+    /// <param name="claimValue">The value of the claim.</param>
+    /// <returns>A proxy implementing IKeyHashActor interface to interact with the user claim index actor.</returns>
+    /// <exception cref="ArgumentNullException">Thrown when actorProxyFactory, claimType, or claimValue is null.</exception>
+    /// <remarks>
+    /// The claim index actor enables efficient user lookups by claim information, supporting role-based and claim-based authorization scenarios.
+    /// </remarks>
+    public static IKeyHashActor CreateUserClaimIndexProxy(this IActorProxyFactory actorProxyFactory, string claimType, string claimValue)
+    {
+        ArgumentNullException.ThrowIfNull(actorProxyFactory);
+        ArgumentException.ThrowIfNullOrWhiteSpace(claimType);
+        ArgumentException.ThrowIfNullOrWhiteSpace(claimValue);
+        string actorId = $"{claimType}:{claimValue}";
+        return actorProxyFactory.CreateActorProxy<IKeyHashActor>(actorId.ToActorId(), DaprIdentityStoreConstants.UserClaimIndexActorTypeName);
+    }
+
+    /// <summary>
+    /// Creates a proxy for the actor that manages the user token index.
+    /// This actor maintains a mapping between login provider/name combinations and user tokens.
+    /// </summary>
+    /// <param name="actorProxyFactory">The actor proxy factory used to create actor proxies.</param>
+    /// <param name="loginProvider">The login provider name.</param>
+    /// <param name="name">The name of the token.</param>
+    /// <returns>A proxy implementing IKeyValueActor interface to interact with the user token index actor.</returns>
+    /// <exception cref="ArgumentNullException">Thrown when actorProxyFactory, loginProvider, or name is null.</exception>
+    /// <remarks>
+    /// The token index actor enables management of user-specific tokens for various authentication and authorization scenarios.
+    /// </remarks>
+    public static IKeyValueActor CreateUserTokenIndexProxy(this IActorProxyFactory actorProxyFactory, string loginProvider, string name)
+    {
+        ArgumentNullException.ThrowIfNull(actorProxyFactory);
+        ArgumentException.ThrowIfNullOrWhiteSpace(loginProvider);
+        ArgumentException.ThrowIfNullOrWhiteSpace(name);
+        string actorId = $"{loginProvider}:{name}";
+        return actorProxyFactory.CreateActorProxy<IKeyValueActor>(actorId.ToActorId(), DaprIdentityStoreConstants.UserTokenIndexActorTypeName);
+    }
 }

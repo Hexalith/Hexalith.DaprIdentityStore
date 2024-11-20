@@ -27,17 +27,23 @@ using Microsoft.AspNetCore.Identity;
 public partial class DaprActorUserStore
     : UserStoreBase<UserIdentity, string, ApplicationUserClaim, ApplicationUserLogin, ApplicationUserToken>
 {
+    private readonly IUserIdentityLoginIndexService _loginCollectionService;
     private readonly IUserIdentityCollectionService _userIdentityCollection;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="DaprActorUserStore"/> class.
     /// </summary>
     /// <param name="userIdentityCollection">The user identity collection service.</param>
-    public DaprActorUserStore(IUserIdentityCollectionService userIdentityCollection)
+    /// <param name="loginCollectionService"></param>
+    public DaprActorUserStore(
+        IUserIdentityCollectionService userIdentityCollection,
+        IUserIdentityLoginIndexService loginCollectionService)
         : base(new HexalithIdentityErrorDescriber())
     {
         ArgumentNullException.ThrowIfNull(userIdentityCollection);
+        ArgumentNullException.ThrowIfNull(loginCollectionService);
         _userIdentityCollection = userIdentityCollection;
+        _loginCollectionService = loginCollectionService;
     }
 
     /// <inheritdoc/>

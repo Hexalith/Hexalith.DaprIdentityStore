@@ -85,8 +85,9 @@ public partial class UserIdentityActorTest
 
         // Create service mocks (not used in this operation but required for constructor)
         Mock<IUserIdentityCollectionService> collectionServiceMoq = new(MockBehavior.Strict);
-        Mock<IUserIdentityNameCollectionService> nameServiceMoq = new(MockBehavior.Strict);
-        Mock<IUserIdentityEmailCollectionService> emailServiceMoq = new(MockBehavior.Strict);
+        Mock<IUserIdentityNameIndexService> nameServiceMoq = new(MockBehavior.Strict);
+        Mock<IUserIdentityEmailIndexService> emailServiceMoq = new(MockBehavior.Strict);
+        Mock<IUserIdentityLoginIndexService> loginServiceMoq = new(MockBehavior.Strict);
 
         // Create actor host and actor
         ActorHost actorHost = ActorHost.CreateForTest<UserIdentityActor>(
@@ -97,6 +98,7 @@ public partial class UserIdentityActorTest
             collectionServiceMoq.Object,
             emailServiceMoq.Object,
             nameServiceMoq.Object,
+            loginServiceMoq.Object,
             stateManagerMoq.Object);
 
         // Act
@@ -141,8 +143,9 @@ public partial class UserIdentityActorTest
 
         // Create service mocks
         Mock<IUserIdentityCollectionService> collectionServiceMoq = new(MockBehavior.Strict);
-        Mock<IUserIdentityNameCollectionService> nameServiceMoq = new(MockBehavior.Strict);
-        Mock<IUserIdentityEmailCollectionService> emailServiceMoq = new(MockBehavior.Strict);
+        Mock<IUserIdentityNameIndexService> nameServiceMoq = new(MockBehavior.Strict);
+        Mock<IUserIdentityEmailIndexService> emailServiceMoq = new(MockBehavior.Strict);
+        Mock<IUserIdentityLoginIndexService> loginServiceMoq = new(MockBehavior.Strict);
 
         // Create actor host and actor
         ActorHost actorHost = ActorHost.CreateForTest<UserIdentityActor>(
@@ -153,6 +156,7 @@ public partial class UserIdentityActorTest
             collectionServiceMoq.Object,
             emailServiceMoq.Object,
             nameServiceMoq.Object,
+            loginServiceMoq.Object,
             stateManagerMoq.Object);
 
         // Act

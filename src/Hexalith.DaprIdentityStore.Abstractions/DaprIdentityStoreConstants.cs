@@ -43,6 +43,19 @@ public static class DaprIdentityStoreConstants
     public static string DefaultUserActorTypeName => "UserIdentity";
 
     /// <summary>
+    /// Gets the index type name for user claim lookups.
+    /// This constant defines the actor type used for claim-based user lookups.
+    /// </summary>
+    /// <value>
+    /// The string "UserClaimIndex", which identifies the actor type responsible for claim-based user lookups.
+    /// </value>
+    /// <remarks>
+    /// This index type enables efficient user lookups by claims, which is essential
+    /// for authorization and user management operations.
+    /// </remarks>
+    public static string UserClaimIndexActorTypeName => "UserClaimIndex";
+
+    /// <summary>
     /// Gets the collection type name for storing user identities.
     /// This constant defines the actor type used for managing collections of user identities.
     /// </summary>
@@ -82,6 +95,19 @@ public static class DaprIdentityStoreConstants
     public static string UserIdentityStateName => "State";
 
     /// <summary>
+    /// Gets the index type name for user login lookups.
+    /// This constant defines the actor type used for login-based user lookups.
+    /// </summary>
+    /// <value>
+    /// The string "UserLoginIndex", which identifies the actor type responsible for login-based user lookups.
+    /// </value>
+    /// <remarks>
+    /// This index type enables efficient user lookups by login information, which is essential
+    /// for authentication and user management operations.
+    /// </remarks>
+    public static string UserLoginIndexActorTypeName => "UserLoginIndex";
+
+    /// <summary>
     /// Gets the index type name for username lookups.
     /// This constant defines the actor type used for username-based user lookups.
     /// </summary>
@@ -93,4 +119,17 @@ public static class DaprIdentityStoreConstants
     /// for authentication and user management operations.
     /// </remarks>
     public static string UserNameIndexActorTypeName => "UserNameIndex";
+
+    /// <summary>
+    /// Gets the index type name for user token lookups.
+    /// This constant defines the actor type used for token-based user lookups.
+    /// </summary>
+    /// <value>
+    /// The string "UserTokenIndex", which identifies the actor type responsible for token-based user lookups.
+    /// </value>
+    /// <remarks>
+    /// This index type enables efficient user lookups by tokens, which is essential
+    /// for authentication and user management operations.
+    /// </remarks>
+    public static string UserTokenIndexActorTypeName => "UserTokenIndex";
 }

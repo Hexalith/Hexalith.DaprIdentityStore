@@ -1,4 +1,4 @@
-﻿// <copyright file="IUserIdentityEmailCollectionService.cs" company="ITANEO">
+﻿// <copyright file="IUserIdentityEmailIndexService.cs" company="ITANEO">
 // Copyright (c) ITANEO (https://www.itaneo.com). All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 // </copyright>
@@ -8,7 +8,7 @@ namespace Hexalith.DaprIdentityStore.Services;
 /// <summary>
 /// Provides operations for managing user identity collections.
 /// </summary>
-public interface IUserIdentityEmailCollectionService
+public interface IUserIdentityEmailIndexService
 {
     /// <summary>
     /// Associates an email address with a user in the identity collection.

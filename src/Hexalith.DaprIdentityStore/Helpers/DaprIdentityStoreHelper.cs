@@ -28,8 +28,9 @@ public static class DaprIdentityStoreHelper
     public static IServiceCollection AddDaprIdentityStore(this IServiceCollection services)
     {
         _ = services.AddSingleton<IUserIdentityCollectionService, UserIdentityCollectionService>();
-        _ = services.AddSingleton<IUserIdentityNameCollectionService, UserIdentityNameCollectionService>();
-        _ = services.AddSingleton<IUserIdentityEmailCollectionService, UserIdentityEmailCollectionService>();
+        _ = services.AddSingleton<IUserIdentityNameIndexService, UserIdentityNameIndexService>();
+        _ = services.AddSingleton<IUserIdentityEmailIndexService, UserIdentityEmailIndexService>();
+        _ = services.AddSingleton<IUserIdentityLoginIndexService, UserIdentityLoginIndexService>();
         return services;
     }
 
@@ -45,5 +46,8 @@ public static class DaprIdentityStoreHelper
         actorRegistrationCollection.RegisterActor<KeyHashActor>(DaprIdentityStoreConstants.UserCollectionActorTypeName);
         actorRegistrationCollection.RegisterActor<KeyValueActor>(DaprIdentityStoreConstants.UserEmailIndexActorTypeName);
         actorRegistrationCollection.RegisterActor<KeyValueActor>(DaprIdentityStoreConstants.UserNameIndexActorTypeName);
+        actorRegistrationCollection.RegisterActor<KeyValueActor>(DaprIdentityStoreConstants.UserLoginIndexActorTypeName);
+        actorRegistrationCollection.RegisterActor<KeyHashActor>(DaprIdentityStoreConstants.UserClaimIndexActorTypeName);
+        actorRegistrationCollection.RegisterActor<KeyValueActor>(DaprIdentityStoreConstants.UserTokenIndexActorTypeName);
     }
 }

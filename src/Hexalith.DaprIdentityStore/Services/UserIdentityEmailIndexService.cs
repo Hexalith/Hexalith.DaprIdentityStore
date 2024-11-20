@@ -1,4 +1,4 @@
-﻿// <copyright file="UserIdentityEmailCollectionService.cs" company="ITANEO">
+﻿// <copyright file="UserIdentityEmailIndexService.cs" company="ITANEO">
 // Copyright (c) ITANEO (https://www.itaneo.com). All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 // </copyright>
@@ -17,27 +17,27 @@ using Hexalith.Infrastructure.DaprRuntime.Actors;
 /// This service handles the mapping between user IDs and their email addresses using Dapr actors.
 /// It provides functionality to add, find, and remove email-to-userId mappings.
 /// </summary>
-public class UserIdentityEmailCollectionService : IUserIdentityEmailCollectionService
+public class UserIdentityEmailIndexService : IUserIdentityEmailIndexService
 {
     // Factory function to create key-value actors for email indexing
     private readonly Func<string, IKeyValueActor> _keyValueActor;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="UserIdentityEmailCollectionService"/> class.
+    /// Initializes a new instance of the <see cref="UserIdentityEmailIndexService"/> class.
     /// This constructor is used in production with actual Dapr actor implementation.
     /// </summary>
     /// <param name="actorHost">The Dapr actor host providing actor management capabilities.</param>
-    public UserIdentityEmailCollectionService(ActorHost actorHost) =>
+    public UserIdentityEmailIndexService(ActorHost actorHost) =>
 
         // Initialize the factory with the email index proxy creator
         _keyValueActor = actorHost.ProxyFactory.CreateUserEmailIndexProxy;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="UserIdentityEmailCollectionService"/> class.
+    /// Initializes a new instance of the <see cref="UserIdentityEmailIndexService"/> class.
     /// This constructor is primarily used for testing, allowing injection of mock actors.
     /// </summary>
     /// <param name="keyValueActor">Factory function to create key-value actors.</param>
-    internal UserIdentityEmailCollectionService(Func<string, IKeyValueActor> keyValueActor) => _keyValueActor = keyValueActor;
+    internal UserIdentityEmailIndexService(Func<string, IKeyValueActor> keyValueActor) => _keyValueActor = keyValueActor;
 
     /// <summary>
     /// Associates a user ID with an email address in the actor state store.

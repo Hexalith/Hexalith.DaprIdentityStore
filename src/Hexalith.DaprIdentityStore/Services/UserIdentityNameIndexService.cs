@@ -1,4 +1,4 @@
-// <copyright file="UserIdentityNameCollectionService.cs" company="ITANEO">
+// <copyright file="UserIdentityNameIndexService.cs" company="ITANEO">
 // Copyright (c) ITANEO (https://www.itaneo.com). All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 // </copyright>
@@ -18,27 +18,27 @@ using Hexalith.Infrastructure.DaprRuntime.Actors;
 /// This service handles the mapping between user IDs and their usernames using Dapr actors.
 /// It provides functionality to add, find, and remove username-to-userId mappings.
 /// </summary>
-public class UserIdentityNameCollectionService : IUserIdentityNameCollectionService
+public class UserIdentityNameIndexService : IUserIdentityNameIndexService
 {
     // Factory function to create key-value actors for username indexing
     private readonly Func<string, IKeyValueActor> _keyValueActor;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="UserIdentityNameCollectionService"/> class.
+    /// Initializes a new instance of the <see cref="UserIdentityNameIndexService"/> class.
     /// This constructor is used in production with actual Dapr actor implementation.
     /// </summary>
     /// <param name="actorHost">The Dapr actor host providing actor management capabilities.</param>
-    public UserIdentityNameCollectionService(ActorHost actorHost) =>
+    public UserIdentityNameIndexService(ActorHost actorHost) =>
 
         // Initialize the factory with the username index proxy creator
         _keyValueActor = actorHost.ProxyFactory.CreateUserNameIndexProxy;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="UserIdentityNameCollectionService"/> class.
+    /// Initializes a new instance of the <see cref="UserIdentityNameIndexService"/> class.
     /// This constructor is primarily used for testing, allowing injection of mock actors.
     /// </summary>
     /// <param name="keyValueActor">Factory function to create key-value actors.</param>
-    internal UserIdentityNameCollectionService(Func<string, IKeyValueActor> keyValueActor)
+    internal UserIdentityNameIndexService(Func<string, IKeyValueActor> keyValueActor)
         => _keyValueActor = keyValueActor;
 
     /// <summary>

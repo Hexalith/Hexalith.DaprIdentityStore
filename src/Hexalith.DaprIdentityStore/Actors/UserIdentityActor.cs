@@ -15,6 +15,8 @@ using Hexalith.DaprIdentityStore.Services;
 using Hexalith.DaprIdentityStore.States;
 using Hexalith.Infrastructure.DaprRuntime.Helpers;
 
+using Microsoft.AspNetCore.Identity;
+
 /// <summary>
 /// Actor responsible for managing user identity operations in a Dapr-based identity store.
 /// This actor handles CRUD operations for user identities and maintains associated indexes.
@@ -30,19 +32,22 @@ using Hexalith.Infrastructure.DaprRuntime.Helpers;
 /// <param name="collectionService">Service for managing the user collection.</param>
 /// <param name="emailCollectionService">Service for managing email-based user indexing.</param>
 /// <param name="nameCollectionService">Service for managing username-based user indexing.</param>
+/// <param name="loginCollectionService"></param>
 public class UserIdentityActor(
     ActorHost host,
     IUserIdentityCollectionService collectionService,
-    IUserIdentityEmailCollectionService emailCollectionService,
-    IUserIdentityNameCollectionService nameCollectionService) : Actor(host), IUserIdentityActor
+    IUserIdentityEmailIndexService emailCollectionService,
+    IUserIdentityNameIndexService nameCollectionService,
+    IUserIdentityLoginIndexService loginCollectionService)
+    : Actor(host), IUserIdentityActor
 {
     /// <summary>
     /// Collection services for managing different aspects of user identity.
     /// </summary>
     private readonly IUserIdentityCollectionService _collectionService = collectionService;         // Manages the main user collection
 
-    private readonly IUserIdentityEmailCollectionService _emailCollectionService = emailCollectionService; // Manages email-based indexing
-    private readonly IUserIdentityNameCollectionService _nameCollectionService = nameCollectionService;   // Manages username-based indexing
+    private readonly IUserIdentityEmailIndexService _emailCollectionService = emailCollectionService; // Manages email-based indexing
+    private readonly IUserIdentityNameIndexService _nameCollectionService = nameCollectionService;   // Manages username-based indexing
 
     /// <summary>
     /// Cached state of the user actor to minimize state store access.
@@ -57,14 +62,16 @@ public class UserIdentityActor(
     /// <param name="collectionService">Service for managing the user collection.</param>
     /// <param name="emailCollectionService">Service for managing email-based user indexing.</param>
     /// <param name="nameCollectionService">Service for managing username-based user indexing.</param>
+    /// <param name="loginCollectionService">Service for managing login-based user indexing.</param>
     /// <param name="stateManager">Optional state manager for managing actor state.</param>
     internal UserIdentityActor(
         ActorHost host,
         IUserIdentityCollectionService collectionService,
-        IUserIdentityEmailCollectionService emailCollectionService,
-        IUserIdentityNameCollectionService nameCollectionService,
+        IUserIdentityEmailIndexService emailCollectionService,
+        IUserIdentityNameIndexService nameCollectionService,
+        IUserIdentityLoginIndexService loginCollectionService,
         IActorStateManager stateManager)
-        : this(host, collectionService, emailCollectionService, nameCollectionService) => StateManager = stateManager;
+        : this(host, collectionService, emailCollectionService, nameCollectionService, loginCollectionService) => StateManager = stateManager;
 
     /// <summary>
     /// Adds claims to the user identity.
@@ -89,6 +96,12 @@ public class UserIdentityActor(
         await StateManager.SetStateAsync(DaprIdentityStoreConstants.UserIdentityStateName, _state, CancellationToken.None);
         await StateManager.SaveStateAsync(CancellationToken.None);
     }
+
+    /// <inheritdoc/>
+    public Task AddLoginAsync(UserLoginInfo login) => throw new NotImplementedException();
+
+    /// <inheritdoc/>
+    public Task AddTokenAsync(ApplicationUserToken token) => throw new NotImplementedException();
 
     /// <summary>
     /// Creates a new user identity and establishes all necessary indexes.
@@ -185,6 +198,9 @@ public class UserIdentityActor(
         return _state?.User;
     }
 
+    /// <inheritdoc/>
+    public Task<ApplicationUserLogin?> FindLoginAsync(string userId, string loginProvider, string providerKey) => throw new NotImplementedException();
+
     /// <summary>
     /// Gets all claims associated with the user.
     /// </summary>
@@ -200,6 +216,12 @@ public class UserIdentityActor(
     }
 
     /// <inheritdoc/>
+    public Task<IEnumerable<UserLoginInfo>> GetLoginsAsync() => throw new NotImplementedException();
+
+    /// <inheritdoc/>
+    public Task<ApplicationUserToken?> GetTokenAsync(string loginProvider, string name) => throw new NotImplementedException();
+
+    /// <inheritdoc/>
     public async Task RemoveClaimsAsync(IEnumerable<Claim> claims)
     {
         _state = await GetStateAsync(CancellationToken.None);
@@ -213,6 +235,12 @@ public class UserIdentityActor(
             .Select(p => new ApplicationUserClaim { UserId = Id.ToUnescapeString(), ClaimType = p.Type, ClaimValue = p.Value });
         _state.Claims = _state.Claims.Union(newClaims).Distinct();
     }
+
+    /// <inheritdoc/>
+    public Task RemoveLoginAsync(string id, string loginProvider, string providerKey) => throw new NotImplementedException();
+
+    /// <inheritdoc/>
+    public Task RemoveTokenAsync(string loginProvider, string name) => throw new NotImplementedException();
 
     /// <inheritdoc/>
     public async Task ReplaceClaimAsync(Claim claim, Claim newClaim)

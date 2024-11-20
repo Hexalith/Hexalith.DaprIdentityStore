@@ -12,6 +12,8 @@ using Dapr.Actors;
 
 using Hexalith.DaprIdentityStore.Models;
 
+using Microsoft.AspNetCore.Identity;
+
 /// <summary>
 /// Represents a Dapr actor interface for managing user identity operations.
 /// </summary>
@@ -23,6 +25,20 @@ public interface IUserIdentityActor : IActor
     /// <param name="claims">The collection of claims to add.</param>
     /// <returns>A task representing the asynchronous operation.</returns>
     Task AddClaimsAsync(IEnumerable<Claim> claims);
+
+    /// <summary>
+    /// Adds a login to the user identity asynchronously.
+    /// </summary>
+    /// <param name="login">The login information to add.</param>
+    /// <returns>A task representing the asynchronous operation.</returns>
+    Task AddLoginAsync(UserLoginInfo login);
+
+    /// <summary>
+    /// Adds a token to the user identity asynchronously.
+    /// </summary>
+    /// <param name="token">The token to add.</param>
+    /// <returns>A task representing the asynchronous operation.</returns>
+    Task AddTokenAsync(ApplicationUserToken token);
 
     /// <summary>
     /// Creates a new user identity asynchronously.
@@ -50,10 +66,33 @@ public interface IUserIdentityActor : IActor
     Task<UserIdentity?> FindAsync();
 
     /// <summary>
+    /// Finds a login for a user identity asynchronously.
+    /// </summary>
+    /// <param name="userId">The user ID.</param>
+    /// <param name="loginProvider">The login provider.</param>
+    /// <param name="providerKey">The provider key.</param>
+    /// <returns>The user login information if found; otherwise, null.</returns>
+    Task<ApplicationUserLogin?> FindLoginAsync(string userId, string loginProvider, string providerKey);
+
+    /// <summary>
     /// Retrieves all claims associated with the user identity asynchronously.
     /// </summary>
     /// <returns>A collection of claims associated with the user.</returns>
     Task<IEnumerable<Claim>> GetClaimsAsync();
+
+    /// <summary>
+    /// Retrieves all logins associated with the user identity asynchronously.
+    /// </summary>
+    /// <returns>A collection of user login information.</returns>
+    Task<IEnumerable<UserLoginInfo>> GetLoginsAsync();
+
+    /// <summary>
+    /// Retrieves a token associated with the user identity asynchronously.
+    /// </summary>
+    /// <param name="loginProvider">The login provider.</param>
+    /// <param name="name">The name of the token.</param>
+    /// <returns>The user token if found; otherwise, null.</returns>
+    Task<ApplicationUserToken?> GetTokenAsync(string loginProvider, string name);
 
     /// <summary>
     /// Removes a collection of claims from the user identity asynchronously.
@@ -61,6 +100,23 @@ public interface IUserIdentityActor : IActor
     /// <param name="claims">The collection of claims to remove.</param>
     /// <returns>A task representing the asynchronous operation.</returns>
     Task RemoveClaimsAsync(IEnumerable<Claim> claims);
+
+    /// <summary>
+    /// Removes a login from the user identity asynchronously.
+    /// </summary>
+    /// <param name="id">The user ID.</param>
+    /// <param name="loginProvider">The login provider.</param>
+    /// <param name="providerKey">The provider key.</param>
+    /// <returns>A task representing the asynchronous operation.</returns>
+    Task RemoveLoginAsync(string id, string loginProvider, string providerKey);
+
+    /// <summary>
+    /// Removes a token from the user identity asynchronously.
+    /// </summary>
+    /// <param name="loginProvider">The login provider.</param>
+    /// <param name="name">The name of the token.</param>
+    /// <returns>A task representing the asynchronous operation.</returns>
+    Task RemoveTokenAsync(string loginProvider, string name);
 
     /// <summary>
     /// Replaces an existing claim with a new claim asynchronously.

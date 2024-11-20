@@ -1,12 +1,9 @@
-// <copyright file="UserIdentityActor.cs" company="ITANEO">
+// <copyright file="UserIdentityActor{Users}.cs" company="ITANEO">
 // Copyright (c) ITANEO (https://www.itaneo.com). All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 // </copyright>
 
 namespace Hexalith.DaprIdentityStore.Actors;
-
-using System.Collections.Generic;
-using System.Security.Claims;
 
 using Dapr.Actors.Runtime;
 
@@ -15,39 +12,44 @@ using Hexalith.DaprIdentityStore.Services;
 using Hexalith.DaprIdentityStore.States;
 using Hexalith.Infrastructure.DaprRuntime.Helpers;
 
-using Microsoft.AspNetCore.Identity;
-
 /// <summary>
-/// Actor responsible for managing user identity operations in a Dapr-based identity store.
-/// This actor handles CRUD operations for user identities and maintains associated indexes.
+/// Represents a Dapr actor for managing user identity operations.
 /// </summary>
-/// <remarks>
-/// Initializes a new instance of the <see cref="UserIdentityActor"/> class.
-/// Initializes a new instance of the UserIdentityActor.
-/// </remarks>
-/// <remarks>
-/// Initializes a new instance of the <see cref="UserIdentityActor"/> class.
-/// </remarks>
 /// <param name="host">The actor host that provides runtime context.</param>
 /// <param name="collectionService">Service for managing the user collection.</param>
-/// <param name="emailCollectionService">Service for managing email-based user indexing.</param>
-/// <param name="nameCollectionService">Service for managing username-based user indexing.</param>
-/// <param name="loginCollectionService"></param>
-public class UserIdentityActor(
+/// <param name="emailIndexService">Service for managing email-based user indexing.</param>
+/// <param name="nameIndexService">Service for managing username-based user indexing.</param>
+/// <param name="claimIndexService">Service for managing claim-based user indexing.</param>
+/// <param name="tokenIndexService">Service for managing token-based user indexing.</param>
+/// <param name="loginIndexService">Service for managing login-based user indexing.</param>
+public partial class UserIdentityActor(
     ActorHost host,
     IUserIdentityCollectionService collectionService,
-    IUserIdentityEmailIndexService emailCollectionService,
-    IUserIdentityNameIndexService nameCollectionService,
-    IUserIdentityLoginIndexService loginCollectionService)
+    IUserIdentityEmailIndexService emailIndexService,
+    IUserIdentityNameIndexService nameIndexService,
+    IUserIdentityClaimsIndexService claimIndexService,
+    IUserIdentityTokenIndexService tokenIndexService,
+    IUserIdentityLoginIndexService loginIndexService)
     : Actor(host), IUserIdentityActor
 {
+    private readonly IUserIdentityClaimsIndexService _claimIndexService = claimIndexService;
+
     /// <summary>
     /// Collection services for managing different aspects of user identity.
     /// </summary>
-    private readonly IUserIdentityCollectionService _collectionService = collectionService;         // Manages the main user collection
+    private readonly IUserIdentityCollectionService _collectionService = collectionService;
 
-    private readonly IUserIdentityEmailIndexService _emailCollectionService = emailCollectionService; // Manages email-based indexing
-    private readonly IUserIdentityNameIndexService _nameCollectionService = nameCollectionService;   // Manages username-based indexing
+    private readonly IUserIdentityEmailIndexService _emailCollectionService = emailIndexService;
+
+    // Manages email-based indexing
+    private readonly IUserIdentityLoginIndexService _loginIndexService = loginIndexService;
+
+    // Manages the main user collection
+    private readonly IUserIdentityNameIndexService _nameCollectionService = nameIndexService;
+
+    private readonly IUserIdentityTokenIndexService _tokenIndexService = tokenIndexService;
+
+    // Manages username-based indexing
 
     /// <summary>
     /// Cached state of the user actor to minimize state store access.
@@ -62,6 +64,8 @@ public class UserIdentityActor(
     /// <param name="collectionService">Service for managing the user collection.</param>
     /// <param name="emailCollectionService">Service for managing email-based user indexing.</param>
     /// <param name="nameCollectionService">Service for managing username-based user indexing.</param>
+    /// <param name="claimIndexService">Service for managing claim-based user indexing.</param>
+    /// <param name="tokenIndexService">Service for managing token-based user indexing.</param>
     /// <param name="loginCollectionService">Service for managing login-based user indexing.</param>
     /// <param name="stateManager">Optional state manager for managing actor state.</param>
     internal UserIdentityActor(
@@ -69,39 +73,18 @@ public class UserIdentityActor(
         IUserIdentityCollectionService collectionService,
         IUserIdentityEmailIndexService emailCollectionService,
         IUserIdentityNameIndexService nameCollectionService,
+        IUserIdentityClaimsIndexService claimIndexService,
+        IUserIdentityTokenIndexService tokenIndexService,
         IUserIdentityLoginIndexService loginCollectionService,
         IActorStateManager stateManager)
-        : this(host, collectionService, emailCollectionService, nameCollectionService, loginCollectionService) => StateManager = stateManager;
-
-    /// <summary>
-    /// Adds claims to the user identity.
-    /// Claims are unique combinations of ClaimType and ClaimValue associated with a user.
-    /// </summary>
-    /// <param name="claims">Collection of claims to add to the user.</param>
-    /// <returns>A task representing the asynchronous operation.</returns>
-    /// <exception cref="InvalidOperationException">Thrown when the user state is not found.</exception>
-    public async Task AddClaimsAsync(IEnumerable<Claim> claims)
-    {
-        _state = await GetStateAsync(CancellationToken.None);
-        if (_state is null)
-        {
-            throw new InvalidOperationException($"Add state Failed : User '{Id.ToUnescapeString()}' not found.");
-        }
-
-        // Add claims to user state and remove duplicates
-        IEnumerable<ApplicationUserClaim> newClaims = claims
-            .Select(p => new ApplicationUserClaim { UserId = Id.ToUnescapeString(), ClaimType = p.Type, ClaimValue = p.Value });
-        _state.Claims = _state.Claims.Union(newClaims).Distinct();
-
-        await StateManager.SetStateAsync(DaprIdentityStoreConstants.UserIdentityStateName, _state, CancellationToken.None);
-        await StateManager.SaveStateAsync(CancellationToken.None);
-    }
-
-    /// <inheritdoc/>
-    public Task AddLoginAsync(UserLoginInfo login) => throw new NotImplementedException();
-
-    /// <inheritdoc/>
-    public Task AddTokenAsync(ApplicationUserToken token) => throw new NotImplementedException();
+        : this(
+              host,
+              collectionService,
+              emailCollectionService,
+              nameCollectionService,
+              claimIndexService,
+              tokenIndexService,
+              loginCollectionService) => StateManager = stateManager;
 
     /// <summary>
     /// Creates a new user identity and establishes all necessary indexes.
@@ -196,106 +179,6 @@ public class UserIdentityActor(
     {
         _state = await GetStateAsync(CancellationToken.None);
         return _state?.User;
-    }
-
-    /// <inheritdoc/>
-    public Task<ApplicationUserLogin?> FindLoginAsync(string loginProvider, string providerKey) => throw new NotImplementedException();
-
-    /// <summary>
-    /// Gets all claims associated with the user.
-    /// </summary>
-    /// <returns>A list of claims associated with the user.</returns>
-    /// <exception cref="InvalidOperationException">Thrown when the user state is not found.</exception>
-    public async Task<IEnumerable<Claim>> GetClaimsAsync()
-    {
-        _state = await GetStateAsync(CancellationToken.None);
-        return _state is null
-            ? throw new InvalidOperationException($"Get claims Failed : User '{Id.ToUnescapeString()}' not found.")
-            : _state.Claims
-            .Select(c => new Claim(c.ClaimType ?? string.Empty, c.ClaimValue ?? string.Empty));
-    }
-
-    /// <inheritdoc/>
-    public async Task<IEnumerable<UserLoginInfo>> GetLoginsAsync()
-    {
-        _state = await GetStateAsync(CancellationToken.None);
-        return (IEnumerable<UserLoginInfo>)(_state is null
-            ? throw new InvalidOperationException($"Get logins Failed : User '{Id.ToUnescapeString()}' not found.")
-            : _state.Logins);
-    }
-
-    /// <inheritdoc/>
-    public Task<ApplicationUserToken?> GetTokenAsync(string loginProvider, string name) => throw new NotImplementedException();
-
-    /// <inheritdoc/>
-    public async Task RemoveClaimsAsync(IEnumerable<Claim> claims)
-    {
-        _state = await GetStateAsync(CancellationToken.None);
-        if (_state is null)
-        {
-            throw new InvalidOperationException($"Remove claims Failed : User '{Id.ToUnescapeString()}' not found.");
-        }
-
-        // Add claims to user state and remove duplicates
-        IEnumerable<ApplicationUserClaim> newClaims = claims
-            .Select(p => new ApplicationUserClaim { UserId = Id.ToUnescapeString(), ClaimType = p.Type, ClaimValue = p.Value });
-        _state.Claims = _state.Claims.Union(newClaims).Distinct();
-    }
-
-    /// <inheritdoc/>
-    public async Task RemoveLoginAsync(string loginProvider, string providerKey)
-    {
-        _state = await GetStateAsync(CancellationToken.None);
-        if (_state is null)
-        {
-            throw new InvalidOperationException($"Remove login Failed : User '{Id.ToUnescapeString()}' not found.");
-        }
-
-        _state.Logins = _state.Logins.Where(p => p.ProviderKey != providerKey || p.LoginProvider != loginProvider);
-        await StateManager.SetStateAsync(DaprIdentityStoreConstants.UserIdentityStateName, _state, CancellationToken.None);
-        await StateManager.SaveStateAsync(CancellationToken.None);
-    }
-
-    /// <inheritdoc/>
-    public async Task RemoveTokenAsync(string loginProvider, string name)
-    {
-        _state = await GetStateAsync(CancellationToken.None);
-        if (_state is null)
-        {
-            throw new InvalidOperationException($"Remove login Failed : User '{Id.ToUnescapeString()}' not found.");
-        }
-
-        _state.Tokens = _state.Tokens.Where(p => p.Name != name || p.LoginProvider != loginProvider);
-
-        await StateManager.SetStateAsync(DaprIdentityStoreConstants.UserIdentityStateName, _state, CancellationToken.None);
-        await StateManager.SaveStateAsync(CancellationToken.None);
-    }
-
-    /// <inheritdoc/>
-    public async Task ReplaceClaimAsync(Claim claim, Claim newClaim)
-    {
-        ArgumentNullException.ThrowIfNull(claim);
-        ArgumentNullException.ThrowIfNull(newClaim);
-        _state = await GetStateAsync(CancellationToken.None);
-        if (_state is null)
-        {
-            throw new InvalidOperationException($"Add state Failed : User '{Id.ToUnescapeString()}' not found.");
-        }
-
-        // Add claims to user state and remove duplicates
-        _state.Claims = _state
-            .Claims
-            .Where(p => p.ClaimType != claim.Type || p.ClaimValue != claim.Value)
-            .Union([new ApplicationUserClaim
-            {
-                UserId = Id.ToUnescapeString(),
-                ClaimType = newClaim.ValueType,
-                ClaimValue = newClaim.Value,
-            }
-            ]);
-
-        await StateManager.SetStateAsync(DaprIdentityStoreConstants.UserIdentityStateName, _state, CancellationToken.None);
-        await StateManager.SaveStateAsync(CancellationToken.None);
     }
 
     /// <summary>

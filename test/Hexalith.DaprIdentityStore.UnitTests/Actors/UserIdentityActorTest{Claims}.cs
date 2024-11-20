@@ -68,8 +68,6 @@ public partial class UserIdentityActorTest
             .Setup(p => p.SetStateAsync(
                 DaprIdentityStoreConstants.UserIdentityStateName,
                 It.Is<UserActorState>(state =>
-
-                    // Verify that the state contains both old and new claims
                     state.Claims.Count() == 3 &&
                     state.Claims.Any(c => c.ClaimType == "existing") &&
                     state.Claims.Any(c => c.ClaimType == "role") &&
@@ -83,11 +81,25 @@ public partial class UserIdentityActorTest
             .Returns(Task.CompletedTask)
             .Verifiable();
 
-        // Create service mocks (not used in this operation but required for constructor)
+        // Create service mocks
         Mock<IUserIdentityCollectionService> collectionServiceMoq = new(MockBehavior.Strict);
         Mock<IUserIdentityNameIndexService> nameServiceMoq = new(MockBehavior.Strict);
         Mock<IUserIdentityEmailIndexService> emailServiceMoq = new(MockBehavior.Strict);
+        Mock<IUserIdentityClaimsIndexService> claimServiceMoq = new(MockBehavior.Strict);
+        Mock<IUserIdentityTokenIndexService> tokenServiceMoq = new(MockBehavior.Strict);
         Mock<IUserIdentityLoginIndexService> loginServiceMoq = new(MockBehavior.Strict);
+
+        // Setup claim service mock for each new claim
+        foreach (Claim claim in newClaims)
+        {
+            claimServiceMoq
+                .Setup(p => p.AddAsync(
+                    It.Is<Claim>(c => c.Type == claim.Type && c.Value == claim.Value),
+                    user.Id,
+                    It.IsAny<CancellationToken>()))
+                .Returns(Task.CompletedTask)
+                .Verifiable();
+        }
 
         // Create actor host and actor
         ActorHost actorHost = ActorHost.CreateForTest<UserIdentityActor>(
@@ -98,6 +110,8 @@ public partial class UserIdentityActorTest
             collectionServiceMoq.Object,
             emailServiceMoq.Object,
             nameServiceMoq.Object,
+            claimServiceMoq.Object,
+            tokenServiceMoq.Object,
             loginServiceMoq.Object,
             stateManagerMoq.Object);
 
@@ -106,6 +120,7 @@ public partial class UserIdentityActorTest
 
         // Assert
         stateManagerMoq.Verify();
+        claimServiceMoq.Verify();
     }
 
     /// <summary>
@@ -145,6 +160,8 @@ public partial class UserIdentityActorTest
         Mock<IUserIdentityCollectionService> collectionServiceMoq = new(MockBehavior.Strict);
         Mock<IUserIdentityNameIndexService> nameServiceMoq = new(MockBehavior.Strict);
         Mock<IUserIdentityEmailIndexService> emailServiceMoq = new(MockBehavior.Strict);
+        Mock<IUserIdentityClaimsIndexService> claimServiceMoq = new(MockBehavior.Strict);
+        Mock<IUserIdentityTokenIndexService> tokenServiceMoq = new(MockBehavior.Strict);
         Mock<IUserIdentityLoginIndexService> loginServiceMoq = new(MockBehavior.Strict);
 
         // Create actor host and actor
@@ -156,6 +173,8 @@ public partial class UserIdentityActorTest
             collectionServiceMoq.Object,
             emailServiceMoq.Object,
             nameServiceMoq.Object,
+            claimServiceMoq.Object,
+            tokenServiceMoq.Object,
             loginServiceMoq.Object,
             stateManagerMoq.Object);
 

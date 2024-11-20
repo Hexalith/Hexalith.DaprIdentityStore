@@ -68,6 +68,8 @@ public partial class UserIdentityActorTest
         Mock<IUserIdentityCollectionService> collectionServiceMoq = new(MockBehavior.Strict);
         Mock<IUserIdentityNameIndexService> nameServiceMoq = new(MockBehavior.Strict);
         Mock<IUserIdentityEmailIndexService> emailServiceMoq = new(MockBehavior.Strict);
+        Mock<IUserIdentityClaimsIndexService> claimServiceMoq = new(MockBehavior.Strict);
+        Mock<IUserIdentityTokenIndexService> tokenServiceMoq = new(MockBehavior.Strict);
         Mock<IUserIdentityLoginIndexService> loginServiceMoq = new(MockBehavior.Strict);
 
         collectionServiceMoq.Setup(p => p.AddUserAsync(user.Id))
@@ -90,6 +92,8 @@ public partial class UserIdentityActorTest
             collectionServiceMoq.Object,
             emailServiceMoq.Object,
             nameServiceMoq.Object,
+            claimServiceMoq.Object,
+            tokenServiceMoq.Object,
             loginServiceMoq.Object,
             stateManagerMoq.Object);
 
@@ -147,6 +151,8 @@ public partial class UserIdentityActorTest
         Mock<IUserIdentityCollectionService> collectionServiceMoq = new(MockBehavior.Strict);
         Mock<IUserIdentityNameIndexService> nameServiceMoq = new(MockBehavior.Strict);
         Mock<IUserIdentityEmailIndexService> emailServiceMoq = new(MockBehavior.Strict);
+        Mock<IUserIdentityClaimsIndexService> claimServiceMoq = new(MockBehavior.Strict);
+        Mock<IUserIdentityTokenIndexService> tokenServiceMoq = new(MockBehavior.Strict);
         Mock<IUserIdentityLoginIndexService> loginServiceMoq = new(MockBehavior.Strict);
 
         // Setup service operations
@@ -174,6 +180,8 @@ public partial class UserIdentityActorTest
             collectionServiceMoq.Object,
             emailServiceMoq.Object,
             nameServiceMoq.Object,
+            claimServiceMoq.Object,
+            tokenServiceMoq.Object,
             loginServiceMoq.Object,
             stateManagerMoq.Object);
 

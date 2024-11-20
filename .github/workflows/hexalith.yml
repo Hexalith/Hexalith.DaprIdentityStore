@@ -39,6 +39,10 @@ jobs:
       with:
         dotnet-version: 9.0.x
         cache: true  
+        cache-dependency-path: |
+          **/*.csproj
+          **/packages.lock.json
+   
     - name: Cache NuGet Packages
       uses: actions/cache@v3
       with:

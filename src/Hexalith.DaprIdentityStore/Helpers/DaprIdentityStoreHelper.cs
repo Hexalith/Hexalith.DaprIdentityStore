@@ -31,6 +31,8 @@ public static class DaprIdentityStoreHelper
         _ = services.AddSingleton<IUserIdentityNameIndexService, UserIdentityNameIndexService>();
         _ = services.AddSingleton<IUserIdentityEmailIndexService, UserIdentityEmailIndexService>();
         _ = services.AddSingleton<IUserIdentityLoginIndexService, UserIdentityLoginIndexService>();
+        _ = services.AddSingleton<IUserIdentityClaimsIndexService, UserIdentityClaimsIndexService>();
+        _ = services.AddSingleton<IUserIdentityTokenIndexService, UserIdentityTokenIndexService>();
         return services;
     }
 

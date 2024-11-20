@@ -15,15 +15,6 @@ using Hexalith.Infrastructure.DaprRuntime.Helpers;
 /// Actor responsible for managing user identity operations in a Dapr-based identity store.
 /// This actor handles CRUD operations for user identities and maintains associated indexes.
 /// </summary>
-/// <remarks>
-/// Initializes a new instance of the <see cref="UserIdentityActor"/> class.
-/// </remarks>
-/// <param name="host">The actor host that provides runtime context.</param>
-/// <param name="collectionService">Service for managing the user collection.</param>
-/// <param name="emailIndexService">Service for managing email-based user indexing.</param>
-/// <param name="nameIndexService">Service for managing username-based user indexing.</param>
-/// <param name="claimIndexService">Service for managing claim-based user indexing.</param>
-/// <param name="loginIndexService">Service for managing login-based user indexing.</param>
 public partial class UserIdentityActor
 {
     /// <summary>

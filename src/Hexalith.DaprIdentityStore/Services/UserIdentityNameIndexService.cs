@@ -8,7 +8,7 @@ namespace Hexalith.DaprIdentityStore.Services;
 using System;
 using System.Threading.Tasks;
 
-using Dapr.Actors.Runtime;
+using Dapr.Actors.Client;
 
 using Hexalith.DaprIdentityStore.Helpers;
 using Hexalith.Infrastructure.DaprRuntime.Actors;
@@ -18,28 +18,15 @@ using Hexalith.Infrastructure.DaprRuntime.Actors;
 /// This service handles the mapping between user IDs and their usernames using Dapr actors.
 /// It provides functionality to add, find, and remove username-to-userId mappings.
 /// </summary>
-public class UserIdentityNameIndexService : IUserIdentityNameIndexService
+/// <remarks>
+/// Initializes a new instance of the <see cref="UserIdentityNameIndexService"/> class.
+/// This constructor is used in production with actual Dapr actor implementation.
+/// </remarks>
+/// <param name="factory">The Dapr actor host providing actor management capabilities.</param>
+public class UserIdentityNameIndexService(IActorProxyFactory factory) : IUserIdentityNameIndexService
 {
     // Factory function to create key-value actors for username indexing
-    private readonly Func<string, IKeyValueActor> _keyValueActor;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="UserIdentityNameIndexService"/> class.
-    /// This constructor is used in production with actual Dapr actor implementation.
-    /// </summary>
-    /// <param name="actorHost">The Dapr actor host providing actor management capabilities.</param>
-    public UserIdentityNameIndexService(ActorHost actorHost) =>
-
-        // Initialize the factory with the username index proxy creator
-        _keyValueActor = actorHost.ProxyFactory.CreateUserNameIndexProxy;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="UserIdentityNameIndexService"/> class.
-    /// This constructor is primarily used for testing, allowing injection of mock actors.
-    /// </summary>
-    /// <param name="keyValueActor">Factory function to create key-value actors.</param>
-    internal UserIdentityNameIndexService(Func<string, IKeyValueActor> keyValueActor)
-        => _keyValueActor = keyValueActor;
+    private readonly Func<string, IKeyValueActor> _keyValueActor = factory.CreateUserNameIndexProxy;
 
     /// <summary>
     /// Associates a user ID with a username in the actor state store.

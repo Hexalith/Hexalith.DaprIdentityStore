@@ -7,7 +7,7 @@ namespace Hexalith.DaprIdentityStore.Services;
 
 using System.Threading.Tasks;
 
-using Dapr.Actors.Runtime;
+using Dapr.Actors.Client;
 
 using Hexalith.DaprIdentityStore.Helpers;
 using Hexalith.Infrastructure.DaprRuntime.Actors;
@@ -17,27 +17,15 @@ using Hexalith.Infrastructure.DaprRuntime.Actors;
 /// This service handles the mapping between user IDs and their email addresses using Dapr actors.
 /// It provides functionality to add, find, and remove email-to-userId mappings.
 /// </summary>
-public class UserIdentityEmailIndexService : IUserIdentityEmailIndexService
+/// <remarks>
+/// Initializes a new instance of the <see cref="UserIdentityEmailIndexService"/> class.
+/// This constructor is used in production with actual Dapr actor implementation.
+/// </remarks>
+/// <param name="factory">The Dapr actor host providing actor management capabilities.</param>
+public class UserIdentityEmailIndexService(IActorProxyFactory factory) : IUserIdentityEmailIndexService
 {
     // Factory function to create key-value actors for email indexing
-    private readonly Func<string, IKeyValueActor> _keyValueActor;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="UserIdentityEmailIndexService"/> class.
-    /// This constructor is used in production with actual Dapr actor implementation.
-    /// </summary>
-    /// <param name="actorHost">The Dapr actor host providing actor management capabilities.</param>
-    public UserIdentityEmailIndexService(ActorHost actorHost) =>
-
-        // Initialize the factory with the email index proxy creator
-        _keyValueActor = actorHost.ProxyFactory.CreateUserEmailIndexProxy;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="UserIdentityEmailIndexService"/> class.
-    /// This constructor is primarily used for testing, allowing injection of mock actors.
-    /// </summary>
-    /// <param name="keyValueActor">Factory function to create key-value actors.</param>
-    internal UserIdentityEmailIndexService(Func<string, IKeyValueActor> keyValueActor) => _keyValueActor = keyValueActor;
+    private readonly Func<string, IKeyValueActor> _keyValueActor = factory.CreateUserEmailIndexProxy;
 
     /// <summary>
     /// Associates a user ID with an email address in the actor state store.

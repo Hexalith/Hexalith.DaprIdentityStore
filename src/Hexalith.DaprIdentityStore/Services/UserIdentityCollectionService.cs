@@ -8,7 +8,7 @@ namespace Hexalith.DaprIdentityStore.Services;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-using Dapr.Actors.Runtime;
+using Dapr.Actors.Client;
 
 using Hexalith.DaprIdentityStore.Helpers;
 using Hexalith.Infrastructure.DaprRuntime.Actors;
@@ -17,37 +17,20 @@ using Hexalith.Infrastructure.DaprRuntime.Actors;
 /// Service for managing the collection of user identities.
 /// This service handles basic user identity operations like adding, removing, and listing users.
 /// </summary>
-public class UserIdentityCollectionService : IUserIdentityCollectionService
+/// <remarks>
+/// Initializes a new instance of the <see cref="UserIdentityCollectionService"/> class.
+/// </remarks>
+/// <param name="actorHost">The actor host for creating actor proxies.</param>
+public class UserIdentityCollectionService(IActorProxyFactory actorHost) : IUserIdentityCollectionService
 {
-    private readonly ActorHost _actorHost;
-    private IKeyHashActor? _keyHashActor;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="UserIdentityCollectionService"/> class.
-    /// </summary>
-    /// <param name="actorHost">The actor host for creating actor proxies.</param>
-    public UserIdentityCollectionService(ActorHost actorHost) => _actorHost = actorHost;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="UserIdentityCollectionService"/> class.
-    /// This constructor is primarily used for testing purposes.
-    /// </summary>
-    /// <param name="keyHashActor">The key hash actor implementation.</param>
-    internal UserIdentityCollectionService(IKeyHashActor keyHashActor)
-    {
-        // This constructor is primarily used for testing purposes.
-        _keyHashActor = keyHashActor;
-        _actorHost = null!;
-    }
-
-    private IKeyHashActor KeyHashActor => _keyHashActor ??= _actorHost.ProxyFactory.CreateAllUsersProxy();
+    private readonly IKeyHashActor _keyHashActor = actorHost.CreateAllUsersProxy();
 
     /// <inheritdoc/>
-    public async Task AddUserAsync(string id) => await KeyHashActor.AddAsync(id);
+    public async Task AddUserAsync(string id) => await _keyHashActor.AddAsync(id);
 
     /// <inheritdoc/>
-    public async Task<IEnumerable<string>> AllAsync() => await KeyHashActor.AllAsync();
+    public async Task<IEnumerable<string>> AllAsync() => await _keyHashActor.AllAsync();
 
     /// <inheritdoc/>
-    public async Task RemoveUserAsync(string id) => await KeyHashActor.RemoveAsync(id);
+    public async Task RemoveUserAsync(string id) => await _keyHashActor.RemoveAsync(id);
 }

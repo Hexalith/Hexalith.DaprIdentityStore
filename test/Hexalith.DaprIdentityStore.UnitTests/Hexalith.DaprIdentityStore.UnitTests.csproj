@@ -17,4 +17,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\Hexalith.DaprIdentityStore\Hexalith.DaprIdentityStore.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Stores\" />
+  </ItemGroup>
 </Project>

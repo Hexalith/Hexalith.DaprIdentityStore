@@ -34,12 +34,6 @@ jobs:
       uses: actions/checkout@v4
       with:
         fetch-depth: 0
-    - name: Initialize HexalithApp submodule
-      run: |
-          git submodule init HexalithApp
-          git submodule update HexalithApp
-          cd HexalithApp
-          git checkout main
     - name: Setup .NET 9.0
       uses: actions/setup-dotnet@v4
       with:

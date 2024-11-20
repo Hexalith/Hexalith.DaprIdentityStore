@@ -14,11 +14,11 @@ public interface IUserIdentityLoginIndexService
     /// <summary>
     /// Associates a user ID with an external login provider in the actor state store.
     /// </summary>
-    /// <param name="id">The user's unique identifier.</param>
     /// <param name="loginProvider">The name of the external login provider.</param>
     /// <param name="providerKey">The provider-specific key for the user.</param>
+    /// <param name="userId">The user's unique identifier.</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    Task AddUserLoginAsync(string id, string loginProvider, string providerKey);
+    Task AddAsync(string loginProvider, string providerKey, string userId);
 
     /// <summary>
     /// Retrieves a user ID associated with the given external login provider information.
@@ -26,14 +26,13 @@ public interface IUserIdentityLoginIndexService
     /// <param name="loginProvider">The name of the external login provider.</param>
     /// <param name="providerKey">The provider-specific key for the user.</param>
     /// <returns>The associated user ID if found; otherwise, null.</returns>
-    Task<string?> FindUserByLoginAsync(string loginProvider, string providerKey);
+    Task<string?> FindUserIdAsync(string loginProvider, string providerKey);
 
     /// <summary>
     /// Removes the association between a user ID and an external login provider.
     /// </summary>
-    /// <param name="id">The user's unique identifier.</param>
     /// <param name="loginProvider">The name of the external login provider.</param>
     /// <param name="providerKey">The provider-specific key for the user.</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    Task RemoveUserLoginAsync(string id, string loginProvider, string providerKey);
+    Task RemoveAsync(string loginProvider, string providerKey);
 }

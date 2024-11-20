@@ -73,10 +73,10 @@ public partial class UserIdentityActorTest
         collectionServiceMoq.Setup(p => p.AddUserAsync(user.Id))
             .Returns(Task.CompletedTask)
             .Verifiable(Times.Once);
-        emailServiceMoq.Setup(p => p.AddUserEmailAsync(user.Id, user.NormalizedEmail))
+        emailServiceMoq.Setup(p => p.AddAsync(user.NormalizedEmail, user.Id))
             .Returns(Task.CompletedTask)
             .Verifiable(Times.Once);
-        nameServiceMoq.Setup(p => p.AddUserNameAsync(user.Id, user.NormalizedUserName))
+        nameServiceMoq.Setup(p => p.AddAsync(user.NormalizedUserName, user.Id))
             .Returns(Task.CompletedTask)
             .Verifiable(Times.Once);
 
@@ -156,12 +156,12 @@ public partial class UserIdentityActorTest
             .Verifiable();
 
         emailServiceMoq
-            .Setup(p => p.RemoveUserEmailAsync(user.Id, user.NormalizedEmail))
+            .Setup(p => p.RemoveAsync(user.NormalizedEmail))
             .Returns(Task.CompletedTask)
             .Verifiable();
 
         nameServiceMoq
-            .Setup(p => p.RemoveUserNameAsync(user.Id, user.NormalizedUserName))
+            .Setup(p => p.RemoveAsync(user.NormalizedUserName))
             .Returns(Task.CompletedTask)
             .Verifiable();
 

@@ -42,14 +42,14 @@ public class UserIdentityLoginIndexService : IUserIdentityLoginIndexService
         _keyValueActor = keyValueActor;
 
     /// <inheritdoc/>
-    public async Task AddUserLoginAsync(string id, string loginProvider, string providerKey) =>
-        await _keyValueActor(loginProvider, providerKey).SetAsync(id);
+    public async Task AddAsync(string loginProvider, string providerKey, string userId) =>
+        await _keyValueActor(loginProvider, providerKey).SetAsync(userId);
 
     /// <inheritdoc/>
-    public async Task<string?> FindUserByLoginAsync(string loginProvider, string providerKey) =>
+    public async Task<string?> FindUserIdAsync(string loginProvider, string providerKey) =>
         await _keyValueActor(loginProvider, providerKey).GetAsync();
 
     /// <inheritdoc/>
-    public async Task RemoveUserLoginAsync(string id, string loginProvider, string providerKey) =>
-        await _keyValueActor(loginProvider, providerKey).RemoveAsync();
+    public async Task RemoveAsync(string loginProvider, string providerKey)
+        => await _keyValueActor(loginProvider, providerKey).RemoveAsync();
 }

@@ -137,13 +137,13 @@ public class UserIdentityActor(
         // Create email index if email exists
         if (!string.IsNullOrWhiteSpace(user.NormalizedEmail))
         {
-            await _emailCollectionService.AddUserEmailAsync(user.Id, user.NormalizedEmail);
+            await _emailCollectionService.AddAsync(user.NormalizedEmail, user.Id);
         }
 
         // Create username index if username exists
         if (!string.IsNullOrWhiteSpace(user.NormalizedUserName))
         {
-            await _nameCollectionService.AddUserNameAsync(user.Id, user.NormalizedUserName);
+            await _nameCollectionService.AddAsync(user.NormalizedUserName, user.Id);
         }
 
         return true;
@@ -163,13 +163,13 @@ public class UserIdentityActor(
             // Remove email index
             if (!string.IsNullOrWhiteSpace(_state.User.NormalizedEmail))
             {
-                await _emailCollectionService.RemoveUserEmailAsync(id, _state.User.NormalizedEmail);
+                await _emailCollectionService.RemoveAsync(_state.User.NormalizedEmail);
             }
 
             // Remove username index
             if (!string.IsNullOrWhiteSpace(_state.User.NormalizedUserName))
             {
-                await _nameCollectionService.RemoveUserNameAsync(id, _state.User.NormalizedUserName);
+                await _nameCollectionService.RemoveAsync(_state.User.NormalizedUserName);
             }
 
             // Clear state
@@ -296,12 +296,12 @@ public class UserIdentityActor(
         {
             if (!string.IsNullOrWhiteSpace(oldUser.NormalizedEmail))
             {
-                await _emailCollectionService.RemoveUserEmailAsync(user.Id, oldUser.NormalizedEmail);
+                await _emailCollectionService.RemoveAsync(oldUser.NormalizedEmail);
             }
 
             if (!string.IsNullOrWhiteSpace(user.NormalizedEmail))
             {
-                await _emailCollectionService.AddUserEmailAsync(user.Id, user.NormalizedEmail);
+                await _emailCollectionService.AddAsync(user.NormalizedEmail, user.Id);
             }
         }
 
@@ -310,12 +310,12 @@ public class UserIdentityActor(
         {
             if (!string.IsNullOrWhiteSpace(oldUser.NormalizedUserName))
             {
-                await _nameCollectionService.RemoveUserNameAsync(user.Id, oldUser.NormalizedUserName);
+                await _nameCollectionService.RemoveAsync(oldUser.NormalizedUserName);
             }
 
             if (!string.IsNullOrWhiteSpace(user.NormalizedUserName))
             {
-                await _nameCollectionService.AddUserNameAsync(user.Id, user.NormalizedUserName);
+                await _nameCollectionService.AddAsync(user.NormalizedUserName, user.Id);
             }
         }
     }

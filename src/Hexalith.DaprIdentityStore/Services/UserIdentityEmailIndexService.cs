@@ -42,23 +42,22 @@ public class UserIdentityEmailIndexService : IUserIdentityEmailIndexService
     /// <summary>
     /// Associates a user ID with an email address in the actor state store.
     /// </summary>
-    /// <param name="id">The user's unique identifier.</param>
     /// <param name="email">The email address to associate with the user.</param>
+    /// <param name="userId">The user's unique identifier.</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public async Task AddUserEmailAsync(string id, string email) => await _keyValueActor(email).SetAsync(id);
+    public async Task AddAsync(string email, string userId) => await _keyValueActor(email).SetAsync(userId);
 
     /// <summary>
     /// Retrieves a user ID associated with the given email address.
     /// </summary>
     /// <param name="email">The email address to look up.</param>
     /// <returns>The associated user ID if found; otherwise, null.</returns>
-    public async Task<string?> FindUserByEmailAsync(string email) => await _keyValueActor(email).GetAsync();
+    public async Task<string?> FindUserIdAsync(string email) => await _keyValueActor(email).GetAsync();
 
     /// <summary>
     /// Removes the association between a user ID and an email address.
     /// </summary>
-    /// <param name="id">The user's unique identifier.</param>
     /// <param name="email">The email address to remove.</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public async Task RemoveUserEmailAsync(string id, string email) => await _keyValueActor(email).RemoveAsync();
+    public async Task RemoveAsync(string email) => await _keyValueActor(email).RemoveAsync();
 }

@@ -77,7 +77,7 @@ public partial class DaprActorUserStore
         ArgumentException.ThrowIfNullOrWhiteSpace(loginProvider);
         ArgumentException.ThrowIfNullOrWhiteSpace(providerKey);
 
-        string? userId = await _loginCollectionService.FindUserByLoginAsync(loginProvider, providerKey);
+        string? userId = await _loginCollectionService.FindUserIdAsync(loginProvider, providerKey);
 
         if (string.IsNullOrWhiteSpace(userId))
         {

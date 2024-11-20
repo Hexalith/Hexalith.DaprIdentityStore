@@ -44,26 +44,25 @@ public class UserIdentityNameIndexService : IUserIdentityNameIndexService
     /// <summary>
     /// Associates a user ID with a username in the actor state store.
     /// </summary>
-    /// <param name="id">The user's unique identifier.</param>
     /// <param name="name">The username to associate with the user.</param>
+    /// <param name="userId">The user's unique identifier.</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public async Task AddUserNameAsync(string id, string name)
-        => await _keyValueActor(name).SetAsync(id);
+    public async Task AddAsync(string name, string userId)
+        => await _keyValueActor(name).SetAsync(userId);
 
     /// <summary>
     /// Retrieves a user ID associated with the given username.
     /// </summary>
     /// <param name="name">The username to look up.</param>
     /// <returns>The associated user ID if found; otherwise, null.</returns>
-    public async Task<string?> FindUserByNameAsync(string name)
+    public async Task<string?> FindUserIdAsync(string name)
         => await _keyValueActor(name).GetAsync();
 
     /// <summary>
     /// Removes the association between a user ID and a username.
     /// </summary>
-    /// <param name="id">The user's unique identifier.</param>
     /// <param name="name">The username to remove.</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public async Task RemoveUserNameAsync(string id, string name)
+    public async Task RemoveAsync(string name)
         => await _keyValueActor(name).RemoveAsync();
 }

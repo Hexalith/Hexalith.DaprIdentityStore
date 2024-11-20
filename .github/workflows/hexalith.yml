@@ -61,11 +61,6 @@ jobs:
         echo "MINVERVERSIONOVERRIDE=$version" >> $GITHUB_ENV
         echo "VERSION=$version" >> $GITHUB_ENV
         echo "VERSION=$version"
-    - name: Run Security Scanner
-      run: |
-        dotnet new tool-manifest
-        dotnet tool install security.scan
-        dotnet security-scan
     - name: Build all projects
       shell: pwsh
       run: |

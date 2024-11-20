@@ -43,11 +43,28 @@ public partial class DaprActorUserStore
         ThrowIfDisposed();
 
         IUserIdentityActor actor = ActorProxy.DefaultProxyFactory.CreateUserIdentityActor(user.Id);
-        return await actor.GetClaimsAsync();
+        return (await actor.GetClaimsAsync()).ToList();
     }
 
     /// <inheritdoc/>
-    public override Task<IList<UserIdentity>> GetUsersForClaimAsync(Claim claim, CancellationToken cancellationToken = default) => throw new System.NotImplementedException();
+    public override async Task<IList<UserIdentity>> GetUsersForClaimAsync(Claim claim, CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(claim);
+        cancellationToken.ThrowIfCancellationRequested();
+        ThrowIfDisposed();
+
+        IEnumerable<string> allUsers = await _userIdentityCollection.AllAsync();
+        List<Task<UserIdentity?>> userTasks = [];
+        foreach (string userId in allUsers)
+        {
+            userTasks.Add(GetUserIfHasClaimAsync(claim, userId));
+        }
+
+        return (await Task.WhenAll(userTasks))
+            .Where(p => p != null)
+            .Select(p => p!)
+            .ToList();
+    }
 
     /// <inheritdoc/>
     public override async Task RemoveClaimsAsync(UserIdentity user, IEnumerable<Claim> claims, CancellationToken cancellationToken = default)
@@ -69,5 +86,17 @@ public partial class DaprActorUserStore
 
         IUserIdentityActor actor = ActorProxy.DefaultProxyFactory.CreateUserIdentityActor(user.Id);
         await actor.ReplaceClaimAsync(claim, newClaim);
+    }
+
+    private static async Task<UserIdentity?> GetUserIfHasClaimAsync(Claim claim, string userId)
+    {
+        IUserIdentityActor collection = ActorProxy.DefaultProxyFactory.CreateUserIdentityActor(userId);
+        if ((await collection.GetClaimsAsync()).Any(p => p.Type == claim.Type && p.Value == claim.Value))
+        {
+            IUserIdentityActor userActor = ActorProxy.DefaultProxyFactory.CreateUserIdentityActor(userId);
+            return await userActor.FindAsync();
+        }
+
+        return null;
     }
 }

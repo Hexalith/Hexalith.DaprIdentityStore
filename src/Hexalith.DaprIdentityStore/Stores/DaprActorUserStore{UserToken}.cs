@@ -22,7 +22,8 @@ public partial class DaprActorUserStore
     protected override Task AddUserTokenAsync(ApplicationUserToken token) => throw new NotImplementedException();
 
     /// <inheritdoc/>
-    protected override Task<ApplicationUserToken?> FindTokenAsync(UserIdentity user, string loginProvider, string name, CancellationToken cancellationToken) => throw new NotImplementedException();
+    protected override Task<ApplicationUserToken?> FindTokenAsync(UserIdentity user, string loginProvider, string name, CancellationToken cancellationToken)
+        => throw new NotImplementedException();
 
     /// <inheritdoc/>
     protected override Task RemoveUserTokenAsync(ApplicationUserToken token) => throw new NotImplementedException();

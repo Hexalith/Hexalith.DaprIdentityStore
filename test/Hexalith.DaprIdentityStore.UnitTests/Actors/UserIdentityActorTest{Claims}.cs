@@ -107,4 +107,63 @@ public partial class UserIdentityActorTest
     }
 
     /// <summary>
+    /// Tests that GetClaimsAsync successfully retrieves all claims for a user.
+    /// </summary>
+    /// <returns>Task representing the test operation.</returns>
+    [Fact]
+    public async Task GetClaimsAsyncShouldReturnAllUserClaims()
+    {
+        // Arrange
+        UserIdentity user = User;
+
+        // Create state with existing claims
+        UserActorState state = new()
+        {
+            User = user,
+            Claims =
+            [
+                new() { UserId = user.Id, ClaimType = "role", ClaimValue = "admin" },
+                new() { UserId = user.Id, ClaimType = "permission", ClaimValue = "read" },
+                new() { UserId = user.Id, ClaimType = "department", ClaimValue = "IT" }
+            ],
+        };
+
+        // Create mock state manager
+        Mock<IActorStateManager> stateManagerMoq = new(MockBehavior.Strict);
+
+        // Setup state retrieval
+        stateManagerMoq
+            .Setup(p => p.TryGetStateAsync<UserActorState>(
+                DaprIdentityStoreConstants.UserIdentityStateName,
+                It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new ConditionalValue<UserActorState>(true, state))
+            .Verifiable();
+
+        // Create service mocks
+        Mock<IUserIdentityCollectionService> collectionServiceMoq = new(MockBehavior.Strict);
+        Mock<IUserIdentityNameCollectionService> nameServiceMoq = new(MockBehavior.Strict);
+        Mock<IUserIdentityEmailCollectionService> emailServiceMoq = new(MockBehavior.Strict);
+
+        // Create actor host and actor
+        ActorHost actorHost = ActorHost.CreateForTest<UserIdentityActor>(
+            new ActorTestOptions { ActorId = user.Id.ToActorId() });
+
+        UserIdentityActor actor = new(
+            actorHost,
+            collectionServiceMoq.Object,
+            emailServiceMoq.Object,
+            nameServiceMoq.Object,
+            stateManagerMoq.Object);
+
+        // Act
+        IEnumerable<Claim> claims = await actor.GetClaimsAsync();
+
+        // Assert
+        stateManagerMoq.Verify();
+        Assert.NotNull(claims);
+        Assert.Equal(3, claims.Count());
+        Assert.Contains(claims, c => c.Type == "role" && c.Value == "admin");
+        Assert.Contains(claims, c => c.Type == "permission" && c.Value == "read");
+        Assert.Contains(claims, c => c.Type == "department" && c.Value == "IT");
+    }
 }

@@ -7,7 +7,6 @@ namespace Hexalith.DaprIdentityStore.Helpers;
 
 using Dapr.Actors.Client;
 
-using Hexalith.DaprIdentityStore;
 using Hexalith.DaprIdentityStore.Actors;
 using Hexalith.Infrastructure.DaprRuntime.Actors;
 using Hexalith.Infrastructure.DaprRuntime.Helpers;
@@ -29,7 +28,10 @@ public static class DaprIdentityStoreActorProxyHelper
     /// The returned actor proxy can be used to add, remove, or query user IDs from the global collection.
     /// </remarks>
     public static IKeyHashActor CreateAllUsersProxy(this IActorProxyFactory actorProxyFactory)
-        => actorProxyFactory.CreateActorProxy<IKeyHashActor>(DaprIdentityStoreConstants.AllUsersCollectionActorId.ToActorId(), DaprIdentityStoreConstants.UserCollectionActorTypeName);
+    {
+        ArgumentNullException.ThrowIfNull(actorProxyFactory);
+        return actorProxyFactory.CreateActorProxy<IKeyHashActor>(DaprIdentityStoreConstants.AllUsersCollectionActorId.ToActorId(), DaprIdentityStoreConstants.UserCollectionActorTypeName);
+    }
 
     /// <summary>
     /// Creates a proxy for the actor that manages the user email index.
@@ -43,7 +45,11 @@ public static class DaprIdentityStoreActorProxyHelper
     /// The email index actor ensures email uniqueness across the system and provides quick user lookup by email.
     /// </remarks>
     public static IKeyValueActor CreateUserEmailIndexProxy(this IActorProxyFactory actorProxyFactory, string normalizedEmail)
-        => actorProxyFactory.CreateActorProxy<IKeyValueActor>(normalizedEmail.ToActorId(), DaprIdentityStoreConstants.UserEmailIndexActorTypeName);
+    {
+        ArgumentNullException.ThrowIfNull(actorProxyFactory);
+        ArgumentException.ThrowIfNullOrWhiteSpace(normalizedEmail);
+        return actorProxyFactory.CreateActorProxy<IKeyValueActor>(normalizedEmail.ToActorId(), DaprIdentityStoreConstants.UserEmailIndexActorTypeName);
+    }
 
     /// <summary>
     /// Creates a proxy for the actor that manages individual user identity data.
@@ -57,7 +63,11 @@ public static class DaprIdentityStoreActorProxyHelper
     /// The user identity actor manages user-specific data including claims, roles, and authentication information.
     /// </remarks>
     public static IUserIdentityActor CreateUserIdentityActor(this IActorProxyFactory actorProxyFactory, string id)
-        => actorProxyFactory.CreateActorProxy<IUserIdentityActor>(id.ToActorId(), DaprIdentityStoreConstants.DefaultUserActorTypeName);
+    {
+        ArgumentNullException.ThrowIfNull(actorProxyFactory);
+        ArgumentException.ThrowIfNullOrWhiteSpace(id);
+        return actorProxyFactory.CreateActorProxy<IUserIdentityActor>(id.ToActorId(), DaprIdentityStoreConstants.DefaultUserActorTypeName);
+    }
 
     /// <summary>
     /// Creates a proxy for the actor that manages the username index.
@@ -71,5 +81,9 @@ public static class DaprIdentityStoreActorProxyHelper
     /// The username index actor ensures username uniqueness across the system and provides quick user lookup by username.
     /// </remarks>
     public static IKeyValueActor CreateUserNameIndexProxy(this IActorProxyFactory actorProxyFactory, string normalizedName)
-        => actorProxyFactory.CreateActorProxy<IKeyValueActor>(normalizedName.ToActorId(), DaprIdentityStoreConstants.UserNameIndexActorTypeName);
+    {
+        ArgumentNullException.ThrowIfNull(actorProxyFactory);
+        ArgumentException.ThrowIfNullOrWhiteSpace(normalizedName);
+        return actorProxyFactory.CreateActorProxy<IKeyValueActor>(normalizedName.ToActorId(), DaprIdentityStoreConstants.UserNameIndexActorTypeName);
+    }
 }

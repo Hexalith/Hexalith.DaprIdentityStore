@@ -23,15 +23,26 @@ using Hexalith.Infrastructure.DaprRuntime.Helpers;
 /// Initializes a new instance of the <see cref="UserIdentityActor"/> class.
 /// Initializes a new instance of the UserIdentityActor.
 /// </remarks>
-public class UserIdentityActor : Actor, IUserIdentityActor
+/// <remarks>
+/// Initializes a new instance of the <see cref="UserIdentityActor"/> class.
+/// </remarks>
+/// <param name="host">The actor host that provides runtime context.</param>
+/// <param name="collectionService">Service for managing the user collection.</param>
+/// <param name="emailCollectionService">Service for managing email-based user indexing.</param>
+/// <param name="nameCollectionService">Service for managing username-based user indexing.</param>
+public class UserIdentityActor(
+    ActorHost host,
+    IUserIdentityCollectionService collectionService,
+    IUserIdentityEmailCollectionService emailCollectionService,
+    IUserIdentityNameCollectionService nameCollectionService) : Actor(host), IUserIdentityActor
 {
     /// <summary>
     /// Collection services for managing different aspects of user identity.
     /// </summary>
-    private readonly IUserIdentityCollectionService _collectionService;         // Manages the main user collection
+    private readonly IUserIdentityCollectionService _collectionService = collectionService;         // Manages the main user collection
 
-    private readonly IUserIdentityEmailCollectionService _emailCollectionService; // Manages email-based indexing
-    private readonly IUserIdentityNameCollectionService _nameCollectionService;   // Manages username-based indexing
+    private readonly IUserIdentityEmailCollectionService _emailCollectionService = emailCollectionService; // Manages email-based indexing
+    private readonly IUserIdentityNameCollectionService _nameCollectionService = nameCollectionService;   // Manages username-based indexing
 
     /// <summary>
     /// Cached state of the user actor to minimize state store access.
@@ -40,30 +51,20 @@ public class UserIdentityActor : Actor, IUserIdentityActor
     private UserActorState? _state;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="UserIdentityActor"/> class.
+    /// Initializes a new instance of the <see cref="UserIdentityActor"/> class for testing purposes.
     /// </summary>
     /// <param name="host">The actor host that provides runtime context.</param>
     /// <param name="collectionService">Service for managing the user collection.</param>
     /// <param name="emailCollectionService">Service for managing email-based user indexing.</param>
     /// <param name="nameCollectionService">Service for managing username-based user indexing.</param>
-    /// <param name="stateManager">Optional state manager for managing actor state (primarily used for testing).</param>
-    public UserIdentityActor(
+    /// <param name="stateManager">Optional state manager for managing actor state.</param>
+    internal UserIdentityActor(
         ActorHost host,
         IUserIdentityCollectionService collectionService,
         IUserIdentityEmailCollectionService emailCollectionService,
         IUserIdentityNameCollectionService nameCollectionService,
-        IActorStateManager? stateManager = null)
-        : base(host)
-    {
-        if (stateManager is not null)
-        {
-            StateManager = stateManager;
-        }
-
-        _collectionService = collectionService;
-        _emailCollectionService = emailCollectionService;
-        _nameCollectionService = nameCollectionService;
-    }
+        IActorStateManager stateManager)
+        : this(host, collectionService, emailCollectionService, nameCollectionService) => StateManager = stateManager;
 
     /// <summary>
     /// Adds claims to the user identity.
@@ -98,6 +99,8 @@ public class UserIdentityActor : Actor, IUserIdentityActor
     /// <exception cref="InvalidOperationException">Thrown when user ID doesn't match actor ID.</exception>
     public async Task<bool> CreateAsync(UserIdentity user)
     {
+        ArgumentNullException.ThrowIfNull(user);
+
         // Validate user ID matches actor ID
         if (user.Id != Id.ToUnescapeString())
         {
@@ -182,8 +185,19 @@ public class UserIdentityActor : Actor, IUserIdentityActor
         return _state?.User;
     }
 
-    /// <inheritdoc/>
-    public Task<IList<Claim>> GetClaimsAsync() => throw new NotImplementedException();
+    /// <summary>
+    /// Gets all claims associated with the user.
+    /// </summary>
+    /// <returns>A list of claims associated with the user.</returns>
+    /// <exception cref="InvalidOperationException">Thrown when the user state is not found.</exception>
+    public async Task<IEnumerable<Claim>> GetClaimsAsync()
+    {
+        _state = await GetStateAsync(CancellationToken.None);
+        return _state is null
+            ? throw new InvalidOperationException($"Get claims Failed : User '{Id.ToUnescapeString()}' not found.")
+            : _state.Claims
+            .Select(c => new Claim(c.ClaimType ?? string.Empty, c.ClaimValue ?? string.Empty));
+    }
 
     /// <inheritdoc/>
     public async Task RemoveClaimsAsync(IEnumerable<Claim> claims)
@@ -203,6 +217,8 @@ public class UserIdentityActor : Actor, IUserIdentityActor
     /// <inheritdoc/>
     public async Task ReplaceClaimAsync(Claim claim, Claim newClaim)
     {
+        ArgumentNullException.ThrowIfNull(claim);
+        ArgumentNullException.ThrowIfNull(newClaim);
         _state = await GetStateAsync(CancellationToken.None);
         if (_state is null)
         {
@@ -210,8 +226,17 @@ public class UserIdentityActor : Actor, IUserIdentityActor
         }
 
         // Add claims to user state and remove duplicates
-        IEnumerable<ApplicationUserClaim> newClaims = _state.Claims.Where(p => p.ClaimType != claim.Type);
-        _state.Claims = _state.Claims.Union([new ApplicationUserClaim { UserId = Id.ToUnescapeString(), ClaimType = newClaim.ValueType, ClaimValue = newClaim.Value }]);
+        _state.Claims = _state
+            .Claims
+            .Where(p => p.ClaimType != claim.Type || p.ClaimValue != claim.Value)
+            .Union([new ApplicationUserClaim
+            {
+                UserId = Id.ToUnescapeString(),
+                ClaimType = newClaim.ValueType,
+                ClaimValue = newClaim.Value,
+            }
+            ]);
+
         await StateManager.SetStateAsync(DaprIdentityStoreConstants.UserIdentityStateName, _state, CancellationToken.None);
         await StateManager.SaveStateAsync(CancellationToken.None);
     }
@@ -225,6 +250,7 @@ public class UserIdentityActor : Actor, IUserIdentityActor
     /// <returns>A task representing the asynchronous operation.</returns>
     public async Task UpdateAsync(UserIdentity user)
     {
+        ArgumentNullException.ThrowIfNull(user);
         _state = await GetStateAsync(CancellationToken.None);
         if (_state is null)
         {

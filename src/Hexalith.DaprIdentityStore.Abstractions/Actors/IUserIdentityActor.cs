@@ -17,6 +17,11 @@ using Hexalith.DaprIdentityStore.Models;
 /// </summary>
 public interface IUserIdentityActor : IActor
 {
+    /// <summary>
+    /// Adds a collection of claims to the user identity asynchronously.
+    /// </summary>
+    /// <param name="claims">The collection of claims to add.</param>
+    /// <returns>A task representing the asynchronous operation.</returns>
     Task AddClaimsAsync(IEnumerable<Claim> claims);
 
     /// <summary>
@@ -44,11 +49,26 @@ public interface IUserIdentityActor : IActor
     /// <returns>The user identity if found; otherwise, null.</returns>
     Task<UserIdentity?> FindAsync();
 
-    Task<IList<Claim>> GetClaimsAsync();
+    /// <summary>
+    /// Retrieves all claims associated with the user identity asynchronously.
+    /// </summary>
+    /// <returns>A collection of claims associated with the user.</returns>
+    Task<IEnumerable<Claim>> GetClaimsAsync();
 
+    /// <summary>
+    /// Removes a collection of claims from the user identity asynchronously.
+    /// </summary>
+    /// <param name="claims">The collection of claims to remove.</param>
+    /// <returns>A task representing the asynchronous operation.</returns>
     Task RemoveClaimsAsync(IEnumerable<Claim> claims);
 
-    Task ReplaceClaimAsync(Claim claim1, Claim newClaim);
+    /// <summary>
+    /// Replaces an existing claim with a new claim asynchronously.
+    /// </summary>
+    /// <param name="claim">The existing claim to replace.</param>
+    /// <param name="newClaim">The new claim that will replace the existing claim.</param>
+    /// <returns>A task representing the asynchronous operation.</returns>
+    Task ReplaceClaimAsync(Claim claim, Claim newClaim);
 
     /// <summary>
     /// Updates an existing user identity asynchronously.

@@ -16,6 +16,7 @@ using Hexalith.DaprIdentityStore.Actors;
 using Hexalith.DaprIdentityStore.Errors;
 using Hexalith.DaprIdentityStore.Helpers;
 using Hexalith.DaprIdentityStore.Models;
+using Hexalith.DaprIdentityStore.Services;
 using Hexalith.Infrastructure.DaprRuntime.Actors;
 
 using Microsoft.AspNetCore.Identity;
@@ -26,16 +27,23 @@ using Microsoft.AspNetCore.Identity;
 public partial class DaprActorUserStore
     : UserStoreBase<UserIdentity, string, ApplicationUserClaim, ApplicationUserLogin, ApplicationUserToken>
 {
+    private readonly IUserIdentityCollectionService _userIdentityCollection;
+
     /// <summary>
     /// Initializes a new instance of the <see cref="DaprActorUserStore"/> class.
     /// </summary>
-    public DaprActorUserStore()
+    /// <param name="userIdentityCollection">The user identity collection service.</param>
+    public DaprActorUserStore(IUserIdentityCollectionService userIdentityCollection)
         : base(new HexalithIdentityErrorDescriber())
     {
+        ArgumentNullException.ThrowIfNull(userIdentityCollection);
+        _userIdentityCollection = userIdentityCollection;
     }
 
     /// <inheritdoc/>
+#pragma warning disable S4462 // Calls to "async" methods should not be blocking
     public override IQueryable<UserIdentity> Users => GetUsersAsync().GetAwaiter().GetResult().AsQueryable();
+#pragma warning restore S4462 // Calls to "async" methods should not be blocking
 
     /// <inheritdoc/>
     public override async Task<IdentityResult> CreateAsync(UserIdentity user, CancellationToken cancellationToken = default)
@@ -46,7 +54,7 @@ public partial class DaprActorUserStore
 
         IUserIdentityActor actor = ActorProxy.DefaultProxyFactory.CreateUserIdentityActor(user.Id);
         bool created = await actor.CreateAsync(user);
-        return created ? IdentityResult.Success : IdentityResult.Failed(ErrorDescriber.DuplicateUserName(user?.NormalizedUserName ?? "Unknown"));
+        return created ? IdentityResult.Success : IdentityResult.Failed(ErrorDescriber.DuplicateUserName(user.NormalizedUserName ?? "Unknown"));
     }
 
     /// <inheritdoc/>
@@ -129,7 +137,6 @@ public partial class DaprActorUserStore
     {
         ThrowIfDisposed();
 
-        List<UserIdentity> users = [];
         IKeyHashActor allProxy = ActorProxy.DefaultProxyFactory.CreateAllUsersProxy();
         IEnumerable<string> userIds = await allProxy.AllAsync();
         List<Task<UserIdentity?>> tasks = [];

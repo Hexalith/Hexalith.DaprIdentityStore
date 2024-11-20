@@ -5,8 +5,6 @@
 
 namespace Hexalith.DaprIdentityStore.States;
 
-using System.Security.Claims;
-
 using Hexalith.DaprIdentityStore.Models;
 
 /// <summary>
@@ -20,7 +18,13 @@ using Hexalith.DaprIdentityStore.Models;
 /// </remarks>
 internal class UserActorState
 {
-    public IEnumerable<ApplicationUserClaim> Claims { get; set; } = new List<ApplicationUserClaim>();
+    /// <summary>
+    /// Gets or sets the claims associated with the user.
+    /// </summary>
+    /// <value>
+    /// A collection of <see cref="ApplicationUserClaim"/> representing the user's claims.
+    /// </value>
+    internal IEnumerable<ApplicationUserClaim> Claims { get; set; } = [];
 
     /// <summary>
     /// Gets or sets the user identity information.
@@ -33,5 +37,5 @@ internal class UserActorState
     /// This property stores core user identity information such as user credentials,
     /// profile data, and authentication details.
     /// </remarks>
-    public UserIdentity User { get; set; } = new();
+    internal UserIdentity User { get; set; } = new();
 }

@@ -23,7 +23,7 @@ using Hexalith.Infrastructure.DaprRuntime.Actors;
 /// This constructor is used in production with actual Dapr actor implementation.
 /// </remarks>
 /// <param name="factory">The Dapr actor host providing actor management capabilities.</param>
-public class UserIdentityNameIndexService(IActorProxyFactory factory) : IUserIdentityNameIndexService
+public class UserIdentityNameIndexService(IActorProxyFactory factory) : IUserNameIndexService
 {
     // Factory function to create key-value actors for username indexing
     private readonly Func<string, IKeyValueActor> _keyValueActor = factory.CreateUserNameIndexProxy;

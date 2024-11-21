@@ -1,4 +1,4 @@
-﻿// <copyright file="IUserIdentityClaimsIndexService.cs" company="ITANEO">
+﻿// <copyright file="IUserClaimsIndexService.cs" company="ITANEO">
 // Copyright (c) ITANEO (https://www.itaneo.com). All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 // </copyright>
@@ -14,7 +14,7 @@ using System.Security.Claims;
 /// This service provides functionality to maintain and query indexes of user claims,
 /// enabling efficient lookups of users by their claim values.
 /// </remarks>
-public interface IUserIdentityClaimsIndexService
+public interface IUserClaimsIndexService
 {
     /// <summary>
     /// Adds a claim value to the user's index.

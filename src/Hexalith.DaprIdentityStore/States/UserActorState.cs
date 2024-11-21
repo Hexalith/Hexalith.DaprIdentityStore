@@ -24,9 +24,9 @@ internal class UserActorState
     /// Gets or sets the claims associated with the user.
     /// </summary>
     /// <value>
-    /// A collection of <see cref="ApplicationUserClaim"/> representing the user's claims.
+    /// A collection of <see cref="CustomUserClaim"/> representing the user's claims.
     /// </value>
-    internal IEnumerable<ApplicationUserClaim> Claims { get; set; } = [];
+    internal IEnumerable<CustomUserClaim> Claims { get; set; } = [];
 
     /// <summary>
     /// Gets or sets the logins associated with the user.
@@ -34,26 +34,26 @@ internal class UserActorState
     /// <value>
     /// A collection of <see cref="UserLoginInfo"/> representing the user's logins.
     /// </value>
-    internal IEnumerable<ApplicationUserLogin> Logins { get; set; } = [];
+    internal IEnumerable<CustomUserLogin> Logins { get; set; } = [];
 
     /// <summary>
     /// Gets or sets the tokens associated with the user.
     /// </summary>
     /// <value>
-    /// A collection of <see cref="ApplicationUserToken"/> representing the user's tokens.
+    /// A collection of <see cref="CustomUserToken"/> representing the user's tokens.
     /// </value>
-    internal IEnumerable<ApplicationUserToken> Tokens { get; set; } = [];
+    internal IEnumerable<CustomUserToken> Tokens { get; set; } = [];
 
     /// <summary>
     /// Gets or sets the user identity information.
     /// </summary>
     /// <value>
-    /// An instance of <see cref="UserIdentity"/> containing the user's identity details.
+    /// An instance of <see cref="CustomUser"/> containing the user's identity details.
     /// Defaults to a new instance if not explicitly set.
     /// </value>
     /// <remarks>
     /// This property stores core user identity information such as user credentials,
     /// profile data, and authentication details.
     /// </remarks>
-    internal UserIdentity User { get; set; } = new();
+    internal CustomUser User { get; set; } = new();
 }

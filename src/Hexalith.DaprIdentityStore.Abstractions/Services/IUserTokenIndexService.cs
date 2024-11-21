@@ -1,4 +1,4 @@
-﻿// <copyright file="IUserIdentityTokenIndexService.cs" company="ITANEO">
+﻿// <copyright file="IUserTokenIndexService.cs" company="ITANEO">
 // Copyright (c) ITANEO (https://www.itaneo.com). All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 // </copyright>
@@ -10,7 +10,7 @@ using Hexalith.DaprIdentityStore.Models;
 /// <summary>
 /// Interface for user identity token index service.
 /// </summary>
-public interface IUserIdentityTokenIndexService
+public interface IUserTokenIndexService
 {
     /// <summary>
     /// Adds a user token to the index.
@@ -18,7 +18,7 @@ public interface IUserIdentityTokenIndexService
     /// <param name="token">The application user token.</param>
     /// <param name="userId">The user identifier.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    Task AddAsync(ApplicationUserToken token, string userId);
+    Task AddAsync(CustomUserToken token, string userId);
 
     /// <summary>
     /// Adds a user token to the index.
@@ -34,7 +34,7 @@ public interface IUserIdentityTokenIndexService
     /// </summary>
     /// <param name="token">The application user token.</param>
     /// <returns>A task that represents the asynchronous operation. The task result contains the user identifier if found; otherwise, null.</returns>
-    Task<string?> FindUserIdAsync(ApplicationUserToken token);
+    Task<string?> FindUserIdAsync(CustomUserToken token);
 
     /// <summary>
     /// Finds the user identifier associated with the specified token.
@@ -49,7 +49,7 @@ public interface IUserIdentityTokenIndexService
     /// </summary>
     /// <param name="token">The application user token.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    Task RemoveAsync(ApplicationUserToken token);
+    Task RemoveAsync(CustomUserToken token);
 
     /// <summary>
     /// Removes the specified token from the index.

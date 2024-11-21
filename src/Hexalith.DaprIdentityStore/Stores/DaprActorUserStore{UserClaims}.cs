@@ -22,10 +22,10 @@ using Microsoft.AspNetCore.Identity;
 /// Represents a user store that uses Dapr actors for user management.
 /// </summary>
 public partial class DaprActorUserStore
-    : UserStoreBase<UserIdentity, string, ApplicationUserClaim, ApplicationUserLogin, ApplicationUserToken>
+    : UserStoreBase<CustomUser, string, CustomUserClaim, CustomUserLogin, CustomUserToken>
 {
     /// <inheritdoc/>
-    public override async Task AddClaimsAsync(UserIdentity user, IEnumerable<Claim> claims, CancellationToken cancellationToken = default)
+    public override async Task AddClaimsAsync(CustomUser user, IEnumerable<Claim> claims, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(user);
         cancellationToken.ThrowIfCancellationRequested();
@@ -36,7 +36,7 @@ public partial class DaprActorUserStore
     }
 
     /// <inheritdoc/>
-    public override async Task<IList<Claim>> GetClaimsAsync(UserIdentity user, CancellationToken cancellationToken = default)
+    public override async Task<IList<Claim>> GetClaimsAsync(CustomUser user, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(user);
         cancellationToken.ThrowIfCancellationRequested();
@@ -47,14 +47,14 @@ public partial class DaprActorUserStore
     }
 
     /// <inheritdoc/>
-    public override async Task<IList<UserIdentity>> GetUsersForClaimAsync(Claim claim, CancellationToken cancellationToken = default)
+    public override async Task<IList<CustomUser>> GetUsersForClaimAsync(Claim claim, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(claim);
         cancellationToken.ThrowIfCancellationRequested();
         ThrowIfDisposed();
 
         IEnumerable<string> allUsers = await _userIdentityCollection.AllAsync();
-        List<Task<UserIdentity?>> userTasks = [];
+        List<Task<CustomUser?>> userTasks = [];
         foreach (string userId in allUsers)
         {
             userTasks.Add(GetUserIfHasClaimAsync(claim, userId));
@@ -67,7 +67,7 @@ public partial class DaprActorUserStore
     }
 
     /// <inheritdoc/>
-    public override async Task RemoveClaimsAsync(UserIdentity user, IEnumerable<Claim> claims, CancellationToken cancellationToken = default)
+    public override async Task RemoveClaimsAsync(CustomUser user, IEnumerable<Claim> claims, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(user);
         cancellationToken.ThrowIfCancellationRequested();
@@ -78,7 +78,7 @@ public partial class DaprActorUserStore
     }
 
     /// <inheritdoc/>
-    public override async Task ReplaceClaimAsync(UserIdentity user, Claim claim, Claim newClaim, CancellationToken cancellationToken = default)
+    public override async Task ReplaceClaimAsync(CustomUser user, Claim claim, Claim newClaim, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(user);
         cancellationToken.ThrowIfCancellationRequested();
@@ -88,7 +88,7 @@ public partial class DaprActorUserStore
         await actor.ReplaceClaimAsync(claim, newClaim);
     }
 
-    private static async Task<UserIdentity?> GetUserIfHasClaimAsync(Claim claim, string userId)
+    private static async Task<CustomUser?> GetUserIfHasClaimAsync(Claim claim, string userId)
     {
         IUserIdentityActor collection = ActorProxy.DefaultProxyFactory.CreateUserIdentityActor(userId);
         if ((await collection.GetClaimsAsync()).Any(p => p.Type == claim.Type && p.Value == claim.Value))

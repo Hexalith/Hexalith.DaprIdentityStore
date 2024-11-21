@@ -27,7 +27,7 @@ public partial class UserIdentityActorTest
     /// Gets a sample user identity for testing purposes.
     /// Contains normalized username and email for index testing.
     /// </summary>
-    private UserIdentity User => new()
+    private CustomUser User => new()
     {
         Id = "user 1",
         UserName = "user one",
@@ -45,7 +45,7 @@ public partial class UserIdentityActorTest
     {
         // Arrange
         // Create a test user identity with normalized username and email
-        UserIdentity user = User;
+        CustomUser user = User;
 
         // Create a mock state manager to verify actor state operations
         Mock<IActorStateManager> stateManagerMoq = new(MockBehavior.Strict);
@@ -65,14 +65,14 @@ public partial class UserIdentityActorTest
             .Verifiable(Times.Once);
 
         // Create services for the actor to use
-        Mock<IUserIdentityCollectionService> collectionServiceMoq = new(MockBehavior.Strict);
-        Mock<IUserIdentityNameIndexService> nameServiceMoq = new(MockBehavior.Strict);
-        Mock<IUserIdentityEmailIndexService> emailServiceMoq = new(MockBehavior.Strict);
-        Mock<IUserIdentityClaimsIndexService> claimServiceMoq = new(MockBehavior.Strict);
-        Mock<IUserIdentityTokenIndexService> tokenServiceMoq = new(MockBehavior.Strict);
-        Mock<IUserIdentityLoginIndexService> loginServiceMoq = new(MockBehavior.Strict);
+        Mock<IUserCollectionService> collectionServiceMoq = new(MockBehavior.Strict);
+        Mock<IUserNameIndexService> nameServiceMoq = new(MockBehavior.Strict);
+        Mock<IUserEmailIndexService> emailServiceMoq = new(MockBehavior.Strict);
+        Mock<IUserClaimsIndexService> claimServiceMoq = new(MockBehavior.Strict);
+        Mock<IUserTokenIndexService> tokenServiceMoq = new(MockBehavior.Strict);
+        Mock<IUserLoginIndexService> loginServiceMoq = new(MockBehavior.Strict);
 
-        collectionServiceMoq.Setup(p => p.AddUserAsync(user.Id))
+        collectionServiceMoq.Setup(p => p.AddAsync(user.Id))
             .Returns(Task.CompletedTask)
             .Verifiable(Times.Once);
         emailServiceMoq.Setup(p => p.AddAsync(user.NormalizedEmail, user.Id))
@@ -121,7 +121,7 @@ public partial class UserIdentityActorTest
         // Arrange
         // Arrange
         // Create a test user identity with normalized username and email
-        UserIdentity user = User;
+        CustomUser user = User;
 
         // Create mock state manager
         Mock<IActorStateManager> stateManagerMoq = new(MockBehavior.Strict);
@@ -148,16 +148,16 @@ public partial class UserIdentityActorTest
             .Verifiable();
 
         // Create service mocks
-        Mock<IUserIdentityCollectionService> collectionServiceMoq = new(MockBehavior.Strict);
-        Mock<IUserIdentityNameIndexService> nameServiceMoq = new(MockBehavior.Strict);
-        Mock<IUserIdentityEmailIndexService> emailServiceMoq = new(MockBehavior.Strict);
-        Mock<IUserIdentityClaimsIndexService> claimServiceMoq = new(MockBehavior.Strict);
-        Mock<IUserIdentityTokenIndexService> tokenServiceMoq = new(MockBehavior.Strict);
-        Mock<IUserIdentityLoginIndexService> loginServiceMoq = new(MockBehavior.Strict);
+        Mock<IUserCollectionService> collectionServiceMoq = new(MockBehavior.Strict);
+        Mock<IUserNameIndexService> nameServiceMoq = new(MockBehavior.Strict);
+        Mock<IUserEmailIndexService> emailServiceMoq = new(MockBehavior.Strict);
+        Mock<IUserClaimsIndexService> claimServiceMoq = new(MockBehavior.Strict);
+        Mock<IUserTokenIndexService> tokenServiceMoq = new(MockBehavior.Strict);
+        Mock<IUserLoginIndexService> loginServiceMoq = new(MockBehavior.Strict);
 
         // Setup service operations
         collectionServiceMoq
-            .Setup(p => p.RemoveUserAsync(user.Id))
+            .Setup(p => p.RemoveAsync(user.Id))
             .Returns(Task.CompletedTask)
             .Verifiable();
 

@@ -33,7 +33,7 @@ public partial class UserIdentityActorTest
     {
         // Arrange
         // Create a test user identity with normalized username and email
-        UserIdentity user = User;
+        CustomUser user = User;
 
         // Create initial state with existing claims
         UserActorState initialState = new()
@@ -82,12 +82,12 @@ public partial class UserIdentityActorTest
             .Verifiable();
 
         // Create service mocks
-        Mock<IUserIdentityCollectionService> collectionServiceMoq = new(MockBehavior.Strict);
-        Mock<IUserIdentityNameIndexService> nameServiceMoq = new(MockBehavior.Strict);
-        Mock<IUserIdentityEmailIndexService> emailServiceMoq = new(MockBehavior.Strict);
-        Mock<IUserIdentityClaimsIndexService> claimServiceMoq = new(MockBehavior.Strict);
-        Mock<IUserIdentityTokenIndexService> tokenServiceMoq = new(MockBehavior.Strict);
-        Mock<IUserIdentityLoginIndexService> loginServiceMoq = new(MockBehavior.Strict);
+        Mock<IUserCollectionService> collectionServiceMoq = new(MockBehavior.Strict);
+        Mock<IUserNameIndexService> nameServiceMoq = new(MockBehavior.Strict);
+        Mock<IUserEmailIndexService> emailServiceMoq = new(MockBehavior.Strict);
+        Mock<IUserClaimsIndexService> claimServiceMoq = new(MockBehavior.Strict);
+        Mock<IUserTokenIndexService> tokenServiceMoq = new(MockBehavior.Strict);
+        Mock<IUserLoginIndexService> loginServiceMoq = new(MockBehavior.Strict);
 
         // Setup claim service mock for each new claim
         foreach (Claim claim in newClaims)
@@ -131,7 +131,7 @@ public partial class UserIdentityActorTest
     public async Task GetClaimsAsyncShouldReturnAllUserClaims()
     {
         // Arrange
-        UserIdentity user = User;
+        CustomUser user = User;
 
         // Create state with existing claims
         UserActorState state = new()
@@ -157,12 +157,12 @@ public partial class UserIdentityActorTest
             .Verifiable();
 
         // Create service mocks
-        Mock<IUserIdentityCollectionService> collectionServiceMoq = new(MockBehavior.Strict);
-        Mock<IUserIdentityNameIndexService> nameServiceMoq = new(MockBehavior.Strict);
-        Mock<IUserIdentityEmailIndexService> emailServiceMoq = new(MockBehavior.Strict);
-        Mock<IUserIdentityClaimsIndexService> claimServiceMoq = new(MockBehavior.Strict);
-        Mock<IUserIdentityTokenIndexService> tokenServiceMoq = new(MockBehavior.Strict);
-        Mock<IUserIdentityLoginIndexService> loginServiceMoq = new(MockBehavior.Strict);
+        Mock<IUserCollectionService> collectionServiceMoq = new(MockBehavior.Strict);
+        Mock<IUserNameIndexService> nameServiceMoq = new(MockBehavior.Strict);
+        Mock<IUserEmailIndexService> emailServiceMoq = new(MockBehavior.Strict);
+        Mock<IUserClaimsIndexService> claimServiceMoq = new(MockBehavior.Strict);
+        Mock<IUserTokenIndexService> tokenServiceMoq = new(MockBehavior.Strict);
+        Mock<IUserLoginIndexService> loginServiceMoq = new(MockBehavior.Strict);
 
         // Create actor host and actor
         ActorHost actorHost = ActorHost.CreateForTest<UserIdentityActor>(

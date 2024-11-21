@@ -1,4 +1,4 @@
-// <copyright file="UserIdentity.cs" company="ITANEO">
+// <copyright file="CustomUser.cs" company="ITANEO">
 // Copyright (c) ITANEO (https://www.itaneo.com). All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 // </copyright>
@@ -12,13 +12,17 @@ using Microsoft.AspNetCore.Identity;
 /// Extends the base IdentityUser class to provide core user identity functionality.
 /// This class serves as the primary user entity for authentication and user management.
 /// </summary>
-public class UserIdentity : IdentityUser
+public class CustomUser : IdentityUser
 {
     /// <summary>
-    /// Gets or sets the contact identifier associated with the user.
+    /// Gets or sets the external data associated with the user.
+    /// This can be used to store additional information from external systems.
     /// </summary>
-    /// <value>
-    /// The contact identifier associated with the user.
-    /// </value>
-    public string? ContactId { get; set; }
+    public string? ExternalData { get; set; }
+
+    /// <summary>
+    /// Gets or sets the external identifier for the user.
+    /// This can be used to link the user to an external system.
+    /// </summary>
+    public string? ExternalId { get; set; }
 }

@@ -20,10 +20,10 @@ using Microsoft.AspNetCore.Identity;
 /// Represents a user store that uses Dapr actors for user management.
 /// </summary>
 public partial class DaprActorUserStore
-    : UserStoreBase<UserIdentity, string, ApplicationUserClaim, ApplicationUserLogin, ApplicationUserToken>
+    : UserStoreBase<CustomUser, string, CustomUserClaim, CustomUserLogin, CustomUserToken>
 {
     /// <inheritdoc/>
-    protected override async Task AddUserTokenAsync(ApplicationUserToken token)
+    protected override async Task AddUserTokenAsync(CustomUserToken token)
     {
         ArgumentNullException.ThrowIfNull(token);
         ArgumentException.ThrowIfNullOrWhiteSpace(token.LoginProvider);
@@ -35,7 +35,7 @@ public partial class DaprActorUserStore
     }
 
     /// <inheritdoc/>
-    protected override async Task<ApplicationUserToken?> FindTokenAsync(UserIdentity user, string loginProvider, string name, CancellationToken cancellationToken)
+    protected override async Task<CustomUserToken?> FindTokenAsync(CustomUser user, string loginProvider, string name, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(user);
         ArgumentException.ThrowIfNullOrWhiteSpace(loginProvider);
@@ -46,7 +46,7 @@ public partial class DaprActorUserStore
     }
 
     /// <inheritdoc/>
-    protected override async Task RemoveUserTokenAsync(ApplicationUserToken token)
+    protected override async Task RemoveUserTokenAsync(CustomUserToken token)
     {
         ArgumentNullException.ThrowIfNull(token);
         ArgumentException.ThrowIfNullOrWhiteSpace(token.LoginProvider);

@@ -1,4 +1,4 @@
-﻿// <copyright file="IUserIdentityLoginIndexService.cs" company="ITANEO">
+﻿// <copyright file="IUserLoginIndexService.cs" company="ITANEO">
 // Copyright (c) ITANEO (https://www.itaneo.com). All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 // </copyright>
@@ -9,7 +9,7 @@ namespace Hexalith.DaprIdentityStore.Services;
 /// Defines the interface for managing user identity logins in a collection.
 /// This service handles the mapping between user IDs and their external login providers.
 /// </summary>
-public interface IUserIdentityLoginIndexService
+public interface IUserLoginIndexService
 {
     /// <summary>
     /// Associates a user ID with an external login provider in the actor state store.

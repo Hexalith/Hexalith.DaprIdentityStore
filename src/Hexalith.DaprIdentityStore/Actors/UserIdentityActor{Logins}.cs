@@ -35,7 +35,7 @@ public partial class UserIdentityActor
         _state.Logins = _state
             .Logins
             .Where(p => p.LoginProvider != login.LoginProvider || p.ProviderKey != login.ProviderKey)
-            .Union([new ApplicationUserLogin { LoginProvider = login.LoginProvider }]);
+            .Union([new CustomUserLogin { LoginProvider = login.LoginProvider }]);
 
         await StateManager.SetStateAsync(DaprIdentityStoreConstants.UserIdentityStateName, _state, CancellationToken.None);
         await StateManager.SaveStateAsync(CancellationToken.None);
@@ -49,7 +49,7 @@ public partial class UserIdentityActor
     /// <param name="loginProvider">Name of the login provider.</param>
     /// <param name="providerKey">Unique key from the provider.</param>
     /// <returns>Login information if found, null otherwise.</returns>
-    public async Task<ApplicationUserLogin?> FindLoginAsync(string loginProvider, string providerKey)
+    public async Task<CustomUserLogin?> FindLoginAsync(string loginProvider, string providerKey)
     {
         _state = await GetStateAsync(CancellationToken.None);
         return _state is null

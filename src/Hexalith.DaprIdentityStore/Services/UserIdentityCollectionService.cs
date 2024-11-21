@@ -21,16 +21,16 @@ using Hexalith.Infrastructure.DaprRuntime.Actors;
 /// Initializes a new instance of the <see cref="UserIdentityCollectionService"/> class.
 /// </remarks>
 /// <param name="actorHost">The actor host for creating actor proxies.</param>
-public class UserIdentityCollectionService(IActorProxyFactory actorHost) : IUserIdentityCollectionService
+public class UserIdentityCollectionService(IActorProxyFactory actorHost) : IUserCollectionService
 {
     private readonly IKeyHashActor _keyHashActor = actorHost.CreateAllUsersProxy();
 
     /// <inheritdoc/>
-    public async Task AddUserAsync(string id) => await _keyHashActor.AddAsync(id);
+    public async Task AddAsync(string id) => await _keyHashActor.AddAsync(id);
 
     /// <inheritdoc/>
     public async Task<IEnumerable<string>> AllAsync() => await _keyHashActor.AllAsync();
 
     /// <inheritdoc/>
-    public async Task RemoveUserAsync(string id) => await _keyHashActor.RemoveAsync(id);
+    public async Task RemoveAsync(string id) => await _keyHashActor.RemoveAsync(id);
 }

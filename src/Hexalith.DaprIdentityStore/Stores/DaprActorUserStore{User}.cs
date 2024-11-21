@@ -25,10 +25,10 @@ using Microsoft.AspNetCore.Identity;
 /// Represents a user store that uses Dapr actors for user management.
 /// </summary>
 public partial class DaprActorUserStore
-    : UserStoreBase<UserIdentity, string, ApplicationUserClaim, ApplicationUserLogin, ApplicationUserToken>
+    : UserStoreBase<CustomUser, string, CustomUserClaim, CustomUserLogin, CustomUserToken>
 {
-    private readonly IUserIdentityLoginIndexService _loginCollectionService;
-    private readonly IUserIdentityCollectionService _userIdentityCollection;
+    private readonly IUserLoginIndexService _loginCollectionService;
+    private readonly IUserCollectionService _userIdentityCollection;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="DaprActorUserStore"/> class.
@@ -36,8 +36,8 @@ public partial class DaprActorUserStore
     /// <param name="userIdentityCollection">The user identity collection service.</param>
     /// <param name="loginCollectionService"></param>
     public DaprActorUserStore(
-        IUserIdentityCollectionService userIdentityCollection,
-        IUserIdentityLoginIndexService loginCollectionService)
+        IUserCollectionService userIdentityCollection,
+        IUserLoginIndexService loginCollectionService)
         : base(new HexalithIdentityErrorDescriber())
     {
         ArgumentNullException.ThrowIfNull(userIdentityCollection);
@@ -48,11 +48,11 @@ public partial class DaprActorUserStore
 
     /// <inheritdoc/>
 #pragma warning disable S4462 // Calls to "async" methods should not be blocking
-    public override IQueryable<UserIdentity> Users => GetUsersAsync().GetAwaiter().GetResult().AsQueryable();
+    public override IQueryable<CustomUser> Users => GetUsersAsync().GetAwaiter().GetResult().AsQueryable();
 #pragma warning restore S4462 // Calls to "async" methods should not be blocking
 
     /// <inheritdoc/>
-    public override async Task<IdentityResult> CreateAsync(UserIdentity user, CancellationToken cancellationToken = default)
+    public override async Task<IdentityResult> CreateAsync(CustomUser user, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(user);
         cancellationToken.ThrowIfCancellationRequested();
@@ -64,7 +64,7 @@ public partial class DaprActorUserStore
     }
 
     /// <inheritdoc/>
-    public override async Task<IdentityResult> DeleteAsync(UserIdentity user, CancellationToken cancellationToken = default)
+    public override async Task<IdentityResult> DeleteAsync(CustomUser user, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(user);
         cancellationToken.ThrowIfCancellationRequested();
@@ -76,7 +76,7 @@ public partial class DaprActorUserStore
     }
 
     /// <inheritdoc/>
-    public override async Task<UserIdentity?> FindByEmailAsync(string normalizedEmail, CancellationToken cancellationToken = default)
+    public override async Task<CustomUser?> FindByEmailAsync(string normalizedEmail, CancellationToken cancellationToken = default)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(normalizedEmail);
         cancellationToken.ThrowIfCancellationRequested();
@@ -88,7 +88,7 @@ public partial class DaprActorUserStore
     }
 
     /// <inheritdoc/>
-    public override async Task<UserIdentity?> FindByIdAsync(string userId, CancellationToken cancellationToken = default)
+    public override async Task<CustomUser?> FindByIdAsync(string userId, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(userId);
         cancellationToken.ThrowIfCancellationRequested();
@@ -99,7 +99,7 @@ public partial class DaprActorUserStore
     }
 
     /// <inheritdoc/>
-    public override async Task<UserIdentity?> FindByNameAsync(string normalizedUserName, CancellationToken cancellationToken = default)
+    public override async Task<CustomUser?> FindByNameAsync(string normalizedUserName, CancellationToken cancellationToken = default)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(normalizedUserName);
         cancellationToken.ThrowIfCancellationRequested();
@@ -111,7 +111,7 @@ public partial class DaprActorUserStore
     }
 
     /// <inheritdoc/>
-    public override async Task<IdentityResult> UpdateAsync(UserIdentity user, CancellationToken cancellationToken = default)
+    public override async Task<IdentityResult> UpdateAsync(CustomUser user, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(user);
         cancellationToken.ThrowIfCancellationRequested();
@@ -127,7 +127,7 @@ public partial class DaprActorUserStore
     }
 
     /// <inheritdoc/>
-    protected override async Task<UserIdentity?> FindUserAsync(string userId, CancellationToken cancellationToken)
+    protected override async Task<CustomUser?> FindUserAsync(string userId, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(userId);
         cancellationToken.ThrowIfCancellationRequested();
@@ -139,19 +139,19 @@ public partial class DaprActorUserStore
     /// Gets the list of all users asynchronously.
     /// </summary>
     /// <returns>A list of all users.</returns>
-    private async Task<List<UserIdentity>> GetUsersAsync()
+    private async Task<List<CustomUser>> GetUsersAsync()
     {
         ThrowIfDisposed();
 
         IKeyHashActor allProxy = ActorProxy.DefaultProxyFactory.CreateAllUsersProxy();
         IEnumerable<string> userIds = await allProxy.AllAsync();
-        List<Task<UserIdentity?>> tasks = [];
+        List<Task<CustomUser?>> tasks = [];
         foreach (string userId in userIds)
         {
             IUserIdentityActor userProxy = ActorProxy.DefaultProxyFactory.CreateUserIdentityActor(userId);
             tasks.Add(userProxy.FindAsync());
         }
 
-        return (await Task.WhenAll(tasks)).Where(p => p != null).OfType<UserIdentity>().ToList();
+        return (await Task.WhenAll(tasks)).Where(p => p != null).OfType<CustomUser>().ToList();
     }
 }

@@ -34,8 +34,8 @@ public partial class UserIdentityActor
         }
 
         // Add claims to user state and remove duplicates
-        IEnumerable<ApplicationUserClaim> newClaims = claims
-            .Select(p => new ApplicationUserClaim { UserId = userId, ClaimType = p.Type, ClaimValue = p.Value });
+        IEnumerable<CustomUserClaim> newClaims = claims
+            .Select(p => new CustomUserClaim { UserId = userId, ClaimType = p.Type, ClaimValue = p.Value });
         _state.Claims = _state.Claims.Union(newClaims);
 
         foreach (Claim claim in claims)
@@ -114,7 +114,7 @@ public partial class UserIdentityActor
         _state.Claims = _state
             .Claims
             .Where(p => p.ClaimType != claim.Type || p.ClaimValue != claim.Value)
-            .Union([new ApplicationUserClaim
+            .Union([new CustomUserClaim
             {
                 UserId = Id.ToUnescapeString(),
                 ClaimType = newClaim.ValueType,

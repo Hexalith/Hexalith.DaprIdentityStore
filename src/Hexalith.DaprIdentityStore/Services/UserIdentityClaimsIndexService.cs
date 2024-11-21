@@ -20,7 +20,7 @@ using Hexalith.Infrastructure.DaprRuntime.Actors;
 /// </remarks>
 /// <param name="actorProxyFactory">The actor proxy factory instance.</param>
 public class UserIdentityClaimsIndexService(
-    IActorProxyFactory actorProxyFactory) : IUserIdentityClaimsIndexService
+    IActorProxyFactory actorProxyFactory) : IUserClaimsIndexService
 {
     private readonly Func<string, string, IKeyHashActor> _keyValueActor = actorProxyFactory.CreateClaimUsersIndexProxy;
 

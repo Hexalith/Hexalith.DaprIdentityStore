@@ -1,4 +1,4 @@
-﻿// <copyright file="IUserIdentityCollectionService.cs" company="ITANEO">
+﻿// <copyright file="IRoleCollectionService.cs" company="ITANEO">
 // Copyright (c) ITANEO (https://www.itaneo.com). All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 // </copyright>
@@ -8,7 +8,7 @@ namespace Hexalith.DaprIdentityStore.Services;
 /// <summary>
 /// Provides operations for managing user identity collections.
 /// </summary>
-public interface IUserIdentityCollectionService
+public interface IRoleCollectionService
 {
     /// <summary>
     /// Adds a new user to the identity collection.

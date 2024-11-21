@@ -20,7 +20,7 @@ public partial class UserIdentityActor
     /// </summary>
     /// <param name="token">Token information to store.</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public async Task AddTokenAsync(ApplicationUserToken token)
+    public async Task AddTokenAsync(CustomUserToken token)
     {
         string userId = Id.ToUnescapeString();
         _state = await GetStateAsync(CancellationToken.None);
@@ -45,7 +45,7 @@ public partial class UserIdentityActor
     /// <param name="loginProvider">Name of the login provider.</param>
     /// <param name="name">Name of the token.</param>
     /// <returns>Token information if found, null otherwise.</returns>
-    public async Task<ApplicationUserToken?> GetTokenAsync(string loginProvider, string name)
+    public async Task<CustomUserToken?> GetTokenAsync(string loginProvider, string name)
     {
         _state = await GetStateAsync(CancellationToken.None);
         return _state is null

@@ -24,30 +24,30 @@ using Hexalith.Infrastructure.DaprRuntime.Helpers;
 /// <param name="loginIndexService">Service for managing login-based user indexing.</param>
 public partial class UserIdentityActor(
     ActorHost host,
-    IUserIdentityCollectionService collectionService,
-    IUserIdentityEmailIndexService emailIndexService,
-    IUserIdentityNameIndexService nameIndexService,
-    IUserIdentityClaimsIndexService claimIndexService,
-    IUserIdentityTokenIndexService tokenIndexService,
-    IUserIdentityLoginIndexService loginIndexService)
+    IUserCollectionService collectionService,
+    IUserEmailIndexService emailIndexService,
+    IUserNameIndexService nameIndexService,
+    IUserClaimsIndexService claimIndexService,
+    IUserTokenIndexService tokenIndexService,
+    IUserLoginIndexService loginIndexService)
     : Actor(host), IUserIdentityActor
 {
-    private readonly IUserIdentityClaimsIndexService _claimIndexService = claimIndexService;
+    private readonly IUserClaimsIndexService _claimIndexService = claimIndexService;
 
     /// <summary>
     /// Collection services for managing different aspects of user identity.
     /// </summary>
-    private readonly IUserIdentityCollectionService _collectionService = collectionService;
+    private readonly IUserCollectionService _collectionService = collectionService;
 
-    private readonly IUserIdentityEmailIndexService _emailCollectionService = emailIndexService;
+    private readonly IUserEmailIndexService _emailCollectionService = emailIndexService;
 
     // Manages email-based indexing
-    private readonly IUserIdentityLoginIndexService _loginIndexService = loginIndexService;
+    private readonly IUserLoginIndexService _loginIndexService = loginIndexService;
 
     // Manages the main user collection
-    private readonly IUserIdentityNameIndexService _nameCollectionService = nameIndexService;
+    private readonly IUserNameIndexService _nameCollectionService = nameIndexService;
 
-    private readonly IUserIdentityTokenIndexService _tokenIndexService = tokenIndexService;
+    private readonly IUserTokenIndexService _tokenIndexService = tokenIndexService;
 
     // Manages username-based indexing
 
@@ -70,12 +70,12 @@ public partial class UserIdentityActor(
     /// <param name="stateManager">Optional state manager for managing actor state.</param>
     internal UserIdentityActor(
         ActorHost host,
-        IUserIdentityCollectionService collectionService,
-        IUserIdentityEmailIndexService emailCollectionService,
-        IUserIdentityNameIndexService nameCollectionService,
-        IUserIdentityClaimsIndexService claimIndexService,
-        IUserIdentityTokenIndexService tokenIndexService,
-        IUserIdentityLoginIndexService loginCollectionService,
+        IUserCollectionService collectionService,
+        IUserEmailIndexService emailCollectionService,
+        IUserNameIndexService nameCollectionService,
+        IUserClaimsIndexService claimIndexService,
+        IUserTokenIndexService tokenIndexService,
+        IUserLoginIndexService loginCollectionService,
         IActorStateManager stateManager)
         : this(
               host,
@@ -93,7 +93,7 @@ public partial class UserIdentityActor(
     /// <param name="user">The user identity to create.</param>
     /// <returns>True if creation was successful, false if user already exists.</returns>
     /// <exception cref="InvalidOperationException">Thrown when user ID doesn't match actor ID.</exception>
-    public async Task<bool> CreateAsync(UserIdentity user)
+    public async Task<bool> CreateAsync(CustomUser user)
     {
         ArgumentNullException.ThrowIfNull(user);
 
@@ -115,7 +115,7 @@ public partial class UserIdentityActor(
         await StateManager.AddStateAsync(DaprIdentityStoreConstants.UserIdentityStateName, _state, CancellationToken.None);
         await StateManager.SaveStateAsync(CancellationToken.None);
 
-        await _collectionService.AddUserAsync(user.Id);
+        await _collectionService.AddAsync(user.Id);
 
         // Create email index if email exists
         if (!string.IsNullOrWhiteSpace(user.NormalizedEmail))
@@ -162,7 +162,7 @@ public partial class UserIdentityActor(
         }
 
         // Remove from indexes
-        await _collectionService.RemoveUserAsync(id);
+        await _collectionService.RemoveAsync(id);
     }
 
     /// <summary>
@@ -175,7 +175,7 @@ public partial class UserIdentityActor(
     /// Retrieves a user's identity information.
     /// </summary>
     /// <returns>The user identity if found, null otherwise.</returns>
-    public async Task<UserIdentity?> FindAsync()
+    public async Task<CustomUser?> FindAsync()
     {
         _state = await GetStateAsync(CancellationToken.None);
         return _state?.User;
@@ -188,7 +188,7 @@ public partial class UserIdentityActor(
     /// <param name="user">The updated user information.</param>
     /// <exception cref="InvalidOperationException">Thrown when user doesn't exist.</exception>
     /// <returns>A task representing the asynchronous operation.</returns>
-    public async Task UpdateAsync(UserIdentity user)
+    public async Task UpdateAsync(CustomUser user)
     {
         ArgumentNullException.ThrowIfNull(user);
         _state = await GetStateAsync(CancellationToken.None);
@@ -198,7 +198,7 @@ public partial class UserIdentityActor(
         }
 
         // Update user state
-        UserIdentity oldUser = _state.User;
+        CustomUser oldUser = _state.User;
         _state.User = user;
         await StateManager.SetStateAsync(DaprIdentityStoreConstants.UserIdentityStateName, _state, CancellationToken.None);
         await StateManager.SaveStateAsync(CancellationToken.None);

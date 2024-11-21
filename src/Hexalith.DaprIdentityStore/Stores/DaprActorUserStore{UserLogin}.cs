@@ -21,10 +21,10 @@ using Microsoft.AspNetCore.Identity;
 /// Represents a user store that uses Dapr actors for user management.
 /// </summary>
 public partial class DaprActorUserStore
-    : UserStoreBase<UserIdentity, string, ApplicationUserClaim, ApplicationUserLogin, ApplicationUserToken>
+    : UserStoreBase<CustomUser, string, CustomUserClaim, CustomUserLogin, CustomUserToken>
 {
     /// <inheritdoc/>
-    public override async Task AddLoginAsync(UserIdentity user, UserLoginInfo login, CancellationToken cancellationToken = default)
+    public override async Task AddLoginAsync(CustomUser user, UserLoginInfo login, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(login);
         ArgumentNullException.ThrowIfNull(user);
@@ -38,7 +38,7 @@ public partial class DaprActorUserStore
     }
 
     /// <inheritdoc/>
-    public override async Task<IList<UserLoginInfo>> GetLoginsAsync(UserIdentity user, CancellationToken cancellationToken = default)
+    public override async Task<IList<UserLoginInfo>> GetLoginsAsync(CustomUser user, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(user);
         ArgumentException.ThrowIfNullOrWhiteSpace(user.Id);
@@ -49,7 +49,7 @@ public partial class DaprActorUserStore
     }
 
     /// <inheritdoc/>
-    public override async Task RemoveLoginAsync(UserIdentity user, string loginProvider, string providerKey, CancellationToken cancellationToken = default)
+    public override async Task RemoveLoginAsync(CustomUser user, string loginProvider, string providerKey, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(user);
         ArgumentException.ThrowIfNullOrWhiteSpace(loginProvider);
@@ -61,7 +61,7 @@ public partial class DaprActorUserStore
     }
 
     /// <inheritdoc/>
-    protected override async Task<ApplicationUserLogin?> FindUserLoginAsync(string userId, string loginProvider, string providerKey, CancellationToken cancellationToken)
+    protected override async Task<CustomUserLogin?> FindUserLoginAsync(string userId, string loginProvider, string providerKey, CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(loginProvider);
         ArgumentException.ThrowIfNullOrWhiteSpace(providerKey);
@@ -72,7 +72,7 @@ public partial class DaprActorUserStore
     }
 
     /// <inheritdoc/>
-    protected override async Task<ApplicationUserLogin?> FindUserLoginAsync(string loginProvider, string providerKey, CancellationToken cancellationToken)
+    protected override async Task<CustomUserLogin?> FindUserLoginAsync(string loginProvider, string providerKey, CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(loginProvider);
         ArgumentException.ThrowIfNullOrWhiteSpace(providerKey);

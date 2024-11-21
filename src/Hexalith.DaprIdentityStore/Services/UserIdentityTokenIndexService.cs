@@ -21,13 +21,13 @@ using Hexalith.Infrastructure.DaprRuntime.Actors;
 /// Initializes a new instance of the <see cref="UserIdentityTokenIndexService"/> class.
 /// </remarks>
 /// <param name="factory">The actor proxy factory.</param>
-public class UserIdentityTokenIndexService(IActorProxyFactory factory) : IUserIdentityTokenIndexService
+public class UserIdentityTokenIndexService(IActorProxyFactory factory) : IUserTokenIndexService
 {
     // Factory function to create key-value actors for login indexing
     private readonly Func<string, string, IKeyValueActor> _keyValueActor = factory.CreateUserTokenIndexProxy;
 
     /// <inheritdoc/>
-    public Task AddAsync(ApplicationUserToken token, string userId)
+    public Task AddAsync(CustomUserToken token, string userId)
     {
         ArgumentNullException.ThrowIfNull(token);
         ArgumentNullException.ThrowIfNull(userId);
@@ -44,7 +44,7 @@ public class UserIdentityTokenIndexService(IActorProxyFactory factory) : IUserId
     }
 
     /// <inheritdoc/>
-    public Task<string?> FindUserIdAsync(ApplicationUserToken token)
+    public Task<string?> FindUserIdAsync(CustomUserToken token)
     {
         ArgumentNullException.ThrowIfNull(token);
         return _keyValueActor(token.LoginProvider, token.Name).GetAsync();
@@ -59,7 +59,7 @@ public class UserIdentityTokenIndexService(IActorProxyFactory factory) : IUserId
     }
 
     /// <inheritdoc/>
-    public Task RemoveAsync(ApplicationUserToken token)
+    public Task RemoveAsync(CustomUserToken token)
     {
         ArgumentNullException.ThrowIfNull(token);
         return _keyValueActor(token.LoginProvider, token.Name).RemoveAsync();

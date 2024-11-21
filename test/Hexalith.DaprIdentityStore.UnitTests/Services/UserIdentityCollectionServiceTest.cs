@@ -56,11 +56,11 @@ public class UserIdentityCollectionServiceTest
                 ProxyFactory = proxyFactoryMock.Object,
             });
 
-        UserIdentityCollectionService service = new(host);
+        UserIdentityCollectionService service = new(host.ProxyFactory);
         string id = Guid.NewGuid().ToString();
 
         // Act
-        await service.AddUserAsync(id);
+        await service.AddAsync(id);
 
         // Verify the actor methods were called
         actorMock.Verify();

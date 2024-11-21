@@ -38,14 +38,14 @@ public interface IUserIdentityActor : IActor
     /// </summary>
     /// <param name="token">The token to add.</param>
     /// <returns>A task representing the asynchronous operation.</returns>
-    Task AddTokenAsync(ApplicationUserToken token);
+    Task AddTokenAsync(CustomUserToken token);
 
     /// <summary>
     /// Creates a new user identity asynchronously.
     /// </summary>
     /// <param name="user">The user identity to create.</param>
     /// <returns>True if the creation was successful; otherwise, false.</returns>
-    Task<bool> CreateAsync(UserIdentity user);
+    Task<bool> CreateAsync(CustomUser user);
 
     /// <summary>
     /// Deletes a user identity asynchronously.
@@ -63,7 +63,7 @@ public interface IUserIdentityActor : IActor
     /// Finds a user identity by its ID asynchronously.
     /// </summary>
     /// <returns>The user identity if found; otherwise, null.</returns>
-    Task<UserIdentity?> FindAsync();
+    Task<CustomUser?> FindAsync();
 
     /// <summary>
     /// Finds a login for a user identity asynchronously.
@@ -71,7 +71,7 @@ public interface IUserIdentityActor : IActor
     /// <param name="loginProvider">The login provider.</param>
     /// <param name="providerKey">The provider key.</param>
     /// <returns>The user login information if found; otherwise, null.</returns>
-    Task<ApplicationUserLogin?> FindLoginAsync(string loginProvider, string providerKey);
+    Task<CustomUserLogin?> FindLoginAsync(string loginProvider, string providerKey);
 
     /// <summary>
     /// Retrieves all claims associated with the user identity asynchronously.
@@ -91,7 +91,7 @@ public interface IUserIdentityActor : IActor
     /// <param name="loginProvider">The login provider.</param>
     /// <param name="name">The name of the token.</param>
     /// <returns>The user token if found; otherwise, null.</returns>
-    Task<ApplicationUserToken?> GetTokenAsync(string loginProvider, string name);
+    Task<CustomUserToken?> GetTokenAsync(string loginProvider, string name);
 
     /// <summary>
     /// Removes a collection of claims from the user identity asynchronously.
@@ -129,5 +129,5 @@ public interface IUserIdentityActor : IActor
     /// </summary>
     /// <param name="user">The user identity to update.</param>
     /// <returns>A task representing the asynchronous operation.</returns>
-    Task UpdateAsync(UserIdentity user);
+    Task UpdateAsync(CustomUser user);
 }

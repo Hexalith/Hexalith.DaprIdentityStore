@@ -1,4 +1,4 @@
-﻿// <copyright file="UserIdentityCollectionService.cs" company="ITANEO">
+﻿// <copyright file="UserCollectionService.cs" company="ITANEO">
 // Copyright (c) ITANEO (https://www.itaneo.com). All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 // </copyright>
@@ -18,10 +18,10 @@ using Hexalith.Infrastructure.DaprRuntime.Actors;
 /// This service handles basic user identity operations like adding, removing, and listing users.
 /// </summary>
 /// <remarks>
-/// Initializes a new instance of the <see cref="UserIdentityCollectionService"/> class.
+/// Initializes a new instance of the <see cref="UserCollectionService"/> class.
 /// </remarks>
 /// <param name="actorHost">The actor host for creating actor proxies.</param>
-public class UserIdentityCollectionService(IActorProxyFactory actorHost) : IUserCollectionService
+public class UserCollectionService(IActorProxyFactory actorHost) : IUserCollectionService
 {
     private readonly IKeyHashActor _keyHashActor = actorHost.CreateAllUsersProxy();
 

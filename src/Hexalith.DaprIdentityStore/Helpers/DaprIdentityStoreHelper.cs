@@ -30,14 +30,26 @@ public static class DaprIdentityStoreHelper
     /// <returns>The IServiceCollection with the added services.</returns>
     public static IServiceCollection AddDaprIdentityStore(this IServiceCollection services)
     {
-        _ = services.AddSingleton<IUserCollectionService, UserIdentityCollectionService>();
-        _ = services.AddSingleton<IUserNameIndexService, UserIdentityNameIndexService>();
-        _ = services.AddSingleton<IUserEmailIndexService, UserIdentityEmailIndexService>();
-        _ = services.AddSingleton<IUserLoginIndexService, UserIdentityLoginIndexService>();
-        _ = services.AddSingleton<IUserClaimsIndexService, UserIdentityClaimsIndexService>();
-        _ = services.AddSingleton<IUserTokenIndexService, UserIdentityTokenIndexService>();
+        _ = services.AddSingleton<IUserCollectionService, UserCollectionService>();
+        _ = services.AddSingleton<IUserNameIndexService, UserNameIndexService>();
+        _ = services.AddSingleton<IUserEmailIndexService, UserEmailIndexService>();
+        _ = services.AddSingleton<IUserLoginIndexService, UserLoginIndexService>();
+        _ = services.AddSingleton<IUserClaimsIndexService, UserClaimsIndexService>();
+        _ = services.AddSingleton<IUserTokenIndexService, UserTokenIndexService>();
+        _ = services.AddSingleton<IRoleCollectionService, RoleCollectionService>();
+        _ = services.AddSingleton<IRoleNameIndexService, RoleNameIndexService>();
+        _ = services.AddSingleton<IRoleClaimsIndexService, RoleClaimsIndexService>();
         _ = services.AddIdentity<CustomUser, CustomRole>()
+            .AddRoles<CustomRole>()
+            .AddRoleValidator<RoleValidator<CustomRole>>()
+            .AddRoleManager<RoleManager<CustomRole>>()
+            .AddPasswordValidator<DaprActorRoleStore>()
+            .AddUserValidator<DaprActorRoleStore>()
+            .AddClaimsPrincipalFactory<UserClaimsPrincipalFactory<CustomUser, CustomRole>>()
+            .AddSignInManager<SignInManager<CustomUser>>()
+            .AddUserManager<UserManager<CustomUser>>()
             .AddDefaultTokenProviders()
+            .AddRoleStore<DaprActorRoleStore>()
             .AddUserStore<DaprActorUserStore>();
         _ = services.AddScoped<DaprActorUserStore>();
         _ = services.AddScoped<IUserClaimStore<CustomUser>>(services => services.GetRequiredService<DaprActorUserStore>());
@@ -64,12 +76,16 @@ public static class DaprIdentityStoreHelper
     public static void RegisterPartitionActors(this ActorRegistrationCollection actorRegistrationCollection)
     {
         ArgumentNullException.ThrowIfNull(actorRegistrationCollection);
-        actorRegistrationCollection.RegisterActor<UserIdentityActor>(DaprIdentityStoreConstants.DefaultUserActorTypeName);
+        actorRegistrationCollection.RegisterActor<UserActor>(DaprIdentityStoreConstants.DefaultUserActorTypeName);
         actorRegistrationCollection.RegisterActor<KeyHashActor>(DaprIdentityStoreConstants.UserCollectionActorTypeName);
         actorRegistrationCollection.RegisterActor<KeyValueActor>(DaprIdentityStoreConstants.UserEmailIndexActorTypeName);
         actorRegistrationCollection.RegisterActor<KeyValueActor>(DaprIdentityStoreConstants.UserNameIndexActorTypeName);
         actorRegistrationCollection.RegisterActor<KeyValueActor>(DaprIdentityStoreConstants.UserLoginIndexActorTypeName);
         actorRegistrationCollection.RegisterActor<KeyHashActor>(DaprIdentityStoreConstants.UserClaimIndexActorTypeName);
         actorRegistrationCollection.RegisterActor<KeyValueActor>(DaprIdentityStoreConstants.UserTokenIndexActorTypeName);
+        actorRegistrationCollection.RegisterActor<RoleActor>(DaprIdentityStoreConstants.DefaultRoleActorTypeName);
+        actorRegistrationCollection.RegisterActor<KeyHashActor>(DaprIdentityStoreConstants.RoleCollectionActorTypeName);
+        actorRegistrationCollection.RegisterActor<KeyHashActor>(DaprIdentityStoreConstants.RoleClaimIndexActorTypeName);
+        actorRegistrationCollection.RegisterActor<KeyValueActor>(DaprIdentityStoreConstants.RoleNameIndexActorTypeName);
     }
 }

@@ -17,6 +17,19 @@ namespace Hexalith.DaprIdentityStore;
 public static class DaprIdentityStoreConstants
 {
     /// <summary>
+    /// Gets the collection identifier for accessing all roles in the store.
+    /// This constant is used as the actor ID when querying or managing the complete set of roles.
+    /// </summary>
+    /// <value>
+    /// The string "AllRoles", which serves as a unique identifier for the collection of all role records.
+    /// </value>
+    /// <remarks>
+    /// This identifier is used in operations that need to access or modify the complete set of roles,
+    /// such as role enumeration or batch operations.
+    /// </remarks>
+    public static string AllRolesCollectionActorId => "AllRoles";
+
+    /// <summary>
     /// Gets the collection identifier for accessing all users in the store.
     /// This constant is used as the actor ID when querying or managing the complete set of users.
     /// </summary>
@@ -30,6 +43,15 @@ public static class DaprIdentityStoreConstants
     public static string AllUsersCollectionActorId => "AllUsers";
 
     /// <summary>
+    /// Gets the default actor type name for role actors.
+    /// This constant defines the base actor type used for role management.
+    /// </summary>
+    /// <value>
+    /// The string "Role", which identifies the actor type responsible for managing roles.
+    /// </value>
+    public static string DefaultRoleActorTypeName => "Role";
+
+    /// <summary>
     /// Gets the default actor type name for user identity actors.
     /// This constant defines the base actor type used for individual user identity management.
     /// </summary>
@@ -40,7 +62,51 @@ public static class DaprIdentityStoreConstants
     /// This actor type handles operations specific to individual user identities, such as
     /// authentication, profile management, and credential validation.
     /// </remarks>
-    public static string DefaultUserActorTypeName => "UserIdentity";
+    public static string DefaultUserActorTypeName => "User";
+
+    /// <summary>
+    /// Gets the index type name for role claim lookups.
+    /// This constant defines the actor type used for claim-based role lookups.
+    /// </summary>
+    /// <value>
+    /// The string "RoleClaimIndex", which identifies the actor type responsible for claim-based role lookups.
+    /// </value>
+    public static string RoleClaimIndexActorTypeName => "RoleClaimIndex";
+
+    /// <summary>
+    /// Gets the collection type name for storing roles.
+    /// This constant defines the actor type used for managing collections of roles.
+    /// </summary>
+    /// <value>
+    /// The string "Roles", which identifies the actor type responsible for managing collections of roles.
+    /// </value>
+    public static string RoleCollectionActorTypeName => "Roles";
+
+    /// <summary>
+    /// Gets the index type name for role name lookups.
+    /// This constant defines the actor type used for name-based role lookups.
+    /// </summary>
+    /// <value>
+    /// The string "RoleNameIndex", which identifies the actor type responsible for name-based role lookups.
+    /// </value>
+    /// <remarks>
+    /// This index type enables efficient role lookups by name, which is essential
+    /// for authorization and role management operations.
+    /// </remarks>
+    public static string RoleNameIndexActorTypeName => "RoleNameIndex";
+
+    /// <summary>
+    /// Gets the state name for role.
+    /// This constant defines the state name used for storing role information.
+    /// </summary>
+    /// <value>
+    /// The string "State", which identifies the state name for role.
+    /// </value>
+    /// <remarks>
+    /// This state name is used in operations that need to access or modify the state of roles,
+    /// such as role management and role validation.
+    /// </remarks>
+    public static string RoleStateName => "State";
 
     /// <summary>
     /// Gets the index type name for user claim lookups.
@@ -66,7 +132,7 @@ public static class DaprIdentityStoreConstants
     /// This collection type is used for operations that involve multiple user identities,
     /// such as querying users or performing batch operations on user groups.
     /// </remarks>
-    public static string UserCollectionActorTypeName => "UserIdentities";
+    public static string UserCollectionActorTypeName => "Users";
 
     /// <summary>
     /// Gets the index type name for user email lookups.
@@ -80,19 +146,6 @@ public static class DaprIdentityStoreConstants
     /// for authentication and user management operations.
     /// </remarks>
     public static string UserEmailIndexActorTypeName => "UserEmailIndex";
-
-    /// <summary>
-    /// Gets the state name for user identity.
-    /// This constant defines the state name used for storing user identity information.
-    /// </summary>
-    /// <value>
-    /// The string "State", which identifies the state name for user identity.
-    /// </value>
-    /// <remarks>
-    /// This state name is used in operations that need to access or modify the state of user identities,
-    /// such as authentication, profile management, and credential validation.
-    /// </remarks>
-    public static string UserIdentityStateName => "State";
 
     /// <summary>
     /// Gets the index type name for user login lookups.
@@ -119,6 +172,19 @@ public static class DaprIdentityStoreConstants
     /// for authentication and user management operations.
     /// </remarks>
     public static string UserNameIndexActorTypeName => "UserNameIndex";
+
+    /// <summary>
+    /// Gets the state name for user identity.
+    /// This constant defines the state name used for storing user identity information.
+    /// </summary>
+    /// <value>
+    /// The string "State", which identifies the state name for user identity.
+    /// </value>
+    /// <remarks>
+    /// This state name is used in operations that need to access or modify the state of user identities,
+    /// such as authentication, profile management, and credential validation.
+    /// </remarks>
+    public static string UserStateName => "State";
 
     /// <summary>
     /// Gets the index type name for user token lookups.

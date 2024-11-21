@@ -58,7 +58,7 @@ public partial class UserIdentityActorTest
         // Setup state retrieval to return existing user with claims
         stateManagerMoq
             .Setup(p => p.TryGetStateAsync<UserActorState>(
-                DaprIdentityStoreConstants.UserIdentityStateName,
+                DaprIdentityStoreConstants.UserStateName,
                 It.IsAny<CancellationToken>()))
             .ReturnsAsync(new ConditionalValue<UserActorState>(true, initialState))
             .Verifiable();
@@ -66,7 +66,7 @@ public partial class UserIdentityActorTest
         // Setup state update
         stateManagerMoq
             .Setup(p => p.SetStateAsync(
-                DaprIdentityStoreConstants.UserIdentityStateName,
+                DaprIdentityStoreConstants.UserStateName,
                 It.Is<UserActorState>(state =>
                     state.Claims.Count() == 3 &&
                     state.Claims.Any(c => c.ClaimType == "existing") &&
@@ -102,10 +102,10 @@ public partial class UserIdentityActorTest
         }
 
         // Create actor host and actor
-        ActorHost actorHost = ActorHost.CreateForTest<UserIdentityActor>(
+        ActorHost actorHost = ActorHost.CreateForTest<UserActor>(
             new ActorTestOptions { ActorId = user.Id.ToActorId() });
 
-        UserIdentityActor actor = new(
+        UserActor actor = new(
             actorHost,
             collectionServiceMoq.Object,
             emailServiceMoq.Object,
@@ -151,7 +151,7 @@ public partial class UserIdentityActorTest
         // Setup state retrieval
         stateManagerMoq
             .Setup(p => p.TryGetStateAsync<UserActorState>(
-                DaprIdentityStoreConstants.UserIdentityStateName,
+                DaprIdentityStoreConstants.UserStateName,
                 It.IsAny<CancellationToken>()))
             .ReturnsAsync(new ConditionalValue<UserActorState>(true, state))
             .Verifiable();
@@ -165,10 +165,10 @@ public partial class UserIdentityActorTest
         Mock<IUserLoginIndexService> loginServiceMoq = new(MockBehavior.Strict);
 
         // Create actor host and actor
-        ActorHost actorHost = ActorHost.CreateForTest<UserIdentityActor>(
+        ActorHost actorHost = ActorHost.CreateForTest<UserActor>(
             new ActorTestOptions { ActorId = user.Id.ToActorId() });
 
-        UserIdentityActor actor = new(
+        UserActor actor = new(
             actorHost,
             collectionServiceMoq.Object,
             emailServiceMoq.Object,

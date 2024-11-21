@@ -1,4 +1,4 @@
-// <copyright file="UserIdentityActor{Logins}.cs" company="ITANEO">
+// <copyright file="UserActor{Logins}.cs" company="ITANEO">
 // Copyright (c) ITANEO (https://www.itaneo.com). All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 // </copyright>
@@ -16,7 +16,7 @@ using Microsoft.AspNetCore.Identity;
 /// Actor responsible for managing user identity operations in a Dapr-based identity store.
 /// This actor handles CRUD operations for user identities and maintains associated indexes.
 /// </summary>
-public partial class UserIdentityActor
+public partial class UserActor
 {
     /// <summary>
     /// Adds a third-party login provider to the user's account.
@@ -37,7 +37,7 @@ public partial class UserIdentityActor
             .Where(p => p.LoginProvider != login.LoginProvider || p.ProviderKey != login.ProviderKey)
             .Union([new CustomUserLogin { LoginProvider = login.LoginProvider }]);
 
-        await StateManager.SetStateAsync(DaprIdentityStoreConstants.UserIdentityStateName, _state, CancellationToken.None);
+        await StateManager.SetStateAsync(DaprIdentityStoreConstants.UserStateName, _state, CancellationToken.None);
         await StateManager.SaveStateAsync(CancellationToken.None);
 
         await _loginIndexService.AddAsync(login.LoginProvider, login.ProviderKey, userId);
@@ -88,7 +88,7 @@ public partial class UserIdentityActor
 
         _state.Logins = _state.Logins.Where(p => p.ProviderKey != providerKey || p.LoginProvider != loginProvider);
         await _loginIndexService.RemoveAsync(loginProvider, providerKey);
-        await StateManager.SetStateAsync(DaprIdentityStoreConstants.UserIdentityStateName, _state, CancellationToken.None);
+        await StateManager.SetStateAsync(DaprIdentityStoreConstants.UserStateName, _state, CancellationToken.None);
         await StateManager.SaveStateAsync(CancellationToken.None);
     }
 }

@@ -1,4 +1,4 @@
-// <copyright file="UserIdentityActor{Tokens}.cs" company="ITANEO">
+// <copyright file="UserActor{Tokens}.cs" company="ITANEO">
 // Copyright (c) ITANEO (https://www.itaneo.com). All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 // </copyright>
@@ -12,7 +12,7 @@ using Hexalith.Infrastructure.DaprRuntime.Helpers;
 /// Actor responsible for managing user identity operations in a Dapr-based identity store.
 /// This actor handles CRUD operations for user identities and maintains associated indexes.
 /// </summary>
-public partial class UserIdentityActor
+public partial class UserActor
 {
     /// <summary>
     /// Adds an authentication token for a specific login provider.
@@ -35,7 +35,7 @@ public partial class UserIdentityActor
             .Union([token]);
         await _tokenIndexService.AddAsync(token, userId);
 
-        await StateManager.SetStateAsync(DaprIdentityStoreConstants.UserIdentityStateName, _state, CancellationToken.None);
+        await StateManager.SetStateAsync(DaprIdentityStoreConstants.UserStateName, _state, CancellationToken.None);
         await StateManager.SaveStateAsync(CancellationToken.None);
     }
 
@@ -73,7 +73,7 @@ public partial class UserIdentityActor
 
         await _tokenIndexService.RemoveAsync(loginProvider, name);
 
-        await StateManager.SetStateAsync(DaprIdentityStoreConstants.UserIdentityStateName, _state, CancellationToken.None);
+        await StateManager.SetStateAsync(DaprIdentityStoreConstants.UserStateName, _state, CancellationToken.None);
         await StateManager.SaveStateAsync(CancellationToken.None);
     }
 }

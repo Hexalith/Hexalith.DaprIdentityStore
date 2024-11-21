@@ -1,4 +1,4 @@
-// <copyright file="IUserIdentityActor.cs" company="ITANEO">
+// <copyright file="IUserActor.cs" company="ITANEO">
 // Copyright (c) ITANEO (https://www.itaneo.com). All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 // </copyright>
@@ -17,7 +17,7 @@ using Microsoft.AspNetCore.Identity;
 /// <summary>
 /// Represents a Dapr actor interface for managing user identity operations.
 /// </summary>
-public interface IUserIdentityActor : IActor
+public interface IUserActor : IActor
 {
     /// <summary>
     /// Adds a collection of claims to the user identity asynchronously.

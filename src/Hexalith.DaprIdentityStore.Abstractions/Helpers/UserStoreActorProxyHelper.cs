@@ -1,4 +1,4 @@
-﻿// <copyright file="DaprIdentityStoreActorProxyHelper.cs" company="ITANEO">
+﻿// <copyright file="UserStoreActorProxyHelper.cs" company="ITANEO">
 // Copyright (c) ITANEO (https://www.itaneo.com). All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 // </copyright>
@@ -18,7 +18,7 @@ using Hexalith.Infrastructure.DaprRuntime.Helpers;
 /// Provides helper methods for creating actor proxies used in Dapr identity store operations.
 /// This static class simplifies the creation of various actor proxies needed for user management.
 /// </summary>
-public static class DaprIdentityStoreActorProxyHelper
+public static class UserStoreActorProxyHelper
 {
     /// <summary>
     /// Creates a proxy for the actor that manages the collection of all users.
@@ -66,7 +66,7 @@ public static class DaprIdentityStoreActorProxyHelper
     public static IKeyHashActor CreateClaimUsersIndexProxy([NotNull] this IActorProxyFactory actorProxyFactory, [NotNull] string claimType, string claimValue)
     {
         ArgumentNullException.ThrowIfNull(actorProxyFactory);
-        return actorProxyFactory.CreateClaimUsersIndexProxy(ToClaimId(claimType, claimValue));
+        return actorProxyFactory.CreateClaimUsersIndexProxy(IdentityActorHelper.ToClaimId(claimType, claimValue));
     }
 
     /// <summary>
@@ -113,11 +113,11 @@ public static class DaprIdentityStoreActorProxyHelper
     /// <remarks>
     /// The user identity actor manages user-specific data including claims, roles, and authentication information.
     /// </remarks>
-    public static IUserIdentityActor CreateUserIdentityActor([NotNull] this IActorProxyFactory actorProxyFactory, [NotNull] string id)
+    public static IUserActor CreateUserIdentityActor([NotNull] this IActorProxyFactory actorProxyFactory, [NotNull] string id)
     {
         ArgumentNullException.ThrowIfNull(actorProxyFactory);
         ArgumentException.ThrowIfNullOrWhiteSpace(id);
-        return actorProxyFactory.CreateActorProxy<IUserIdentityActor>(id.ToActorId(), DaprIdentityStoreConstants.DefaultUserActorTypeName);
+        return actorProxyFactory.CreateActorProxy<IUserActor>(id.ToActorId(), DaprIdentityStoreConstants.DefaultUserActorTypeName);
     }
 
     /// <summary>
@@ -179,31 +179,6 @@ public static class DaprIdentityStoreActorProxyHelper
         ArgumentException.ThrowIfNullOrWhiteSpace(name);
         string actorId = $"{loginProvider}:{name}";
         return actorProxyFactory.CreateActorProxy<IKeyValueActor>(actorId.ToActorId(), DaprIdentityStoreConstants.UserTokenIndexActorTypeName);
-    }
-
-    /// <summary>
-    /// Formats a claim type and value into a standardized claim identifier string.
-    /// </summary>
-    /// <param name="claimType">The type of the claim.</param>
-    /// <param name="claimValue">The value of the claim.</param>
-    /// <returns>A formatted string combining the claim type and value with a separator.</returns>
-    /// <exception cref="ArgumentException">Thrown when claimType is null or whitespace.</exception>
-    public static string ToClaimId([NotNull] string claimType, string claimValue)
-    {
-        ArgumentException.ThrowIfNullOrWhiteSpace(claimType);
-        return $"{claimType}-{claimValue}";
-    }
-
-    /// <summary>
-    /// Converts a Claim object into a standardized claim identifier string.
-    /// </summary>
-    /// <param name="claim">The claim object to convert.</param>
-    /// <returns>A formatted string combining the claim's type and value with a separator.</returns>
-    /// <exception cref="ArgumentNullException">Thrown when claim is null.</exception>
-    public static string ToClaimId([NotNull] this Claim claim)
-    {
-        ArgumentNullException.ThrowIfNull(claim);
-        return ToClaimId(claim.Type, claim.Value);
     }
 
     /// <summary>

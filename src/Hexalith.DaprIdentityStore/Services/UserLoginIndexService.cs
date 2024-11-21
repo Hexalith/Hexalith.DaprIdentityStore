@@ -1,4 +1,4 @@
-// <copyright file="UserIdentityLoginIndexService.cs" company="ITANEO">
+// <copyright file="UserLoginIndexService.cs" company="ITANEO">
 // Copyright (c) ITANEO (https://www.itaneo.com). All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 // </copyright>
@@ -19,11 +19,11 @@ using Hexalith.Infrastructure.DaprRuntime.Actors;
 /// It provides functionality to add, find, and remove login provider mappings.
 /// </summary>
 /// <remarks>
-/// Initializes a new instance of the <see cref="UserIdentityLoginIndexService"/> class.
+/// Initializes a new instance of the <see cref="UserLoginIndexService"/> class.
 /// This constructor is used in production with actual Dapr actor implementation.
 /// </remarks>
 /// <param name="factory">The Dapr actor host providing actor management capabilities.</param>
-public class UserIdentityLoginIndexService(IActorProxyFactory factory) : IUserLoginIndexService
+public class UserLoginIndexService(IActorProxyFactory factory) : IUserLoginIndexService
 {
     // Factory function to create key-value actors for login indexing
     private readonly Func<string, string, IKeyValueActor> _keyValueActor = factory.CreateUserLoginIndexProxy;

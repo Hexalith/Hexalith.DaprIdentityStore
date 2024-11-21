@@ -1,4 +1,4 @@
-// <copyright file="UserIdentityClaimsIndexService.cs" company="ITANEO">
+// <copyright file="UserClaimsIndexService.cs" company="ITANEO">
 // Copyright (c) ITANEO (https://www.itaneo.com). All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 // </copyright>
@@ -16,10 +16,10 @@ using Hexalith.Infrastructure.DaprRuntime.Actors;
 /// Service for managing user identity claims indexing using Dapr actors.
 /// </summary>
 /// <remarks>
-/// Initializes a new instance of the <see cref="UserIdentityClaimsIndexService"/> class.
+/// Initializes a new instance of the <see cref="UserClaimsIndexService"/> class.
 /// </remarks>
 /// <param name="actorProxyFactory">The actor proxy factory instance.</param>
-public class UserIdentityClaimsIndexService(
+public class UserClaimsIndexService(
     IActorProxyFactory actorProxyFactory) : IUserClaimsIndexService
 {
     private readonly Func<string, string, IKeyHashActor> _keyValueActor = actorProxyFactory.CreateClaimUsersIndexProxy;

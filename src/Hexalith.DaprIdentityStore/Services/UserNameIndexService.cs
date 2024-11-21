@@ -1,4 +1,4 @@
-// <copyright file="UserIdentityNameIndexService.cs" company="ITANEO">
+// <copyright file="UserNameIndexService.cs" company="ITANEO">
 // Copyright (c) ITANEO (https://www.itaneo.com). All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 // </copyright>
@@ -19,11 +19,11 @@ using Hexalith.Infrastructure.DaprRuntime.Actors;
 /// It provides functionality to add, find, and remove username-to-userId mappings.
 /// </summary>
 /// <remarks>
-/// Initializes a new instance of the <see cref="UserIdentityNameIndexService"/> class.
+/// Initializes a new instance of the <see cref="UserNameIndexService"/> class.
 /// This constructor is used in production with actual Dapr actor implementation.
 /// </remarks>
 /// <param name="factory">The Dapr actor host providing actor management capabilities.</param>
-public class UserIdentityNameIndexService(IActorProxyFactory factory) : IUserNameIndexService
+public class UserNameIndexService(IActorProxyFactory factory) : IUserNameIndexService
 {
     // Factory function to create key-value actors for username indexing
     private readonly Func<string, IKeyValueActor> _keyValueActor = factory.CreateUserNameIndexProxy;

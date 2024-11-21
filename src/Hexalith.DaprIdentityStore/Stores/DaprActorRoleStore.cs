@@ -19,11 +19,11 @@ using Microsoft.AspNetCore.Identity;
 /// <summary>
 /// Initializes a new instance of the <see cref="DaprActorRoleStore"/> class.
 /// </summary>
-/// <param name="describer"></param>
+/// <param name="describer">The <see cref="IdentityErrorDescriber"/> used to describe identity errors.</param>
 public class DaprActorRoleStore(IdentityErrorDescriber describer) : RoleStoreBase<CustomRole, string, CustomUserRole, CustomRoleClaim>(describer)
 {
     /// <inheritdoc/>
-    public override IQueryable<CustomRole>? Roles { get; }
+    public override IQueryable<CustomRole> Roles => Array.Empty<CustomRole>().AsQueryable();
 
     /// <inheritdoc/>
     public override Task AddClaimAsync(CustomRole role, Claim claim, CancellationToken cancellationToken = default) => throw new NotImplementedException();

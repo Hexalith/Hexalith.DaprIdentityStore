@@ -33,7 +33,7 @@ public partial class DaprActorUserStore
         ArgumentException.ThrowIfNullOrWhiteSpace(user.Id);
 
         ThrowIfDisposed();
-        IUserIdentityActor actor = ActorProxy.DefaultProxyFactory.CreateUserIdentityActor(user.Id);
+        IUserActor actor = ActorProxy.DefaultProxyFactory.CreateUserIdentityActor(user.Id);
         await actor.AddLoginAsync(login);
     }
 
@@ -44,7 +44,7 @@ public partial class DaprActorUserStore
         ArgumentException.ThrowIfNullOrWhiteSpace(user.Id);
 
         ThrowIfDisposed();
-        IUserIdentityActor actor = ActorProxy.DefaultProxyFactory.CreateUserIdentityActor(user.Id);
+        IUserActor actor = ActorProxy.DefaultProxyFactory.CreateUserIdentityActor(user.Id);
         return (await actor.GetLoginsAsync()).ToList();
     }
 
@@ -56,7 +56,7 @@ public partial class DaprActorUserStore
         ArgumentException.ThrowIfNullOrWhiteSpace(providerKey);
         ArgumentException.ThrowIfNullOrWhiteSpace(user.Id);
         ThrowIfDisposed();
-        IUserIdentityActor actor = ActorProxy.DefaultProxyFactory.CreateUserIdentityActor(user.Id);
+        IUserActor actor = ActorProxy.DefaultProxyFactory.CreateUserIdentityActor(user.Id);
         await actor.RemoveLoginAsync(loginProvider, providerKey);
     }
 
@@ -67,7 +67,7 @@ public partial class DaprActorUserStore
         ArgumentException.ThrowIfNullOrWhiteSpace(providerKey);
         ArgumentException.ThrowIfNullOrWhiteSpace(userId);
         ThrowIfDisposed();
-        IUserIdentityActor actor = ActorProxy.DefaultProxyFactory.CreateUserIdentityActor(userId);
+        IUserActor actor = ActorProxy.DefaultProxyFactory.CreateUserIdentityActor(userId);
         return await actor.FindLoginAsync(loginProvider, providerKey);
     }
 
@@ -84,7 +84,7 @@ public partial class DaprActorUserStore
             return null;
         }
 
-        IUserIdentityActor actor = ActorProxy.DefaultProxyFactory.CreateUserIdentityActor(userId);
+        IUserActor actor = ActorProxy.DefaultProxyFactory.CreateUserIdentityActor(userId);
         return await actor.FindLoginAsync(loginProvider, providerKey);
     }
 }

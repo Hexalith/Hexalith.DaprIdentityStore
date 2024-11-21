@@ -31,7 +31,7 @@ public partial class DaprActorUserStore
         cancellationToken.ThrowIfCancellationRequested();
         ThrowIfDisposed();
 
-        IUserIdentityActor actor = ActorProxy.DefaultProxyFactory.CreateUserIdentityActor(user.Id);
+        IUserActor actor = ActorProxy.DefaultProxyFactory.CreateUserIdentityActor(user.Id);
         await actor.AddClaimsAsync(claims);
     }
 
@@ -42,7 +42,7 @@ public partial class DaprActorUserStore
         cancellationToken.ThrowIfCancellationRequested();
         ThrowIfDisposed();
 
-        IUserIdentityActor actor = ActorProxy.DefaultProxyFactory.CreateUserIdentityActor(user.Id);
+        IUserActor actor = ActorProxy.DefaultProxyFactory.CreateUserIdentityActor(user.Id);
         return (await actor.GetClaimsAsync()).ToList();
     }
 
@@ -73,7 +73,7 @@ public partial class DaprActorUserStore
         cancellationToken.ThrowIfCancellationRequested();
         ThrowIfDisposed();
 
-        IUserIdentityActor actor = ActorProxy.DefaultProxyFactory.CreateUserIdentityActor(user.Id);
+        IUserActor actor = ActorProxy.DefaultProxyFactory.CreateUserIdentityActor(user.Id);
         await actor.RemoveClaimsAsync(claims);
     }
 
@@ -84,16 +84,16 @@ public partial class DaprActorUserStore
         cancellationToken.ThrowIfCancellationRequested();
         ThrowIfDisposed();
 
-        IUserIdentityActor actor = ActorProxy.DefaultProxyFactory.CreateUserIdentityActor(user.Id);
+        IUserActor actor = ActorProxy.DefaultProxyFactory.CreateUserIdentityActor(user.Id);
         await actor.ReplaceClaimAsync(claim, newClaim);
     }
 
     private static async Task<CustomUser?> GetUserIfHasClaimAsync(Claim claim, string userId)
     {
-        IUserIdentityActor collection = ActorProxy.DefaultProxyFactory.CreateUserIdentityActor(userId);
+        IUserActor collection = ActorProxy.DefaultProxyFactory.CreateUserIdentityActor(userId);
         if ((await collection.GetClaimsAsync()).Any(p => p.Type == claim.Type && p.Value == claim.Value))
         {
-            IUserIdentityActor userActor = ActorProxy.DefaultProxyFactory.CreateUserIdentityActor(userId);
+            IUserActor userActor = ActorProxy.DefaultProxyFactory.CreateUserIdentityActor(userId);
             return await userActor.FindAsync();
         }
 

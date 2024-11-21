@@ -1,4 +1,4 @@
-// <copyright file="UserIdentityActor{Users}.cs" company="ITANEO">
+// <copyright file="UserActor{Users}.cs" company="ITANEO">
 // Copyright (c) ITANEO (https://www.itaneo.com). All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 // </copyright>
@@ -22,7 +22,7 @@ using Hexalith.Infrastructure.DaprRuntime.Helpers;
 /// <param name="claimIndexService">Service for managing claim-based user indexing.</param>
 /// <param name="tokenIndexService">Service for managing token-based user indexing.</param>
 /// <param name="loginIndexService">Service for managing login-based user indexing.</param>
-public partial class UserIdentityActor(
+public partial class UserActor(
     ActorHost host,
     IUserCollectionService collectionService,
     IUserEmailIndexService emailIndexService,
@@ -30,7 +30,7 @@ public partial class UserIdentityActor(
     IUserClaimsIndexService claimIndexService,
     IUserTokenIndexService tokenIndexService,
     IUserLoginIndexService loginIndexService)
-    : Actor(host), IUserIdentityActor
+    : Actor(host), IUserActor
 {
     private readonly IUserClaimsIndexService _claimIndexService = claimIndexService;
 
@@ -58,7 +58,7 @@ public partial class UserIdentityActor(
     private UserActorState? _state;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="UserIdentityActor"/> class for testing purposes.
+    /// Initializes a new instance of the <see cref="UserActor"/> class for testing purposes.
     /// </summary>
     /// <param name="host">The actor host that provides runtime context.</param>
     /// <param name="collectionService">Service for managing the user collection.</param>
@@ -68,7 +68,7 @@ public partial class UserIdentityActor(
     /// <param name="tokenIndexService">Service for managing token-based user indexing.</param>
     /// <param name="loginCollectionService">Service for managing login-based user indexing.</param>
     /// <param name="stateManager">Optional state manager for managing actor state.</param>
-    internal UserIdentityActor(
+    internal UserActor(
         ActorHost host,
         IUserCollectionService collectionService,
         IUserEmailIndexService emailCollectionService,
@@ -112,7 +112,7 @@ public partial class UserIdentityActor(
         _state = new UserActorState { User = user };
 
         // Save user state
-        await StateManager.AddStateAsync(DaprIdentityStoreConstants.UserIdentityStateName, _state, CancellationToken.None);
+        await StateManager.AddStateAsync(DaprIdentityStoreConstants.UserStateName, _state, CancellationToken.None);
         await StateManager.SaveStateAsync(CancellationToken.None);
 
         await _collectionService.AddAsync(user.Id);
@@ -157,7 +157,7 @@ public partial class UserIdentityActor(
 
             // Clear state
             _state = null;
-            await StateManager.RemoveStateAsync(DaprIdentityStoreConstants.UserIdentityStateName, CancellationToken.None);
+            await StateManager.RemoveStateAsync(DaprIdentityStoreConstants.UserStateName, CancellationToken.None);
             await StateManager.SaveStateAsync(CancellationToken.None);
         }
 
@@ -200,7 +200,7 @@ public partial class UserIdentityActor(
         // Update user state
         CustomUser oldUser = _state.User;
         _state.User = user;
-        await StateManager.SetStateAsync(DaprIdentityStoreConstants.UserIdentityStateName, _state, CancellationToken.None);
+        await StateManager.SetStateAsync(DaprIdentityStoreConstants.UserStateName, _state, CancellationToken.None);
         await StateManager.SaveStateAsync(CancellationToken.None);
 
         // Update email index
@@ -242,7 +242,7 @@ public partial class UserIdentityActor(
     {
         if (_state is null)
         {
-            ConditionalValue<UserActorState> result = await StateManager.TryGetStateAsync<UserActorState>(DaprIdentityStoreConstants.UserIdentityStateName, cancellationToken);
+            ConditionalValue<UserActorState> result = await StateManager.TryGetStateAsync<UserActorState>(DaprIdentityStoreConstants.UserStateName, cancellationToken);
             if (result.HasValue)
             {
                 _state = result.Value;

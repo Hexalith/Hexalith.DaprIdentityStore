@@ -56,7 +56,7 @@ public class UserIdentityCollectionServiceTest
                 ProxyFactory = proxyFactoryMock.Object,
             });
 
-        UserIdentityCollectionService service = new(host.ProxyFactory);
+        UserCollectionService service = new(host.ProxyFactory);
         string id = Guid.NewGuid().ToString();
 
         // Act

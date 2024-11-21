@@ -53,7 +53,7 @@ public partial class UserIdentityActorTest
         // Setup the mock to verify that AddStateAsync is called exactly once
         // with the correct state name and user data
         stateManagerMoq.Setup(p => p.AddStateAsync<UserActorState>(
-            DaprIdentityStoreConstants.UserIdentityStateName,
+            DaprIdentityStoreConstants.UserStateName,
             It.Is<UserActorState>(p => p.User.Id == user.Id),
             It.IsAny<CancellationToken>()))
             .Returns(Task.CompletedTask)
@@ -83,11 +83,11 @@ public partial class UserIdentityActorTest
             .Verifiable(Times.Once);
 
         // Create a test actor host with the specified user ID
-        ActorHost actorHost = ActorHost.CreateForTest<UserIdentityActor>(
+        ActorHost actorHost = ActorHost.CreateForTest<UserActor>(
             new ActorTestOptions { ActorId = user.Id.ToActorId() });
 
         // Initialize the actor with the mock state manager
-        UserIdentityActor actor = new(
+        UserActor actor = new(
             actorHost,
             collectionServiceMoq.Object,
             emailServiceMoq.Object,
@@ -129,7 +129,7 @@ public partial class UserIdentityActorTest
         // Setup state retrieval to return existing user
         stateManagerMoq
             .Setup(p => p.TryGetStateAsync<UserActorState>(
-                DaprIdentityStoreConstants.UserIdentityStateName,
+                DaprIdentityStoreConstants.UserStateName,
                 It.IsAny<CancellationToken>()))
             .ReturnsAsync(new ConditionalValue<UserActorState>(true, new UserActorState { User = user }))
             .Verifiable();
@@ -137,7 +137,7 @@ public partial class UserIdentityActorTest
         // Setup state removal operations
         stateManagerMoq
             .Setup(p => p.RemoveStateAsync(
-                DaprIdentityStoreConstants.UserIdentityStateName,
+                DaprIdentityStoreConstants.UserStateName,
                 It.IsAny<CancellationToken>()))
             .Returns(Task.CompletedTask)
             .Verifiable();
@@ -172,10 +172,10 @@ public partial class UserIdentityActorTest
             .Verifiable();
 
         // Create actor host and actor
-        ActorHost actorHost = ActorHost.CreateForTest<UserIdentityActor>(
+        ActorHost actorHost = ActorHost.CreateForTest<UserActor>(
             new ActorTestOptions { ActorId = user.Id.ToActorId() });
 
-        UserIdentityActor actor = new(
+        UserActor actor = new(
             actorHost,
             collectionServiceMoq.Object,
             emailServiceMoq.Object,

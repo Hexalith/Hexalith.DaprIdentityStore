@@ -1,4 +1,4 @@
-// <copyright file="UserIdentityActor{Claims].cs" company="ITANEO">
+// <copyright file="UserActor{Claims].cs" company="ITANEO">
 // Copyright (c) ITANEO (https://www.itaneo.com). All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 // </copyright>
@@ -15,7 +15,7 @@ using Hexalith.Infrastructure.DaprRuntime.Helpers;
 /// Actor responsible for managing user identity operations in a Dapr-based identity store.
 /// This actor handles CRUD operations for user identities and maintains associated indexes.
 /// </summary>
-public partial class UserIdentityActor
+public partial class UserActor
 {
     /// <summary>
     /// Adds claims to the user identity.
@@ -43,7 +43,7 @@ public partial class UserIdentityActor
             await _claimIndexService.AddAsync(claim, userId, CancellationToken.None);
         }
 
-        await StateManager.SetStateAsync(DaprIdentityStoreConstants.UserIdentityStateName, _state, CancellationToken.None);
+        await StateManager.SetStateAsync(DaprIdentityStoreConstants.UserStateName, _state, CancellationToken.None);
         await StateManager.SaveStateAsync(CancellationToken.None);
     }
 
@@ -86,7 +86,7 @@ public partial class UserIdentityActor
             await _claimIndexService.RemoveAsync(claim, userId, CancellationToken.None);
         }
 
-        await StateManager.SetStateAsync(DaprIdentityStoreConstants.UserIdentityStateName, _state, CancellationToken.None);
+        await StateManager.SetStateAsync(DaprIdentityStoreConstants.UserStateName, _state, CancellationToken.None);
         await StateManager.SaveStateAsync(CancellationToken.None);
     }
 
@@ -125,7 +125,7 @@ public partial class UserIdentityActor
         await _claimIndexService.RemoveAsync(claim, userId, CancellationToken.None);
         await _claimIndexService.AddAsync(newClaim, userId, CancellationToken.None);
 
-        await StateManager.SetStateAsync(DaprIdentityStoreConstants.UserIdentityStateName, _state, CancellationToken.None);
+        await StateManager.SetStateAsync(DaprIdentityStoreConstants.UserStateName, _state, CancellationToken.None);
         await StateManager.SaveStateAsync(CancellationToken.None);
     }
 }

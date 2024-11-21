@@ -6,27 +6,27 @@
 namespace Hexalith.DaprIdentityStore.Services;
 
 /// <summary>
-/// Provides operations for managing user identity collections.
+/// Provides operations for managing role identity collections.
 /// </summary>
 public interface IRoleCollectionService
 {
     /// <summary>
-    /// Adds a new user to the identity collection.
+    /// Adds a new role to the identity collection.
     /// </summary>
-    /// <param name="id">The unique identifier for the user.</param>
+    /// <param name="id">The unique identifier for the role.</param>
     /// <returns>A task representing the asynchronous operation.</returns>
-    Task AddUserAsync(string id);
+    Task AddAsync(string id);
 
     /// <summary>
-    /// Retrieves all user identifiers from the collection.
+    /// Retrieves all role identifiers from the collection.
     /// </summary>
-    /// <returns>A task representing the asynchronous operation that returns an enumerable of user identifiers.</returns>
+    /// <returns>A task representing the asynchronous operation that returns an enumerable of role identifiers.</returns>
     Task<IEnumerable<string>> AllAsync();
 
     /// <summary>
-    /// Removes a user and all their associated data from the identity collection.
+    /// Removes a role and all their associated data from the identity collection.
     /// </summary>
-    /// <param name="id">The unique identifier of the user to remove.</param>
+    /// <param name="id">The unique identifier of the role to remove.</param>
     /// <returns>A task representing the asynchronous operation.</returns>
-    Task RemoveUserAsync(string id);
+    Task RemoveAsync(string id);
 }

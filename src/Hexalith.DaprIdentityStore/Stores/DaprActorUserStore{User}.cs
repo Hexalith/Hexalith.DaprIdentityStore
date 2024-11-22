@@ -28,21 +28,21 @@ public partial class DaprActorUserStore
     : UserStoreBase<CustomUser, string, CustomUserClaim, CustomUserLogin, CustomUserToken>
 {
     private readonly IUserLoginIndexService _loginCollectionService;
-    private readonly IUserCollectionService _userIdentityCollection;
+    private readonly IUserCollectionService _userCollection;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="DaprActorUserStore"/> class.
     /// </summary>
-    /// <param name="userIdentityCollection">The user identity collection service.</param>
+    /// <param name="userCollection">The user identity collection service.</param>
     /// <param name="loginCollectionService">The login collection service.</param>
     public DaprActorUserStore(
-        IUserCollectionService userIdentityCollection,
+        IUserCollectionService userCollection,
         IUserLoginIndexService loginCollectionService)
         : base(new HexalithIdentityErrorDescriber())
     {
-        ArgumentNullException.ThrowIfNull(userIdentityCollection);
+        ArgumentNullException.ThrowIfNull(userCollection);
         ArgumentNullException.ThrowIfNull(loginCollectionService);
-        _userIdentityCollection = userIdentityCollection;
+        _userCollection = userCollection;
         _loginCollectionService = loginCollectionService;
     }
 
@@ -58,7 +58,7 @@ public partial class DaprActorUserStore
         cancellationToken.ThrowIfCancellationRequested();
         ThrowIfDisposed();
 
-        IUserActor actor = ActorProxy.DefaultProxyFactory.CreateUserIdentityActor(user.Id);
+        IUserActor actor = ActorProxy.DefaultProxyFactory.CreateUserActor(user.Id);
         bool created = await actor.CreateAsync(user);
         return created ? IdentityResult.Success : IdentityResult.Failed(ErrorDescriber.DuplicateUserName(user.NormalizedUserName ?? "Unknown"));
     }
@@ -70,7 +70,7 @@ public partial class DaprActorUserStore
         cancellationToken.ThrowIfCancellationRequested();
         ThrowIfDisposed();
 
-        IUserActor actor = ActorProxy.DefaultProxyFactory.CreateUserIdentityActor(user.Id);
+        IUserActor actor = ActorProxy.DefaultProxyFactory.CreateUserActor(user.Id);
         await actor.DeleteAsync();
         return IdentityResult.Success;
     }
@@ -94,7 +94,7 @@ public partial class DaprActorUserStore
         cancellationToken.ThrowIfCancellationRequested();
         ThrowIfDisposed();
 
-        IUserActor actor = ActorProxy.DefaultProxyFactory.CreateUserIdentityActor(userId);
+        IUserActor actor = ActorProxy.DefaultProxyFactory.CreateUserActor(userId);
         return await actor.FindAsync();
     }
 
@@ -121,7 +121,7 @@ public partial class DaprActorUserStore
             return IdentityResult.Failed(new IdentityError { Code = "UserNotFound", Description = $"A user with the Id '{user.Id}' could not be found." });
         }
 
-        IUserActor actor = ActorProxy.DefaultProxyFactory.CreateUserIdentityActor(user.Id);
+        IUserActor actor = ActorProxy.DefaultProxyFactory.CreateUserActor(user.Id);
         await actor.UpdateAsync(user);
         return IdentityResult.Success;
     }
@@ -142,13 +142,11 @@ public partial class DaprActorUserStore
     private async Task<List<CustomUser>> GetUsersAsync()
     {
         ThrowIfDisposed();
-
-        IKeyHashActor allProxy = ActorProxy.DefaultProxyFactory.CreateAllUsersProxy();
-        IEnumerable<string> userIds = await allProxy.AllAsync();
+        IEnumerable<string> userIds = await _userCollection.AllAsync();
         List<Task<CustomUser?>> tasks = [];
         foreach (string userId in userIds)
         {
-            IUserActor userProxy = ActorProxy.DefaultProxyFactory.CreateUserIdentityActor(userId);
+            IUserActor userProxy = ActorProxy.DefaultProxyFactory.CreateUserActor(userId);
             tasks.Add(userProxy.FindAsync());
         }
 

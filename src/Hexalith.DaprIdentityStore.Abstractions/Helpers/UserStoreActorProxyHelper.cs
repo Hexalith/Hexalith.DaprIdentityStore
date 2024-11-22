@@ -85,6 +85,24 @@ public static class UserStoreActorProxyHelper
     }
 
     /// <summary>
+    /// Creates a proxy for the actor that manages individual user identity data.
+    /// This actor handles all operations related to a specific user's identity information.
+    /// </summary>
+    /// <param name="actorProxyFactory">The actor proxy factory used to create actor proxies.</param>
+    /// <param name="id">The unique identifier of the user.</param>
+    /// <returns>A proxy implementing IUserIdentityActor interface to interact with the user identity actor.</returns>
+    /// <exception cref="ArgumentNullException">Thrown when actorProxyFactory or id is null.</exception>
+    /// <remarks>
+    /// The user identity actor manages user-specific data including claims, roles, and authentication information.
+    /// </remarks>
+    public static IUserActor CreateUserActor([NotNull] this IActorProxyFactory actorProxyFactory, [NotNull] string id)
+    {
+        ArgumentNullException.ThrowIfNull(actorProxyFactory);
+        ArgumentException.ThrowIfNullOrWhiteSpace(id);
+        return actorProxyFactory.CreateActorProxy<IUserActor>(id.ToActorId(), DaprIdentityStoreConstants.DefaultUserActorTypeName);
+    }
+
+    /// <summary>
     /// Creates a proxy for the actor that manages the user email index.
     /// This actor maintains a mapping between normalized email addresses and user IDs.
     /// </summary>
@@ -100,24 +118,6 @@ public static class UserStoreActorProxyHelper
         ArgumentNullException.ThrowIfNull(actorProxyFactory);
         ArgumentException.ThrowIfNullOrWhiteSpace(normalizedEmail);
         return actorProxyFactory.CreateActorProxy<IKeyValueActor>(normalizedEmail.ToActorId(), DaprIdentityStoreConstants.UserEmailIndexActorTypeName);
-    }
-
-    /// <summary>
-    /// Creates a proxy for the actor that manages individual user identity data.
-    /// This actor handles all operations related to a specific user's identity information.
-    /// </summary>
-    /// <param name="actorProxyFactory">The actor proxy factory used to create actor proxies.</param>
-    /// <param name="id">The unique identifier of the user.</param>
-    /// <returns>A proxy implementing IUserIdentityActor interface to interact with the user identity actor.</returns>
-    /// <exception cref="ArgumentNullException">Thrown when actorProxyFactory or id is null.</exception>
-    /// <remarks>
-    /// The user identity actor manages user-specific data including claims, roles, and authentication information.
-    /// </remarks>
-    public static IUserActor CreateUserIdentityActor([NotNull] this IActorProxyFactory actorProxyFactory, [NotNull] string id)
-    {
-        ArgumentNullException.ThrowIfNull(actorProxyFactory);
-        ArgumentException.ThrowIfNullOrWhiteSpace(id);
-        return actorProxyFactory.CreateActorProxy<IUserActor>(id.ToActorId(), DaprIdentityStoreConstants.DefaultUserActorTypeName);
     }
 
     /// <summary>

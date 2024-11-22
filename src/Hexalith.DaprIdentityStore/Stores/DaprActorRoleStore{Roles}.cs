@@ -23,23 +23,22 @@ using Microsoft.AspNetCore.Identity;
 /// <summary>
 /// Initializes a new instance of the <see cref="DaprActorRoleStore"/> class.
 /// </summary>
+/// <param name="roleCollection">The role identity collection service.</param>
 /// <param name="describer">The <see cref="IdentityErrorDescriber"/> used to describe identity errors.</param>
-public partial class DaprActorRoleStore(IdentityErrorDescriber describer) : RoleStoreBase<CustomRole, string, CustomUserRole, CustomRoleClaim>(describer)
+public partial class DaprActorRoleStore(IRoleCollectionService roleCollection, IdentityErrorDescriber describer) : RoleStoreBase<CustomRole, string, CustomUserRole, CustomRoleClaim>(describer)
 {
-    private readonly IRoleCollectionService? _roleIdentityCollection;
+    private readonly IRoleCollectionService _roleCollection = roleCollection;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="DaprActorRoleStore"/> class.
     /// </summary>
-    /// <param name="roleIdentityCollection"></param>
-    /// <param name="describer"></param>
+    /// <param name="roleCollection">The role identity collection service.</param>
     public DaprActorRoleStore(
-        IRoleCollectionService roleIdentityCollection,
-        IdentityErrorDescriber? describer = null)
-        : this(describer ?? new IdentityErrorDescriber())
+        IRoleCollectionService roleCollection)
+        : this(roleCollection, new IdentityErrorDescriber())
     {
-        ArgumentNullException.ThrowIfNull(roleIdentityCollection);
-        _roleIdentityCollection = roleIdentityCollection;
+        ArgumentNullException.ThrowIfNull(roleCollection);
+        _roleCollection = roleCollection;
     }
 
     /// <inheritdoc/>
@@ -48,7 +47,9 @@ public partial class DaprActorRoleStore(IdentityErrorDescriber describer) : Role
         get
         {
             ThrowIfDisposed();
+#pragma warning disable S4462 // Calls to "async" methods should not be blocking
             return GetRolesAsync().GetAwaiter().GetResult().AsQueryable();
+#pragma warning restore S4462 // Calls to "async" methods should not be blocking
         }
     }
 
@@ -63,7 +64,7 @@ public partial class DaprActorRoleStore(IdentityErrorDescriber describer) : Role
         bool created = await actor.CreateAsync(role);
         return created
             ? IdentityResult.Success
-            : IdentityResult.Failed(ErrorDescriber.DuplicateRoleName(role.Name));
+            : IdentityResult.Failed(ErrorDescriber.DuplicateRoleName(role.Name ?? role.Id));
     }
 
     /// <inheritdoc/>
@@ -79,24 +80,24 @@ public partial class DaprActorRoleStore(IdentityErrorDescriber describer) : Role
     }
 
     /// <inheritdoc/>
-    public override async Task<CustomRole?> FindByIdAsync(string roleId, CancellationToken cancellationToken = default)
+    public override async Task<CustomRole?> FindByIdAsync(string id, CancellationToken cancellationToken = default)
     {
-        ArgumentNullException.ThrowIfNull(roleId);
+        ArgumentNullException.ThrowIfNull(id);
         cancellationToken.ThrowIfCancellationRequested();
         ThrowIfDisposed();
 
-        IRoleActor actor = ActorProxy.DefaultProxyFactory.CreateRoleIdentityActor(roleId);
+        IRoleActor actor = ActorProxy.DefaultProxyFactory.CreateRoleIdentityActor(id);
         return await actor.FindAsync();
     }
 
     /// <inheritdoc/>
-    public override async Task<CustomRole?> FindByNameAsync(string normalizedRoleName, CancellationToken cancellationToken = default)
+    public override async Task<CustomRole?> FindByNameAsync(string normalizedName, CancellationToken cancellationToken = default)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(normalizedRoleName);
+        ArgumentException.ThrowIfNullOrWhiteSpace(normalizedName);
         cancellationToken.ThrowIfCancellationRequested();
         ThrowIfDisposed();
 
-        IKeyValueActor actor = ActorProxy.DefaultProxyFactory.CreateRoleNameIndexProxy(normalizedRoleName);
+        IKeyValueActor actor = ActorProxy.DefaultProxyFactory.CreateRoleNameIndexProxy(normalizedName);
         string? roleId = await actor.GetAsync();
         return string.IsNullOrWhiteSpace(roleId) ? null : await FindByIdAsync(roleId, cancellationToken);
     }
@@ -122,12 +123,15 @@ public partial class DaprActorRoleStore(IdentityErrorDescriber describer) : Role
         return IdentityResult.Success;
     }
 
+    /// <summary>
+    /// Gets the list of roles asynchronously.
+    /// </summary>
+    /// <returns>A task that represents the asynchronous operation. The task result contains the list of roles.</returns>
     private async Task<List<CustomRole>> GetRolesAsync()
     {
         ThrowIfDisposed();
 
-        IKeyHashActor allProxy = ActorProxy.DefaultProxyFactory.CreateAllRolesProxy();
-        IEnumerable<string> roleIds = await allProxy.AllAsync();
+        IEnumerable<string> roleIds = await _roleCollection.AllAsync();
         List<Task<CustomRole?>> tasks = [];
         foreach (string roleId in roleIds)
         {

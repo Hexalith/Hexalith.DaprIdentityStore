@@ -51,12 +51,10 @@ public static class DaprIdentityStoreHelper
             // .AddPasswordValidator<DaprActorRoleStore>()
             // .AddUserValidator<DaprActorRoleStore>()
             // .AddClaimsPrincipalFactory<UserClaimsPrincipalFactory<CustomUser, CustomRole>>()
-            // .AddSignInManager<SignInManager<CustomUser>>()
             // .AddUserManager<UserManager<CustomUser>>()
             .AddDefaultTokenProviders()
             .AddRoleStore<DaprActorRoleStore>()
             .AddUserStore<DaprActorUserStore>();
-        _ = services.AddAuthentication().AddIdentityCookies();
 
         // _ = services.AddScoped<DaprActorUserStore>();
         // _ = services.AddScoped<IUserClaimStore<CustomUser>>(services => services.GetRequiredService<DaprActorUserStore>());

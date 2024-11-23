@@ -24,7 +24,6 @@ public static class IdentityStoreUIExtensions
     public static IServiceCollection AddDaprIdentityStoreUI(this IServiceCollection services)
         => services
             .AddDaprIdentityStore()
-            .AddCascadingAuthenticationState()
             .AddScoped<IdentityUserAccessor>()
             .AddScoped<IdentityRedirectManager>()
             .AddScoped<AuthenticationStateProvider, IdentityRevalidatingAuthenticationStateProvider>();

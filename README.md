@@ -5,7 +5,7 @@ Dapr Actor implementation of Microsoft Identity Store - a distributed, scalable 
 ## Build status
 
 [![Build status](https://github.com/Hexalith/Hexalith.DaprIdentityStore/actions/workflows/hexalith_build.yml/badge.svg)](https://github.com/Hexalith/Hexalith.DaprIdentityStore/actions)
-[![NuGet](https://img.shields.io/nuget/v/Hexalith.DaprIdentityStore.Server.svg)](https://www.nuget.org/packages/Hexalith.DaprIdentityStore.Server)
+[![NuGet](https://img.shields.io/nuget/v/Hexalith.DaprIdentityStore.Abstractions.svg)](https://www.nuget.org/packages/Hexalith.DaprIdentityStore.Abstractions)
 [![License: MIT](https://img.shields.io/github/license/hexalith/hexalith.Security)](https://github.com/hexalith/hexalith.Security/blob/main/LICENSE)
 [![Discord](https://img.shields.io/discord/1063152441819942922?label=Discord&logo=discord&logoColor=white&color=d82679)](https://discordapp.com/channels/1102166958918610994/1102166958918610997)
   

@@ -41,6 +41,8 @@
   </ItemGroup>
   <PropertyGroup>
     <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory).stylecop.ruleset</CodeAnalysisRuleSet>
+    <HexalithPath Condition="'$(HexalithPath)' == ''">$(MSBuildThisFileDirectory)Hexalith\</HexalithPath>
+    <HexalithVersion Condition="'$(HexalithVersion)' == ''">1.*</HexalithVersion>
   </PropertyGroup>
   <ItemGroup>
     <AdditionalFiles

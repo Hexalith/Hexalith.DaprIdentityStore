@@ -9,7 +9,7 @@ Dapr Actor implementation of Microsoft Identity Store - a distributed, scalable 
 [![License: MIT](https://img.shields.io/github/license/hexalith/hexalith.Security)](https://github.com/hexalith/hexalith.Security/blob/main/LICENSE)
 [![Discord](https://img.shields.io/discord/1063152441819942922?label=Discord&logo=discord&logoColor=white&color=d82679)](https://discordapp.com/channels/1102166958918610994/1102166958918610997)
   
-[![Coverity Scan Build Status](https://scan.coverity.com/projects/30308/badge.svg)](https://scan.coverity.com/projects/hexalith-hexalith-Security)
+[![Coverity Scan Build Status](https://scan.coverity.com/projects/31039/badge.svg)](https://scan.coverity.com/projects/hexalith-hexalith-dapridentitystore)
   
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/9f3644b4447a401189fcbd10738dd964)](https://app.codacy.com/gh/Hexalith/Hexalith.DaprIdentityStore/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
   

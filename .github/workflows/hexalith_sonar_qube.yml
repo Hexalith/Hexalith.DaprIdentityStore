@@ -50,7 +50,7 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         shell: powershell
         run: |
-          .\.sonar\scanner\dotnet-sonarscanner begin /k:"Hexalith_Hexalith.Security" /o:"hexalith" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io"
+          .\.sonar\scanner\dotnet-sonarscanner begin /k:"Hexalith_Hexalith.DaprIdentityStore" /o:"hexalith" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io"
           Get-ChildItem -Path src -Filter *.csproj -Recurse | ForEach-Object {
             Write-Host "Building $($_.FullName)"
             dotnet build $_.FullName --configuration Release

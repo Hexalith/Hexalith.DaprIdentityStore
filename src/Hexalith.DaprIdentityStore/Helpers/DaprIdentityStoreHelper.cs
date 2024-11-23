@@ -17,6 +17,7 @@ using Hexalith.Infrastructure.DaprRuntime.Actors;
 
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 /// <summary>
 /// Provides helper methods for partition actors.
@@ -30,16 +31,18 @@ public static class DaprIdentityStoreHelper
     /// <returns>The IServiceCollection with the added services.</returns>
     public static IServiceCollection AddDaprIdentityStore(this IServiceCollection services)
     {
-        _ = services.AddControllers().AddDapr();
-        _ = services.AddSingleton<IUserCollectionService, UserCollectionService>();
-        _ = services.AddSingleton<IUserNameIndexService, UserNameIndexService>();
-        _ = services.AddSingleton<IUserEmailIndexService, UserEmailIndexService>();
-        _ = services.AddSingleton<IUserLoginIndexService, UserLoginIndexService>();
-        _ = services.AddSingleton<IUserClaimsIndexService, UserClaimsIndexService>();
-        _ = services.AddSingleton<IUserTokenIndexService, UserTokenIndexService>();
-        _ = services.AddSingleton<IRoleCollectionService, RoleCollectionService>();
-        _ = services.AddSingleton<IRoleNameIndexService, RoleNameIndexService>();
-        _ = services.AddSingleton<IRoleClaimsIndexService, RoleClaimsIndexService>();
+        _ = services
+            .AddAntiforgery()
+            .AddControllers().AddDapr();
+        services.TryAddSingleton<IUserCollectionService, UserCollectionService>();
+        services.TryAddSingleton<IUserNameIndexService, UserNameIndexService>();
+        services.TryAddSingleton<IUserEmailIndexService, UserEmailIndexService>();
+        services.TryAddSingleton<IUserLoginIndexService, UserLoginIndexService>();
+        services.TryAddSingleton<IUserClaimsIndexService, UserClaimsIndexService>();
+        services.TryAddSingleton<IUserTokenIndexService, UserTokenIndexService>();
+        services.TryAddSingleton<IRoleCollectionService, RoleCollectionService>();
+        services.TryAddSingleton<IRoleNameIndexService, RoleNameIndexService>();
+        services.TryAddSingleton<IRoleClaimsIndexService, RoleClaimsIndexService>();
         _ = services.AddIdentity<CustomUser, CustomRole>()
 
             // .AddRoles<CustomRole>()

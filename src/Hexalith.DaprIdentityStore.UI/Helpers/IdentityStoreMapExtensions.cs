@@ -1,4 +1,4 @@
-// <copyright file="IdentityComponentsEndpointRouteBuilderExtensions.cs" company="ITANEO">
+﻿// <copyright file="IdentityStoreExtensions.cs" company="ITANEO">
 // Copyright (c) ITANEO (https://www.itaneo.com). All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 // </copyright>
@@ -8,7 +8,9 @@ namespace Hexalith.DaprIdentityStore.UI.Helpers;
 using System.Security.Claims;
 using System.Text.Json;
 
+using Hexalith.DaprIdentityStore.Helpers;
 using Hexalith.DaprIdentityStore.Models;
+using Hexalith.DaprIdentityStore.UI.Account;
 using Hexalith.DaprIdentityStore.UI.Account.Pages;
 using Hexalith.DaprIdentityStore.UI.Account.Pages.Manage;
 
@@ -27,8 +29,9 @@ using Microsoft.Extensions.Primitives;
 /// <summary>
 /// Provides extension methods for mapping additional identity endpoints required by the Identity Razor components.
 /// </summary>
-public static class IdentityComponentsEndpointRouteBuilderExtensions
+public static class IdentityStoreMapExtensions
 {
+
     /// <summary>
     /// Maps additional identity endpoints required by the Identity Razor components.
     /// </summary>

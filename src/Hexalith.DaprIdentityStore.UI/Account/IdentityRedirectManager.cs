@@ -15,12 +15,12 @@ using Microsoft.AspNetCore.Http;
 /// <summary>
 /// Manages redirection within the identity store UI.
 /// </summary>
-internal sealed class IdentityRedirectManager
+public sealed class IdentityRedirectManager
 {
     /// <summary>
     /// The name of the status message cookie.
     /// </summary>
-    internal const string _statusCookieName = "Identity.StatusMessage";
+    public const string _statusCookieName = "Identity.StatusMessage";
 
     private static readonly CookieBuilder _statusCookieBuilder = new()
     {
@@ -36,7 +36,7 @@ internal sealed class IdentityRedirectManager
     /// Initializes a new instance of the <see cref="IdentityRedirectManager"/> class.
     /// </summary>
     /// <param name="navigationManager">The navigation manager.</param>
-    internal IdentityRedirectManager(NavigationManager navigationManager) => _navigationManager = navigationManager;
+    public IdentityRedirectManager(NavigationManager navigationManager) => _navigationManager = navigationManager;
 
     private string CurrentPath => _navigationManager.ToAbsoluteUri(_navigationManager.Uri).GetLeftPart(UriPartial.Path);
 
@@ -46,7 +46,7 @@ internal sealed class IdentityRedirectManager
     /// <param name="uri">The URI to redirect to.</param>
     /// <exception cref="InvalidOperationException">Thrown when used outside of static rendering.</exception>
     [DoesNotReturn]
-    internal void RedirectTo(string? uri)
+    public void RedirectTo(string? uri)
     {
         uri ??= string.Empty;
 
@@ -69,7 +69,7 @@ internal sealed class IdentityRedirectManager
     /// <param name="queryParameters">The query parameters to include in the URI.</param>
     /// <exception cref="InvalidOperationException">Thrown when used outside of static rendering.</exception>
     [DoesNotReturn]
-    internal void RedirectTo(string uri, IReadOnlyDictionary<string, object?> queryParameters)
+    public void RedirectTo(string uri, IReadOnlyDictionary<string, object?> queryParameters)
     {
         string uriWithoutQuery = _navigationManager.ToAbsoluteUri(uri).GetLeftPart(UriPartial.Path);
         string newUri = _navigationManager.GetUriWithQueryParameters(uriWithoutQuery, queryParameters);
@@ -81,7 +81,7 @@ internal sealed class IdentityRedirectManager
     /// </summary>
     /// <exception cref="InvalidOperationException">Thrown when used outside of static rendering.</exception>
     [DoesNotReturn]
-    internal void RedirectToCurrentPage() => RedirectTo(CurrentPath);
+    public void RedirectToCurrentPage() => RedirectTo(CurrentPath);
 
     /// <summary>
     /// Redirects to the current page with a status message.
@@ -90,7 +90,7 @@ internal sealed class IdentityRedirectManager
     /// <param name="context">The HTTP context.</param>
     /// <exception cref="InvalidOperationException">Thrown when used outside of static rendering.</exception>
     [DoesNotReturn]
-    internal void RedirectToCurrentPageWithStatus(string message, HttpContext context)
+    public void RedirectToCurrentPageWithStatus(string message, HttpContext context)
         => RedirectToWithStatus(CurrentPath, message, context);
 
     /// <summary>
@@ -101,7 +101,7 @@ internal sealed class IdentityRedirectManager
     /// <param name="context">The HTTP context.</param>
     /// <exception cref="InvalidOperationException">Thrown when used outside of static rendering.</exception>
     [DoesNotReturn]
-    internal void RedirectToWithStatus(string uri, string message, HttpContext context)
+    public void RedirectToWithStatus(string uri, string message, HttpContext context)
     {
         context.Response.Cookies.Append(_statusCookieName, message, _statusCookieBuilder.Build(context));
         RedirectTo(uri);

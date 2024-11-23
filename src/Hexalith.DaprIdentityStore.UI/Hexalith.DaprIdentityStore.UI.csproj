@@ -18,6 +18,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Hexalith.DaprIdentityStore.Abstractions\Hexalith.DaprIdentityStore.Abstractions.csproj" />
+    <ProjectReference Include="..\Hexalith.DaprIdentityStore\Hexalith.DaprIdentityStore.csproj" />
   </ItemGroup>
 
 </Project>

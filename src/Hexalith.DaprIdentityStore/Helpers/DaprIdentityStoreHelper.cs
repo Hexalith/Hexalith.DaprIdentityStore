@@ -30,6 +30,7 @@ public static class DaprIdentityStoreHelper
     /// <returns>The IServiceCollection with the added services.</returns>
     public static IServiceCollection AddDaprIdentityStore(this IServiceCollection services)
     {
+        _ = services.AddControllers().AddDapr();
         _ = services.AddSingleton<IUserCollectionService, UserCollectionService>();
         _ = services.AddSingleton<IUserNameIndexService, UserNameIndexService>();
         _ = services.AddSingleton<IUserEmailIndexService, UserEmailIndexService>();
@@ -40,31 +41,33 @@ public static class DaprIdentityStoreHelper
         _ = services.AddSingleton<IRoleNameIndexService, RoleNameIndexService>();
         _ = services.AddSingleton<IRoleClaimsIndexService, RoleClaimsIndexService>();
         _ = services.AddIdentity<CustomUser, CustomRole>()
-            .AddRoles<CustomRole>()
-            .AddRoleValidator<RoleValidator<CustomRole>>()
-            .AddRoleManager<RoleManager<CustomRole>>()
-            .AddPasswordValidator<DaprActorRoleStore>()
-            .AddUserValidator<DaprActorRoleStore>()
-            .AddClaimsPrincipalFactory<UserClaimsPrincipalFactory<CustomUser, CustomRole>>()
-            .AddSignInManager<SignInManager<CustomUser>>()
-            .AddUserManager<UserManager<CustomUser>>()
+
+            // .AddRoles<CustomRole>()
+            // .AddRoleValidator<RoleValidator<CustomRole>>()
+            // .AddRoleManager<RoleManager<CustomRole>>()
+            // .AddPasswordValidator<DaprActorRoleStore>()
+            // .AddUserValidator<DaprActorRoleStore>()
+            // .AddClaimsPrincipalFactory<UserClaimsPrincipalFactory<CustomUser, CustomRole>>()
+            // .AddSignInManager<SignInManager<CustomUser>>()
+            // .AddUserManager<UserManager<CustomUser>>()
             .AddDefaultTokenProviders()
             .AddRoleStore<DaprActorRoleStore>()
             .AddUserStore<DaprActorUserStore>();
-        _ = services.AddScoped<DaprActorUserStore>();
-        _ = services.AddScoped<IUserClaimStore<CustomUser>>(services => services.GetRequiredService<DaprActorUserStore>());
-        _ = services.AddScoped<IUserLoginStore<CustomUser>>(services => services.GetRequiredService<DaprActorUserStore>());
-        _ = services.AddScoped<IUserAuthenticationTokenStore<CustomUser>>(services => services.GetRequiredService<DaprActorUserStore>());
-        _ = services.AddScoped<IUserPasswordStore<CustomUser>>(services => services.GetRequiredService<DaprActorUserStore>());
-        _ = services.AddScoped<IUserSecurityStampStore<CustomUser>>(services => services.GetRequiredService<DaprActorUserStore>());
-        _ = services.AddScoped<IUserEmailStore<CustomUser>>(services => services.GetRequiredService<DaprActorUserStore>());
-        _ = services.AddScoped<IUserLockoutStore<CustomUser>>(services => services.GetRequiredService<DaprActorUserStore>());
-        _ = services.AddScoped<IUserPhoneNumberStore<CustomUser>>(services => services.GetRequiredService<DaprActorUserStore>());
-        _ = services.AddScoped<IQueryableUserStore<CustomUser>>(services => services.GetRequiredService<DaprActorUserStore>());
-        _ = services.AddScoped<IUserTwoFactorStore<CustomUser>>(services => services.GetRequiredService<DaprActorUserStore>());
-        _ = services.AddScoped<IUserAuthenticatorKeyStore<CustomUser>>(services => services.GetRequiredService<DaprActorUserStore>());
-        _ = services.AddScoped<IUserTwoFactorRecoveryCodeStore<CustomUser>>(services => services.GetRequiredService<DaprActorUserStore>());
-        _ = services.AddScoped<IUserLoginStore<CustomUser>>(services => services.GetRequiredService<DaprActorUserStore>());
+
+        // _ = services.AddScoped<DaprActorUserStore>();
+        // _ = services.AddScoped<IUserClaimStore<CustomUser>>(services => services.GetRequiredService<DaprActorUserStore>());
+        // _ = services.AddScoped<IUserLoginStore<CustomUser>>(services => services.GetRequiredService<DaprActorUserStore>());
+        // _ = services.AddScoped<IUserAuthenticationTokenStore<CustomUser>>(services => services.GetRequiredService<DaprActorUserStore>());
+        // _ = services.AddScoped<IUserPasswordStore<CustomUser>>(services => services.GetRequiredService<DaprActorUserStore>());
+        // _ = services.AddScoped<IUserSecurityStampStore<CustomUser>>(services => services.GetRequiredService<DaprActorUserStore>());
+        // _ = services.AddScoped<IUserEmailStore<CustomUser>>(services => services.GetRequiredService<DaprActorUserStore>());
+        // _ = services.AddScoped<IUserLockoutStore<CustomUser>>(services => services.GetRequiredService<DaprActorUserStore>());
+        // _ = services.AddScoped<IUserPhoneNumberStore<CustomUser>>(services => services.GetRequiredService<DaprActorUserStore>());
+        // _ = services.AddScoped<IQueryableUserStore<CustomUser>>(services => services.GetRequiredService<DaprActorUserStore>());
+        // _ = services.AddScoped<IUserTwoFactorStore<CustomUser>>(services => services.GetRequiredService<DaprActorUserStore>());
+        // _ = services.AddScoped<IUserAuthenticatorKeyStore<CustomUser>>(services => services.GetRequiredService<DaprActorUserStore>());
+        // _ = services.AddScoped<IUserTwoFactorRecoveryCodeStore<CustomUser>>(services => services.GetRequiredService<DaprActorUserStore>());
+        // _ = services.AddScoped<IUserLoginStore<CustomUser>>(services => services.GetRequiredService<DaprActorUserStore>());
         return services;
     }
 
@@ -73,7 +76,7 @@ public static class DaprIdentityStoreHelper
     /// </summary>
     /// <param name="actorRegistrationCollection">The ActorRegistrationCollection to register actors with.</param>
     /// <exception cref="ArgumentNullException">Thrown when actorRegistrationCollection is null.</exception>
-    public static void RegisterPartitionActors(this ActorRegistrationCollection actorRegistrationCollection)
+    public static void RegisterIdentityActors(this ActorRegistrationCollection actorRegistrationCollection)
     {
         ArgumentNullException.ThrowIfNull(actorRegistrationCollection);
         actorRegistrationCollection.RegisterActor<UserActor>(DaprIdentityStoreConstants.DefaultUserActorTypeName);

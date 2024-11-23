@@ -18,7 +18,7 @@ using Microsoft.AspNetCore.Identity;
 /// </remarks>
 /// <param name="userManager">The user manager.</param>
 /// <param name="redirectManager">The redirect manager.</param>
-internal sealed class IdentityUserAccessor(UserManager<CustomUser> userManager, IdentityRedirectManager redirectManager)
+public sealed class IdentityUserAccessor(UserManager<CustomUser> userManager, IdentityRedirectManager redirectManager)
 {
     private readonly IdentityRedirectManager _redirectManager = redirectManager;
     private readonly UserManager<CustomUser> _userManager = userManager;
@@ -29,7 +29,7 @@ internal sealed class IdentityUserAccessor(UserManager<CustomUser> userManager, 
     /// <param name="context">The HTTP context.</param>
     /// <returns>The custom user.</returns>
     /// <exception cref="InvalidOperationException">Thrown when the user cannot be loaded.</exception>
-    internal async Task<CustomUser> GetRequiredUserAsync(HttpContext context)
+    public async Task<CustomUser> GetRequiredUserAsync(HttpContext context)
     {
         CustomUser? user = await _userManager.GetUserAsync(context.User);
 

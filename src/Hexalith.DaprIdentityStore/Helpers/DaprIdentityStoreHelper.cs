@@ -32,8 +32,8 @@ public static class DaprIdentityStoreHelper
     public static IServiceCollection AddDaprIdentityStore(this IServiceCollection services)
     {
         _ = services
-            .AddAntiforgery()
-            .AddControllers().AddDapr();
+            .AddControllers()
+                .AddDapr();
         services.TryAddSingleton<IUserCollectionService, UserCollectionService>();
         services.TryAddSingleton<IUserNameIndexService, UserNameIndexService>();
         services.TryAddSingleton<IUserEmailIndexService, UserEmailIndexService>();
@@ -56,6 +56,7 @@ public static class DaprIdentityStoreHelper
             .AddDefaultTokenProviders()
             .AddRoleStore<DaprActorRoleStore>()
             .AddUserStore<DaprActorUserStore>();
+        _ = services.AddAuthentication().AddIdentityCookies();
 
         // _ = services.AddScoped<DaprActorUserStore>();
         // _ = services.AddScoped<IUserClaimStore<CustomUser>>(services => services.GetRequiredService<DaprActorUserStore>());

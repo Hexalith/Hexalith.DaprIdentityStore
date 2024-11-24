@@ -15,13 +15,12 @@ using Microsoft.AspNetCore.Http;
 /// <summary>
 /// Manages redirection within the identity store UI.
 /// </summary>
-public sealed class IdentityRedirectManager
+/// <remarks>
+/// Initializes a new instance of the <see cref="IdentityRedirectManager"/> class.
+/// </remarks>
+/// <param name="navigationManager">The navigation manager.</param>
+public sealed class IdentityRedirectManager(NavigationManager navigationManager)
 {
-    /// <summary>
-    /// The name of the status message cookie.
-    /// </summary>
-    public const string _statusCookieName = "Identity.StatusMessage";
-
     private static readonly CookieBuilder _statusCookieBuilder = new()
     {
         SameSite = SameSiteMode.Strict,
@@ -30,13 +29,12 @@ public sealed class IdentityRedirectManager
         MaxAge = TimeSpan.FromSeconds(5),
     };
 
-    private readonly NavigationManager _navigationManager;
+    private readonly NavigationManager _navigationManager = navigationManager;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="IdentityRedirectManager"/> class.
+    /// Gets the name of the status message cookie.
     /// </summary>
-    /// <param name="navigationManager">The navigation manager.</param>
-    public IdentityRedirectManager(NavigationManager navigationManager) => _navigationManager = navigationManager;
+    public static string StatusCookieName => "Identity.StatusMessage";
 
     private string CurrentPath => _navigationManager.ToAbsoluteUri(_navigationManager.Uri).GetLeftPart(UriPartial.Path);
 
@@ -103,7 +101,10 @@ public sealed class IdentityRedirectManager
     [DoesNotReturn]
     public void RedirectToWithStatus(string uri, string message, HttpContext context)
     {
-        context.Response.Cookies.Append(_statusCookieName, message, _statusCookieBuilder.Build(context));
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentException.ThrowIfNullOrWhiteSpace(message);
+        ArgumentException.ThrowIfNullOrWhiteSpace(uri);
+        context.Response.Cookies.Append(StatusCookieName, message, _statusCookieBuilder.Build(context));
         RedirectTo(uri);
     }
 }

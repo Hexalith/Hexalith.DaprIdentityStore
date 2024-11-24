@@ -1,4 +1,4 @@
-﻿// <copyright file="IdentityStoreExtensions - Copy.cs" company="ITANEO">
+﻿// <copyright file="IdentityStoreUIExtensions.cs" company="ITANEO">
 // Copyright (c) ITANEO (https://www.itaneo.com). All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 // </copyright>
@@ -6,9 +6,13 @@
 namespace Hexalith.DaprIdentityStore.UI.Helpers;
 
 using Hexalith.DaprIdentityStore.Helpers;
+using Hexalith.DaprIdentityStore.Models;
+using Hexalith.DaprIdentityStore.Stores;
 using Hexalith.DaprIdentityStore.UI.Account;
+using Hexalith.DaprIdentityStore.UI.Services;
 
 using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 
 /// <summary>
@@ -22,9 +26,17 @@ public static class IdentityStoreUIExtensions
     /// <param name="services">The IServiceCollection to add the services to.</param>
     /// <returns>The IServiceCollection with the services added.</returns>
     public static IServiceCollection AddDaprIdentityStoreUI(this IServiceCollection services)
-        => services
+    {
+        _ = services
             .AddDaprIdentityStore()
+            .AddScoped<IEmailSender<CustomUser>, EmailSender>()
             .AddScoped<IdentityUserAccessor>()
             .AddScoped<IdentityRedirectManager>()
-            .AddScoped<AuthenticationStateProvider, IdentityRevalidatingAuthenticationStateProvider>();
+            .AddScoped<AuthenticationStateProvider, IdentityRevalidatingAuthenticationStateProvider>()
+            .AddIdentity<CustomUser, CustomRole>()
+            .AddDefaultTokenProviders()
+            .AddRoleStore<DaprActorRoleStore>()
+            .AddUserStore<DaprActorUserStore>();
+        return services;
+    }
 }

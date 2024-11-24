@@ -10,12 +10,9 @@ using System;
 using Dapr.Actors.Runtime;
 
 using Hexalith.DaprIdentityStore.Actors;
-using Hexalith.DaprIdentityStore.Models;
 using Hexalith.DaprIdentityStore.Services;
-using Hexalith.DaprIdentityStore.Stores;
 using Hexalith.Infrastructure.DaprRuntime.Actors;
 
-using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
@@ -43,33 +40,6 @@ public static class DaprIdentityStoreHelper
         services.TryAddSingleton<IRoleCollectionService, RoleCollectionService>();
         services.TryAddSingleton<IRoleNameIndexService, RoleNameIndexService>();
         services.TryAddSingleton<IRoleClaimsIndexService, RoleClaimsIndexService>();
-        _ = services.AddIdentity<CustomUser, CustomRole>()
-
-            // .AddRoles<CustomRole>()
-            // .AddRoleValidator<RoleValidator<CustomRole>>()
-            // .AddRoleManager<RoleManager<CustomRole>>()
-            // .AddPasswordValidator<DaprActorRoleStore>()
-            // .AddUserValidator<DaprActorRoleStore>()
-            // .AddClaimsPrincipalFactory<UserClaimsPrincipalFactory<CustomUser, CustomRole>>()
-            // .AddUserManager<UserManager<CustomUser>>()
-            .AddDefaultTokenProviders()
-            .AddRoleStore<DaprActorRoleStore>()
-            .AddUserStore<DaprActorUserStore>();
-
-        // _ = services.AddScoped<DaprActorUserStore>();
-        // _ = services.AddScoped<IUserClaimStore<CustomUser>>(services => services.GetRequiredService<DaprActorUserStore>());
-        // _ = services.AddScoped<IUserLoginStore<CustomUser>>(services => services.GetRequiredService<DaprActorUserStore>());
-        // _ = services.AddScoped<IUserAuthenticationTokenStore<CustomUser>>(services => services.GetRequiredService<DaprActorUserStore>());
-        // _ = services.AddScoped<IUserPasswordStore<CustomUser>>(services => services.GetRequiredService<DaprActorUserStore>());
-        // _ = services.AddScoped<IUserSecurityStampStore<CustomUser>>(services => services.GetRequiredService<DaprActorUserStore>());
-        // _ = services.AddScoped<IUserEmailStore<CustomUser>>(services => services.GetRequiredService<DaprActorUserStore>());
-        // _ = services.AddScoped<IUserLockoutStore<CustomUser>>(services => services.GetRequiredService<DaprActorUserStore>());
-        // _ = services.AddScoped<IUserPhoneNumberStore<CustomUser>>(services => services.GetRequiredService<DaprActorUserStore>());
-        // _ = services.AddScoped<IQueryableUserStore<CustomUser>>(services => services.GetRequiredService<DaprActorUserStore>());
-        // _ = services.AddScoped<IUserTwoFactorStore<CustomUser>>(services => services.GetRequiredService<DaprActorUserStore>());
-        // _ = services.AddScoped<IUserAuthenticatorKeyStore<CustomUser>>(services => services.GetRequiredService<DaprActorUserStore>());
-        // _ = services.AddScoped<IUserTwoFactorRecoveryCodeStore<CustomUser>>(services => services.GetRequiredService<DaprActorUserStore>());
-        // _ = services.AddScoped<IUserLoginStore<CustomUser>>(services => services.GetRequiredService<DaprActorUserStore>());
         return services;
     }
 

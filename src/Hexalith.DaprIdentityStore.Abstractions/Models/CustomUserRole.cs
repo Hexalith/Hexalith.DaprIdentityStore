@@ -5,11 +5,14 @@
 
 namespace Hexalith.DaprIdentityStore.Models;
 
+using System.Runtime.Serialization;
+
 using Microsoft.AspNetCore.Identity;
 
 /// <summary>
 /// Represents a custom user role with additional external data and ID.
 /// </summary>
+[DataContract]
 public class CustomUserRole : IdentityUserRole<string>
 #pragma warning restore S2094 // Classes should not be empty
 {

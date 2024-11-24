@@ -5,12 +5,15 @@
 
 namespace Hexalith.DaprIdentityStore.Models;
 
+using System.Runtime.Serialization;
+
 using Microsoft.AspNetCore.Identity;
 
 /// <summary>
 /// Represents an application role in the Dapr identity store.
 /// Extends the base IdentityRole class to provide role-based authorization capabilities.
 /// </summary>
+[DataContract]
 public class CustomRole : IdentityRole
 #pragma warning restore S2094 // Classes should not be empty
 {

@@ -5,12 +5,15 @@
 
 namespace Hexalith.DaprIdentityStore.Models;
 
+using System.Runtime.Serialization;
+
 using Microsoft.AspNetCore.Identity;
 
 /// <summary>
 /// Represents a claim that belongs to a user in the Dapr identity store.
 /// Extends IdentityUserClaim with string-based user identifiers.
 /// </summary>
+[DataContract]
 public class CustomUserClaim : IdentityUserClaim<string>
 {
     /// <summary>

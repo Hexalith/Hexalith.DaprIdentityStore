@@ -5,6 +5,8 @@
 
 namespace Hexalith.DaprIdentityStore.States;
 
+using System.Runtime.Serialization;
+
 using Hexalith.DaprIdentityStore.Models;
 
 /// <summary>
@@ -16,7 +18,8 @@ using Hexalith.DaprIdentityStore.Models;
 /// across actor invocations. It serves as the primary state container for role data
 /// in the distributed actor system.
 /// </remarks>
-internal class RoleActorState
+[DataContract]
+public class RoleActorState
 {
     /// <summary>
     /// Gets or sets the claims associated with the role.
@@ -24,7 +27,7 @@ internal class RoleActorState
     /// <value>
     /// A collection of <see cref="CustomRoleClaim"/> representing the role's claims.
     /// </value>
-    internal IEnumerable<CustomRoleClaim> Claims { get; set; } = [];
+    public IEnumerable<CustomRoleClaim> Claims { get; set; } = [];
 
     /// <summary>
     /// Gets or sets the role identity information.
@@ -37,5 +40,5 @@ internal class RoleActorState
     /// This property stores core role identity information such as role credentials,
     /// profile data, and authentication details.
     /// </remarks>
-    internal CustomRole Role { get; set; } = new();
+    public CustomRole Role { get; set; } = new();
 }

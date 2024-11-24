@@ -5,6 +5,8 @@
 
 namespace Hexalith.DaprIdentityStore.States;
 
+using System.Runtime.Serialization;
+
 using Hexalith.DaprIdentityStore.Models;
 
 using Microsoft.AspNetCore.Identity;
@@ -18,7 +20,8 @@ using Microsoft.AspNetCore.Identity;
 /// across actor invocations. It serves as the primary state container for user data
 /// in the distributed actor system.
 /// </remarks>
-internal class UserActorState
+[DataContract]
+public class UserActorState
 {
     /// <summary>
     /// Gets or sets the claims associated with the user.
@@ -26,7 +29,7 @@ internal class UserActorState
     /// <value>
     /// A collection of <see cref="CustomUserClaim"/> representing the user's claims.
     /// </value>
-    internal IEnumerable<CustomUserClaim> Claims { get; set; } = [];
+    public IEnumerable<CustomUserClaim> Claims { get; set; } = [];
 
     /// <summary>
     /// Gets or sets the logins associated with the user.
@@ -34,7 +37,7 @@ internal class UserActorState
     /// <value>
     /// A collection of <see cref="UserLoginInfo"/> representing the user's logins.
     /// </value>
-    internal IEnumerable<CustomUserLogin> Logins { get; set; } = [];
+    public IEnumerable<CustomUserLogin> Logins { get; set; } = [];
 
     /// <summary>
     /// Gets or sets the tokens associated with the user.
@@ -42,7 +45,7 @@ internal class UserActorState
     /// <value>
     /// A collection of <see cref="CustomUserToken"/> representing the user's tokens.
     /// </value>
-    internal IEnumerable<CustomUserToken> Tokens { get; set; } = [];
+    public IEnumerable<CustomUserToken> Tokens { get; set; } = [];
 
     /// <summary>
     /// Gets or sets the user identity information.
@@ -55,5 +58,5 @@ internal class UserActorState
     /// This property stores core user identity information such as user credentials,
     /// profile data, and authentication details.
     /// </remarks>
-    internal CustomUser User { get; set; } = new();
+    public CustomUser User { get; set; } = new();
 }

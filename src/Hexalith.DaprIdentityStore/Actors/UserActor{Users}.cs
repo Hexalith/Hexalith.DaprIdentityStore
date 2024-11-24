@@ -111,10 +111,6 @@ public partial class UserActor(
 
         _state = new UserActorState { User = user };
 
-        // Save user state
-        await StateManager.AddStateAsync(DaprIdentityStoreConstants.UserStateName, _state, CancellationToken.None);
-        await StateManager.SaveStateAsync(CancellationToken.None);
-
         await _collectionService.AddAsync(user.Id);
 
         // Create email index if email exists
@@ -129,6 +125,9 @@ public partial class UserActor(
             await _nameCollectionService.AddAsync(user.NormalizedUserName, user.Id);
         }
 
+        // Save user state
+        await StateManager.AddStateAsync(DaprIdentityStoreConstants.UserStateName, _state, CancellationToken.None);
+        await StateManager.SaveStateAsync(CancellationToken.None);
         return true;
     }
 

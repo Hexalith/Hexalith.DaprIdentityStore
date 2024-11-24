@@ -3,13 +3,21 @@
     <UseProjectReference Condition="'$(UseProjectReference)' == '' and '$(BuildingByReSharper)' == 'true'">true</UseProjectReference>
     <UseProjectReference Condition="'$(UseProjectReference)' == '' and '$(BuildingInsideVisualStudio)' == 'true'">true</UseProjectReference>
     <UseProjectReference Condition="'$(UseProjectReference)' == '' and ('$(TERM_PROGRAM)' == 'vscode' or '$(VSCODE_PID)' != '')">true</UseProjectReference>
+    <HexalithProps>$([MSBuild]::GetPathOfFileAbove('Hexalith.props', '$(MSBuildThisFileDirectory)..'))</HexalithProps>
   </PropertyGroup>
-  <Import Project="buildFiles/Project.Common.props" />
+  <Import Project="$(HexalithProps)" Condition=" '$(HexalithProps)' != '' " />
+  <Import Project="buildFiles\Project.Common.props" />
+  <PropertyGroup>
+    <HexalithPath Condition="'$(HexalithPath)' == ''">$(MSBuildThisFileDirectory)Hexalith\</HexalithPath>
+    <HexalithVersion Condition="'$(HexalithVersion)' == ''">1.*</HexalithVersion>
+    <HexalithDaprIdentityStorePath Condition="'$(HexalithDaprIdentityStorePath)' == ''">$(HexalithPath)..\Hexalith.DaprIdentityStore\</HexalithDaprIdentityStorePath>
+    <HexalithDaprIdentityStoreVersion Condition="'$(HexalithDaprIdentityStoreVersion)' == ''">*</HexalithDaprIdentityStoreVersion>
+  </PropertyGroup>
   <PropertyGroup>
     <Authors>Jérôme Piquot</Authors>
-    <Company>Jérôme Piquot</Company>
+    <Company>Itaneo</Company>
     <Product>Hexalith</Product>
-    <PackageTags>Hexalith;Dapr</PackageTags>
+    <PackageTags>Hexalith;Dapr;Identity;Asp Net Core;</PackageTags>
     <Description>Hexalith is a set of libraries to build a micro-service architecture.</Description>
     <RepositoryUrl>https://github.com/Hexalith/Hexalith.DaprIdentityStore</RepositoryUrl>
     <RepositoryType>git</RepositoryType>

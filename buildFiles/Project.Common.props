@@ -5,7 +5,7 @@
   <PropertyGroup>
     <DNVersion>9</DNVersion>
     <!-- Framework version used when coding in Visual Studio and when creating templates -->
-    <DefaultTargetFramework>net9.0</DefaultTargetFramework>
+    <DefaultTargetFramework>net$(DNVersion).0</DefaultTargetFramework>
 
     <!-- TFMs used to build the abstractions and modules-->
     <CommonTargetFrameworks Condition="'$(CommonTargetFrameworks)' == ''">$(DefaultTargetFramework)</CommonTargetFrameworks>

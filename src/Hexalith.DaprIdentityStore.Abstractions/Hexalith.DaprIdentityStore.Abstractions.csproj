@@ -12,5 +12,10 @@
     <PackageReference Include="Hexalith.Infrastructure.DaprRuntime.Abstractions" Version="$(HexalithVersion)" />
     <PackageReference Include="Microsoft.Extensions.Identity.Stores" Version="$(MicrosoftExtensionsPackagesVersion)" />
   </ItemGroup>
-
+  <ItemGroup Condition="'$(UseProjectReference)' == 'true'">
+    <ProjectReference Include="$(HexalithPath)\src\Core\Infrastructure\Hexalith.Infrastructure.DaprRuntime.Abstractions\Hexalith.Infrastructure.DaprRuntime.Abstractions.csproj" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(UseProjectReference)' != 'true'">
+    <PackageReference Include="Hexalith.Infrastructure.DaprRuntime.Abstractions" Version="$(HexalithVersion)" />
+  </ItemGroup>
 </Project>

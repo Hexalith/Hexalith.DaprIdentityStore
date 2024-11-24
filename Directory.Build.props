@@ -10,7 +10,7 @@
   <PropertyGroup>
     <HexalithPath Condition="'$(HexalithPath)' == ''">$(MSBuildThisFileDirectory)Hexalith\</HexalithPath>
     <HexalithVersion Condition="'$(HexalithVersion)' == ''">1.*</HexalithVersion>
-    <HexalithDaprIdentityStorePath Condition="'$(HexalithDaprIdentityStorePath)' == ''">$(HexalithPath)..\Hexalith.DaprIdentityStore\</HexalithDaprIdentityStorePath>
+    <HexalithDaprIdentityStorePath Condition="'$(HexalithDaprIdentityStorePath)' == ''">$(MSBuildThisFileDirectory)</HexalithDaprIdentityStorePath>
     <HexalithDaprIdentityStoreVersion Condition="'$(HexalithDaprIdentityStoreVersion)' == ''">*</HexalithDaprIdentityStoreVersion>
   </PropertyGroup>
   <PropertyGroup>

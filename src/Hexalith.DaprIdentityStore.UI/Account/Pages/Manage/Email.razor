@@ -16,9 +16,9 @@
 
 <h3>Manage email</h3>
 
-<StatusMessage Message="@message"/>
 <FluentGrid>
     <FluentGridItem xs="12" sm="6">
+        <StatusMessage Message="@message" />
         <form @onsubmit="OnSendEmailVerificationAsync" @formname="send-verification" id="send-verification-form" method="post">
             <AntiforgeryToken />
         </form>

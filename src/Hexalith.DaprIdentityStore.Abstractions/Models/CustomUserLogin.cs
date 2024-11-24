@@ -5,15 +5,12 @@
 
 namespace Hexalith.DaprIdentityStore.Models;
 
-using System.Runtime.Serialization;
-
 using Microsoft.AspNetCore.Identity;
 
 /// <summary>
 /// Represents a user's login information in the Dapr identity store.
 /// Extends IdentityUserLogin with string-based user identifiers to store external login provider data.
 /// </summary>
-[DataContract]
 public class CustomUserLogin : IdentityUserLogin<string>
 {
     /// <summary>

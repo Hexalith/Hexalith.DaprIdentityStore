@@ -31,6 +31,7 @@ public sealed class IdentityUserAccessor(UserManager<CustomUser> userManager, Id
     /// <exception cref="InvalidOperationException">Thrown when the user cannot be loaded.</exception>
     public async Task<CustomUser> GetRequiredUserAsync(HttpContext context)
     {
+        ArgumentNullException.ThrowIfNull(context);
         CustomUser? user = await _userManager.GetUserAsync(context.User);
 
         if (user is null)

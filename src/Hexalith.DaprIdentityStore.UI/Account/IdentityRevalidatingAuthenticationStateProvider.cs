@@ -36,6 +36,8 @@ public sealed class IdentityRevalidatingAuthenticationStateProvider(
     protected override async Task<bool> ValidateAuthenticationStateAsync(
         AuthenticationState authenticationState, CancellationToken cancellationToken)
     {
+        ArgumentNullException.ThrowIfNull(authenticationState);
+
         // Get the user manager from a new scope to ensure it fetches fresh data
         await using AsyncServiceScope scope = scopeFactory.CreateAsyncScope();
         UserManager<CustomUser> userManager = scope.ServiceProvider.GetRequiredService<UserManager<CustomUser>>();

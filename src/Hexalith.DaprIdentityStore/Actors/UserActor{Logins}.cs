@@ -65,9 +65,9 @@ public partial class UserActor
     public async Task<IEnumerable<UserLoginInfo>> GetLoginsAsync()
     {
         _state = await GetStateAsync(CancellationToken.None);
-        return (IEnumerable<UserLoginInfo>)(_state is null
-            ? throw new InvalidOperationException($"Get logins failed : User '{Id.ToUnescapeString()}' not found.")
-            : _state.Logins);
+        return (_state ?? throw new InvalidOperationException($"Get logins failed : User '{Id.ToUnescapeString()}' not found."))
+            .Logins
+            .Select(p => new UserLoginInfo(p.LoginProvider, p.ProviderKey, p.ProviderDisplayName));
     }
 
     /// <summary>

@@ -50,10 +50,6 @@ jobs:
         key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
         restore-keys: |
           ${{ runner.os }}-nuget-
-    - name: Add Aspire Workloads
-      run: |
-        dotnet workload install aspire
-        dotnet workload restore
     - name: Build Version
       run: |
         dotnet tool install --global minver-cli --version 5.0.0

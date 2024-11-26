@@ -22,7 +22,7 @@
     <DaprVersion>1.14.*</DaprVersion>
     <DocFxConsoleVersion>2.59.4</DocFxConsoleVersion>
     <FluentAssertionsVersion>6.12.2</FluentAssertionsVersion>
-    <FluentValidationVersion>11.10.0</FluentValidationVersion>
+    <FluentValidationVersion>11.11.0</FluentValidationVersion>
     <FluentValidationAspNetCoreVersion>11.3.0</FluentValidationAspNetCoreVersion>
     <GitHubActionsTestLoggerVersion>2.4.1</GitHubActionsTestLoggerVersion>
     <GoogleApiVersion>5.4.2</GoogleApiVersion>
@@ -38,10 +38,10 @@
     <MicrosoftFluentUIComponentsVersion>4.10.4</MicrosoftFluentUIComponentsVersion>
     <MicrosoftIdentityClientVersion>4.66.2</MicrosoftIdentityClientVersion>
     <MicrosoftIdentityWebVersion>3.2.1</MicrosoftIdentityWebVersion>
-    <MicrosoftNETTestSdkVersion>17.11.1</MicrosoftNETTestSdkVersion>
+    <MicrosoftNETTestSdkVersion>17.12.0</MicrosoftNETTestSdkVersion>
     <MicrosoftSemanticKernelVersion>1.29.0</MicrosoftSemanticKernelVersion>
     <MicrosoftTeamsFxVersion>2.5.0</MicrosoftTeamsFxVersion>
-    <MicrosoftTypescriptMSBuild>5.6.2</MicrosoftTypescriptMSBuild>
+    <MicrosoftTypescriptMSBuild>5.7.1</MicrosoftTypescriptMSBuild>
     <MicrosoftGraphVersion>5.12.*</MicrosoftGraphVersion>
     <MicrosoftVisualStudioThreadingAnalyzersVersion>17.12.19</MicrosoftVisualStudioThreadingAnalyzersVersion>
     <MinverVersion>5.0.0</MinverVersion>
@@ -51,7 +51,7 @@
     <OpenTelemetryBetaVersion>1.8.0-beta.1</OpenTelemetryBetaVersion>
     <OrchardCoreLocalizationCoreVersion>1.8.3</OrchardCoreLocalizationCoreVersion>
     <RadzenBlazorVersion>4.23.4</RadzenBlazorVersion>
-    <SonarAnalyzerCSharpVersion>9.32.0.97167</SonarAnalyzerCSharpVersion>
+    <SonarAnalyzerCSharpVersion>10.3.0.106239</SonarAnalyzerCSharpVersion>
     <SendGridExtensionsDependencyInjectionVersion>1.0.1</SendGridExtensionsDependencyInjectionVersion>
     <SerilogVersion>8.0.*</SerilogVersion>
     <SerilogEnrichersEnvironmentVersion>3.0.*</SerilogEnrichersEnvironmentVersion>

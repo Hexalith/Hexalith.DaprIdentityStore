@@ -6,7 +6,6 @@
 namespace Hexalith.DaprIdentityStore.Actors;
 
 using System.Collections.Generic;
-using System.Security.Claims;
 
 using Dapr.Actors;
 
@@ -22,9 +21,9 @@ public interface IUserActor : IActor
     /// <summary>
     /// Adds a collection of claims to the user identity asynchronously.
     /// </summary>
-    /// <param name="claims">The collection of claims to add.</param>
+    /// <param name="userClaims">The collection of user claims to add.</param>
     /// <returns>A task representing the asynchronous operation.</returns>
-    Task AddClaimsAsync(IEnumerable<Claim> claims);
+    Task AddClaimsAsync(IEnumerable<CustomUserClaim> userClaims);
 
     /// <summary>
     /// Adds a login to the user identity asynchronously.
@@ -77,7 +76,7 @@ public interface IUserActor : IActor
     /// Retrieves all claims associated with the user identity asynchronously.
     /// </summary>
     /// <returns>A collection of claims associated with the user.</returns>
-    Task<IEnumerable<Claim>> GetClaimsAsync();
+    Task<IEnumerable<CustomUserClaim>> GetClaimsAsync();
 
     /// <summary>
     /// Retrieves all logins associated with the user identity asynchronously.
@@ -98,7 +97,7 @@ public interface IUserActor : IActor
     /// </summary>
     /// <param name="claims">The collection of claims to remove.</param>
     /// <returns>A task representing the asynchronous operation.</returns>
-    Task RemoveClaimsAsync(IEnumerable<Claim> claims);
+    Task RemoveClaimsAsync(IEnumerable<CustomUserClaim> claims);
 
     /// <summary>
     /// Removes a login from the user identity asynchronously.
@@ -122,7 +121,7 @@ public interface IUserActor : IActor
     /// <param name="claim">The existing claim to replace.</param>
     /// <param name="newClaim">The new claim that will replace the existing claim.</param>
     /// <returns>A task representing the asynchronous operation.</returns>
-    Task ReplaceClaimAsync(Claim claim, Claim newClaim);
+    Task ReplaceClaimAsync(CustomUserClaim claim, CustomUserClaim newClaim);
 
     /// <summary>
     /// Updates an existing user identity asynchronously.

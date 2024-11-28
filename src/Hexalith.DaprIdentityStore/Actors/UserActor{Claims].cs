@@ -6,7 +6,6 @@
 namespace Hexalith.DaprIdentityStore.Actors;
 
 using System.Collections.Generic;
-using System.Security.Claims;
 
 using Hexalith.DaprIdentityStore.Models;
 using Hexalith.Infrastructure.DaprRuntime.Helpers;
@@ -17,14 +16,8 @@ using Hexalith.Infrastructure.DaprRuntime.Helpers;
 /// </summary>
 public partial class UserActor
 {
-    /// <summary>
-    /// Adds claims to the user identity.
-    /// Claims are unique combinations of ClaimType and ClaimValue associated with a user.
-    /// </summary>
-    /// <param name="claims">Collection of claims to add to the user.</param>
-    /// <returns>A task representing the asynchronous operation.</returns>
-    /// <exception cref="InvalidOperationException">Thrown when the user state is not found.</exception>
-    public async Task AddClaimsAsync(IEnumerable<Claim> claims)
+    /// <inheritdoc/>
+    public async Task AddClaimsAsync(IEnumerable<CustomUserClaim> claims)
     {
         string userId = Id.ToUnescapeString();
         _state = await GetStateAsync(CancellationToken.None);
@@ -33,33 +26,24 @@ public partial class UserActor
             throw new InvalidOperationException($"Add {nameof(claims)} failed : User '{userId}' not found.");
         }
 
-        // Add claims to user state and remove duplicates
-        IEnumerable<CustomUserClaim> newClaims = claims
-            .Select(p => new CustomUserClaim { UserId = userId, ClaimType = p.Type, ClaimValue = p.Value });
-        _state.Claims = _state.Claims.Union(newClaims);
+        _state.Claims = _state.Claims.Union(claims.Where(p => p.ClaimType is not null));
 
-        foreach (Claim claim in claims)
+        foreach (CustomUserClaim claim in claims.Where(p => p.ClaimType is not null))
         {
-            await _claimIndexService.AddAsync(claim, userId, CancellationToken.None);
+            await _claimIndexService.AddAsync(claim.ClaimType!, claim.ClaimValue, userId, CancellationToken.None);
         }
 
         await StateManager.SetStateAsync(DaprIdentityStoreConstants.UserStateName, _state, CancellationToken.None);
         await StateManager.SaveStateAsync(CancellationToken.None);
     }
 
-    /// <summary>
-    /// Retrieves all claims associated with the user.
-    /// Claims represent user attributes and permissions.
-    /// </summary>
-    /// <returns>Collection of user claims.</returns>
-    /// <exception cref="InvalidOperationException">When user not found.</exception>
-    public async Task<IEnumerable<Claim>> GetClaimsAsync()
+    /// <inheritdoc/>
+    public async Task<IEnumerable<CustomUserClaim>> GetClaimsAsync()
     {
         _state = await GetStateAsync(CancellationToken.None);
         return _state is null
             ? throw new InvalidOperationException($"Get claims Failed : User '{Id.ToUnescapeString()}' not found.")
-            : _state.Claims
-            .Select(c => new Claim(c.ClaimType ?? string.Empty, c.ClaimValue ?? string.Empty));
+            : _state.Claims;
     }
 
     /// <summary>
@@ -68,7 +52,7 @@ public partial class UserActor
     /// <param name="claims">Claims to remove.</param>
     /// <exception cref="InvalidOperationException">When user not found.</exception>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public async Task RemoveClaimsAsync(IEnumerable<Claim> claims)
+    public async Task RemoveClaimsAsync(IEnumerable<CustomUserClaim> claims)
     {
         string userId = Id.ToUnescapeString();
         _state = await GetStateAsync(CancellationToken.None);
@@ -79,11 +63,11 @@ public partial class UserActor
 
         // Remove user claims
         _state.Claims = _state.Claims
-            .Where(p => !claims.Any(c => c.Type == p.ClaimType && c.Value == p.ClaimValue));
+            .Where(p => !claims.Any(c => c.ClaimType == p.ClaimType && c.ClaimValue == p.ClaimValue));
 
-        foreach (Claim claim in claims)
+        foreach (CustomUserClaim claim in claims.Where(p => p.ClaimType is not null))
         {
-            await _claimIndexService.RemoveAsync(claim, userId, CancellationToken.None);
+            await _claimIndexService.RemoveAsync(claim.ClaimType!, claim.ClaimValue, userId, CancellationToken.None);
         }
 
         await StateManager.SetStateAsync(DaprIdentityStoreConstants.UserStateName, _state, CancellationToken.None);
@@ -99,10 +83,12 @@ public partial class UserActor
     /// <exception cref="ArgumentNullException">When claim parameters are null.</exception>
     /// <exception cref="InvalidOperationException">When user not found.</exception>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public async Task ReplaceClaimAsync(Claim claim, Claim newClaim)
+    public async Task ReplaceClaimAsync(CustomUserClaim claim, CustomUserClaim newClaim)
     {
         ArgumentNullException.ThrowIfNull(claim);
         ArgumentNullException.ThrowIfNull(newClaim);
+        ArgumentNullException.ThrowIfNull(claim.ClaimType);
+        ArgumentNullException.ThrowIfNull(newClaim.ClaimType);
         string userId = Id.ToUnescapeString();
         _state = await GetStateAsync(CancellationToken.None);
         if (_state is null)
@@ -113,17 +99,11 @@ public partial class UserActor
         // Add claims to user state and remove duplicates
         _state.Claims = _state
             .Claims
-            .Where(p => p.ClaimType != claim.Type || p.ClaimValue != claim.Value)
-            .Union([new CustomUserClaim
-            {
-                UserId = Id.ToUnescapeString(),
-                ClaimType = newClaim.ValueType,
-                ClaimValue = newClaim.Value,
-            }
-            ]);
+            .Where(p => p.ClaimType != claim.ClaimType || p.ClaimValue != claim.ClaimValue)
+            .Union([newClaim]);
 
-        await _claimIndexService.RemoveAsync(claim, userId, CancellationToken.None);
-        await _claimIndexService.AddAsync(newClaim, userId, CancellationToken.None);
+        await _claimIndexService.RemoveAsync(claim.ClaimType, claim.ClaimValue, userId, CancellationToken.None);
+        await _claimIndexService.AddAsync(newClaim.ClaimType, newClaim.ClaimValue, userId, CancellationToken.None);
 
         await StateManager.SetStateAsync(DaprIdentityStoreConstants.UserStateName, _state, CancellationToken.None);
         await StateManager.SaveStateAsync(CancellationToken.None);

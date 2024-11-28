@@ -32,7 +32,7 @@ public partial class DaprActorUserStore
         ThrowIfDisposed();
 
         IUserActor actor = ActorProxy.DefaultProxyFactory.CreateUserActor(user.Id);
-        await actor.AddClaimsAsync(claims);
+        await actor.AddClaimsAsync(claims.Select(p => new CustomUserClaim { ClaimType = p.Type, ClaimValue = p.Value, UserId = user.Id }));
     }
 
     /// <inheritdoc/>
@@ -43,7 +43,7 @@ public partial class DaprActorUserStore
         ThrowIfDisposed();
 
         IUserActor actor = ActorProxy.DefaultProxyFactory.CreateUserActor(user.Id);
-        return (await actor.GetClaimsAsync()).ToList();
+        return (IList<Claim>)(await actor.GetClaimsAsync()).ToList();
     }
 
     /// <inheritdoc/>
@@ -74,7 +74,7 @@ public partial class DaprActorUserStore
         ThrowIfDisposed();
 
         IUserActor actor = ActorProxy.DefaultProxyFactory.CreateUserActor(user.Id);
-        await actor.RemoveClaimsAsync(claims);
+        await actor.RemoveClaimsAsync(claims.Select(p => new CustomUserClaim { ClaimType = p.Type, ClaimValue = p.Value }));
     }
 
     /// <inheritdoc/>
@@ -85,13 +85,15 @@ public partial class DaprActorUserStore
         ThrowIfDisposed();
 
         IUserActor actor = ActorProxy.DefaultProxyFactory.CreateUserActor(user.Id);
-        await actor.ReplaceClaimAsync(claim, newClaim);
+        await actor.ReplaceClaimAsync(
+            new CustomUserClaim { ClaimType = claim.Type, ClaimValue = claim.Value },
+            new CustomUserClaim { ClaimType = newClaim.Type, ClaimValue = newClaim.Value });
     }
 
     private static async Task<CustomUser?> GetUserIfHasClaimAsync(Claim claim, string userId)
     {
         IUserActor collection = ActorProxy.DefaultProxyFactory.CreateUserActor(userId);
-        if ((await collection.GetClaimsAsync()).Any(p => p.Type == claim.Type && p.Value == claim.Value))
+        if ((await collection.GetClaimsAsync()).Any(p => p.ClaimType == claim.Type && p.ClaimValue == claim.Value))
         {
             IUserActor userActor = ActorProxy.DefaultProxyFactory.CreateUserActor(userId);
             return await userActor.FindAsync();

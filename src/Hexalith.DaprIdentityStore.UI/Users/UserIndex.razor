@@ -1,0 +1,49 @@
+﻿@page "/Security/User"
+@attribute [Authorize(Roles = ApplicationRoles.GlobalAdministrator)]
+@inject IUserCollectionService UserCollectionService
+@inject IUserStore<CustomUser> UserService
+@using Labels = Hexalith.DaprIdentityStore.UI.Resources.Users.UserIndex
+
+<FluentLabel Typo="Typography.PageTitle">Users</FluentLabel>
+
+
+@if (_users is null)
+{
+    <FluentProgressRing />
+}
+else
+{
+    <FluentDataGrid TGridItem="CustomUser" Items="@_users.AsQueryable()" ResizableColumns="true">
+        <PropertyColumn Property="@(p => p.Id)" Title="@Labels.Id" />
+        <PropertyColumn Property="@(p => p.UserName)" Title="@Labels.Name" />
+        <PropertyColumn Property="@(p => p.Email)" Title="@Labels.Email" />
+    </FluentDataGrid>
+}
+
+@code {
+    private IEnumerable<CustomUser>? _users;
+    private bool _loading = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            _loading = true;
+            var ids = await UserCollectionService.AllAsync();
+            var _users = new List<CustomUser>();
+            foreach	(var id in ids)
+            {
+                var user = await UserService.FindByIdAsync(id, CancellationToken.None);
+                if (user is not null)
+                {
+                    _users.Add(user);
+                }
+            }
+        }
+        finally
+        {
+            _loading = false;
+        }
+        await base.OnInitializedAsync();
+    }
+}

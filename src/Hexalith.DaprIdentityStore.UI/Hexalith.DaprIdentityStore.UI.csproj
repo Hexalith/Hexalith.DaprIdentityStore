@@ -21,5 +21,21 @@
   <ItemGroup Condition="'$(UseProjectReference)' != 'true'">
     <PackageReference Include="Hexalith.UI.Components" Version="$(HexalithVersion)" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Roles\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Update="Resources\Users\UserIndex.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>UserIndex.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Update="Resources\Users\UserIndex.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>UserIndex.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
 
 </Project>

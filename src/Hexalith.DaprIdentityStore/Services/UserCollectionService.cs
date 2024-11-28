@@ -26,7 +26,7 @@ public class UserCollectionService(IActorProxyFactory actorHost) : IUserCollecti
     private readonly IKeyHashActor _keyHashActor = actorHost.CreateAllUsersProxy();
 
     /// <inheritdoc/>
-    public async Task AddAsync(string id) => await _keyHashActor.AddAsync(id);
+    public async Task<int> AddAsync(string id) => await _keyHashActor.AddAsync(id);
 
     /// <inheritdoc/>
     public async Task<IEnumerable<string>> AllAsync() => await _keyHashActor.AllAsync();

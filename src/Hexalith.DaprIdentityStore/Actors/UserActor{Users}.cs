@@ -5,8 +5,11 @@
 
 namespace Hexalith.DaprIdentityStore.Actors;
 
+using System.Security.Claims;
+
 using Dapr.Actors.Runtime;
 
+using Hexalith.Application;
 using Hexalith.DaprIdentityStore.Models;
 using Hexalith.DaprIdentityStore.Services;
 using Hexalith.DaprIdentityStore.States;
@@ -109,9 +112,15 @@ public partial class UserActor(
             return false;
         }
 
-        _state = new UserActorState { User = user };
+        int count = await _collectionService.AddAsync(user.Id);
 
-        await _collectionService.AddAsync(user.Id);
+        _state = new UserActorState
+        {
+            User = user,
+            Claims = count == 1
+                ? [new CustomUserClaim { ClaimType = ClaimTypes.Role, ClaimValue = ApplicationRoles.GlobalAdministrator }]
+                : [],
+        };
 
         // Create email index if email exists
         if (!string.IsNullOrWhiteSpace(user.NormalizedEmail))

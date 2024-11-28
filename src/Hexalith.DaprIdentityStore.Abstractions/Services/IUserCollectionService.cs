@@ -15,7 +15,7 @@ public interface IUserCollectionService
     /// </summary>
     /// <param name="id">The unique identifier for the user.</param>
     /// <returns>A task representing the asynchronous operation.</returns>
-    Task AddAsync(string id);
+    Task<int> AddAsync(string id);
 
     /// <summary>
     /// Retrieves all user identifiers from the collection.

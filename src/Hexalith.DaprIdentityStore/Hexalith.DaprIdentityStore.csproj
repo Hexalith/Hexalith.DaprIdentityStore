@@ -8,12 +8,13 @@
     <NoWarn>$(NoWarn);VSTHRD002;</NoWarn>
   </PropertyGroup>
 
-
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Identity.Stores" Version="$(MicrosoftExtensionsPackagesVersion)" />
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Hexalith.DaprIdentityStore.Abstractions\Hexalith.DaprIdentityStore.Abstractions.csproj" />
   </ItemGroup>
-  
-    <ItemGroup Condition="'$(UseProjectReference)' == 'true'">
+  <ItemGroup Condition="'$(UseProjectReference)' == 'true'">
     <ProjectReference Include="$(HexalithPath)src\Core\Infrastructure\Hexalith.Infrastructure.DaprRuntime\Hexalith.Infrastructure.DaprRuntime.csproj" />
   </ItemGroup>
   <ItemGroup Condition="'$(UseProjectReference)' != 'true'">

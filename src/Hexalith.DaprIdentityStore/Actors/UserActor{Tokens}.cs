@@ -33,7 +33,7 @@ public partial class UserActor
             .Tokens
             .Where(p => p.Name != token.Name || p.LoginProvider != token.LoginProvider)
             .Union([token]);
-        await _tokenIndexService.AddAsync(token, userId);
+        await _tokenIndexService.AddAsync(token.LoginProvider, token.Name, userId);
 
         await StateManager.SetStateAsync(DaprIdentityStoreConstants.UserStateName, _state, CancellationToken.None);
         await StateManager.SaveStateAsync(CancellationToken.None);

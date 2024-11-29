@@ -14,6 +14,7 @@ using Hexalith.DaprIdentityStore.UI.Services;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 /// <summary>
 /// Provides extension methods for mapping additional identity endpoints required by the Identity Razor components.
@@ -27,6 +28,10 @@ public static class IdentityStoreUIExtensions
     /// <returns>The IServiceCollection with the services added.</returns>
     public static IServiceCollection AddDaprIdentityStoreUI(this IServiceCollection services)
     {
+        services.TryAddScoped<IUserClaimStore<CustomUser>, DaprActorUserStore>();
+        services.TryAddScoped<IRoleClaimStore<CustomRole>, DaprActorRoleStore>();
+        services.TryAddScoped<IUserStore<CustomUser>, DaprActorUserStore>();
+        services.TryAddScoped<IRoleStore<CustomRole>, DaprActorRoleStore>();
         _ = services
             .AddDaprIdentityStore()
             .AddScoped<IEmailSender<CustomUser>, EmailSender>()
@@ -34,9 +39,8 @@ public static class IdentityStoreUIExtensions
             .AddScoped<IdentityRedirectManager>()
             .AddScoped<AuthenticationStateProvider, IdentityRevalidatingAuthenticationStateProvider>()
             .AddIdentity<CustomUser, CustomRole>()
-            .AddDefaultTokenProviders()
-            .AddRoleStore<DaprActorRoleStore>()
-            .AddUserStore<DaprActorUserStore>();
+            .AddRoles<CustomRole>()
+            .AddDefaultTokenProviders();
         return services;
     }
 }

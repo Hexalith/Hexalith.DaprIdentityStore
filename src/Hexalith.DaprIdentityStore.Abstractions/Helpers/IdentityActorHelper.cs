@@ -20,7 +20,7 @@ public static class IdentityActorHelper
     /// <param name="claimValue">The value of the claim.</param>
     /// <returns>A formatted string combining the claim type and value with a separator.</returns>
     /// <exception cref="ArgumentException">Thrown when claimType is null or whitespace.</exception>
-    public static string ToClaimId([NotNull] string claimType, string claimValue)
+    public static string ToClaimId([NotNull] string claimType, string? claimValue)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(claimType);
         return $"{claimType}-{claimValue}";

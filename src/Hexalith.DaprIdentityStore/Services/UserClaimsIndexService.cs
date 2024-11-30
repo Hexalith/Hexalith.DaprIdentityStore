@@ -5,8 +5,6 @@
 
 namespace Hexalith.DaprIdentityStore.Services;
 
-using System.Security.Claims;
-
 using Dapr.Actors.Client;
 
 using Hexalith.DaprIdentityStore.Helpers;
@@ -22,58 +20,30 @@ using Hexalith.Infrastructure.DaprRuntime.Actors;
 public class UserClaimsIndexService(
     IActorProxyFactory actorProxyFactory) : IUserClaimsIndexService
 {
-    private readonly Func<string, string, IKeyHashActor> _keyValueActor = actorProxyFactory.CreateClaimUsersIndexProxy;
+    private readonly Func<string, string?, IKeyHashActor> _keyValueActor = actorProxyFactory.CreateClaimUsersIndexProxy;
 
     /// <inheritdoc/>
-    public async Task AddAsync(string claimType, string claimValue, string userId, CancellationToken cancellationToken)
+    public async Task AddAsync(string claimType, string? claimValue, string userId, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(claimType);
-        ArgumentNullException.ThrowIfNull(claimValue);
         ArgumentNullException.ThrowIfNull(userId);
 
+        _ = await _keyValueActor("test:123", "hello123").AddAsync(userId);
         _ = await _keyValueActor(claimType, claimValue).AddAsync(userId);
     }
 
     /// <inheritdoc/>
-    public Task AddAsync(Claim claim, string userId, CancellationToken cancellationToken)
-    {
-        ArgumentNullException.ThrowIfNull(claim);
-        ArgumentNullException.ThrowIfNull(userId);
-
-        return AddAsync(claim.Type, claim.Value, userId, cancellationToken);
-    }
-
-    /// <inheritdoc/>
-    public Task<IEnumerable<string>> FindUserIdsAsync(Claim claim, CancellationToken cancellationToken)
-    {
-        ArgumentNullException.ThrowIfNull(claim);
-
-        return FindUserIdsAsync(claim.Type, claim.Value, cancellationToken);
-    }
-
-    /// <inheritdoc/>
-    public async Task<IEnumerable<string>> FindUserIdsAsync(string claimType, string claimValue, CancellationToken cancellationToken)
+    public async Task<IEnumerable<string>> FindUserIdsAsync(string claimType, string? claimValue, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(claimType);
-        ArgumentNullException.ThrowIfNull(claimValue);
 
         return await _keyValueActor(claimType, claimValue).AllAsync();
     }
 
     /// <inheritdoc/>
-    public Task RemoveAsync(Claim claim, string userId, CancellationToken cancellationToken)
-    {
-        ArgumentNullException.ThrowIfNull(claim);
-        ArgumentNullException.ThrowIfNull(userId);
-
-        return RemoveAsync(claim.Type, claim.Value, userId, cancellationToken);
-    }
-
-    /// <inheritdoc/>
-    public async Task RemoveAsync(string claimType, string claimValue, string userId, CancellationToken cancellationToken)
+    public async Task RemoveAsync(string claimType, string? claimValue, string userId, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(claimType);
-        ArgumentNullException.ThrowIfNull(claimValue);
         ArgumentNullException.ThrowIfNull(userId);
 
         await _keyValueActor(claimType, claimValue).RemoveAsync(userId);

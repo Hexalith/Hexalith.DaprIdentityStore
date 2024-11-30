@@ -63,7 +63,7 @@ public static class UserStoreActorProxyHelper
     /// <param name="claimValue">The value of the claim.</param>
     /// <returns>A proxy implementing IKeyHashActor interface to interact with the user claim index actor.</returns>
     /// <exception cref="ArgumentNullException">Thrown when actorProxyFactory or claimType is null.</exception>
-    public static IKeyHashActor CreateClaimUsersIndexProxy([NotNull] this IActorProxyFactory actorProxyFactory, [NotNull] string claimType, string claimValue)
+    public static IKeyHashActor CreateClaimUsersIndexProxy([NotNull] this IActorProxyFactory actorProxyFactory, [NotNull] string claimType, string? claimValue)
     {
         ArgumentNullException.ThrowIfNull(actorProxyFactory);
         return actorProxyFactory.CreateClaimUsersIndexProxy(IdentityActorHelper.ToClaimId(claimType, claimValue));
@@ -81,7 +81,8 @@ public static class UserStoreActorProxyHelper
     {
         ArgumentNullException.ThrowIfNull(actorProxyFactory);
         ArgumentException.ThrowIfNullOrWhiteSpace(id);
-        return actorProxyFactory.CreateActorProxy<IKeyHashActor>(id.ToActorId(), DaprIdentityStoreConstants.UserClaimIndexActorTypeName);
+        Dapr.Actors.ActorId aid = id.ToActorId();
+        return actorProxyFactory.CreateActorProxy<IKeyHashActor>(aid, DaprIdentityStoreConstants.UserClaimIndexActorTypeName);
     }
 
     /// <summary>

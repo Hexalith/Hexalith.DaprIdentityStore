@@ -15,6 +15,11 @@ using Microsoft.AspNetCore.Identity;
 public class CustomUser : IdentityUser
 {
     /// <summary>
+    /// Gets or sets a value indicating whether the user is disabled.
+    /// </summary>
+    public bool Disabled { get; set; }
+
+    /// <summary>
     /// Gets or sets the external data associated with the user.
     /// This can be used to store additional information from external systems.
     /// </summary>

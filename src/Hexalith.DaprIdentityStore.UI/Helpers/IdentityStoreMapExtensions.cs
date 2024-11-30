@@ -9,7 +9,7 @@ using System.Security.Claims;
 using System.Text.Json;
 
 using Hexalith.DaprIdentityStore.Models;
-using Hexalith.DaprIdentityStore.UI.Account.Pages;
+using Hexalith.DaprIdentityStore.UI.Account.Pages.Login;
 using Hexalith.DaprIdentityStore.UI.Account.Pages.Manage;
 
 using Microsoft.AspNetCore.Authentication;

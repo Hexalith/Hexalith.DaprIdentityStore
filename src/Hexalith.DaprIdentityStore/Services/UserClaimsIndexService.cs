@@ -28,7 +28,6 @@ public class UserClaimsIndexService(
         ArgumentNullException.ThrowIfNull(claimType);
         ArgumentNullException.ThrowIfNull(userId);
 
-        _ = await _keyValueActor("test:123", "hello123").AddAsync(userId);
         _ = await _keyValueActor(claimType, claimValue).AddAsync(userId);
     }
 

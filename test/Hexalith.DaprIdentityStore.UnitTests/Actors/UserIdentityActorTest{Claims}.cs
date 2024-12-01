@@ -94,7 +94,8 @@ public partial class UserIdentityActorTest
         {
             claimServiceMoq
                 .Setup(p => p.AddAsync(
-                    It.Is<Claim>(c => c.Type == claim.Type && c.Value == claim.Value),
+                    It.Is<string>(c => c == claim.Type),
+                    It.Is<string>(c => c == claim.Value),
                     user.Id,
                     It.IsAny<CancellationToken>()))
                 .Returns(Task.CompletedTask)
@@ -116,7 +117,7 @@ public partial class UserIdentityActorTest
             stateManagerMoq.Object);
 
         // Act
-        await actor.AddClaimsAsync(newClaims);
+        await actor.AddClaimsAsync(newClaims.Select(p => new CustomUserClaim { ClaimType = p.Type, ClaimValue = p.Value }));
 
         // Assert
         stateManagerMoq.Verify();
@@ -179,7 +180,7 @@ public partial class UserIdentityActorTest
             stateManagerMoq.Object);
 
         // Act
-        IEnumerable<Claim> claims = await actor.GetClaimsAsync();
+        IEnumerable<Claim> claims = (IEnumerable<Claim>)await actor.GetClaimsAsync();
 
         // Assert
         stateManagerMoq.Verify();

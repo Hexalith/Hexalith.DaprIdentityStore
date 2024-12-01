@@ -73,7 +73,7 @@ public partial class UserIdentityActorTest
         Mock<IUserLoginIndexService> loginServiceMoq = new(MockBehavior.Strict);
 
         collectionServiceMoq.Setup(p => p.AddAsync(user.Id))
-            .Returns(Task.CompletedTask)
+            .Returns(Task.FromResult(1))
             .Verifiable(Times.Once);
         emailServiceMoq.Setup(p => p.AddAsync(user.NormalizedEmail, user.Id))
             .Returns(Task.CompletedTask)

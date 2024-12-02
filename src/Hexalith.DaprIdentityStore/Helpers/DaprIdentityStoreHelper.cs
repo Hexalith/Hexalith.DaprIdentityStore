@@ -9,6 +9,7 @@ using System;
 
 using Dapr.Actors.Runtime;
 
+using Hexalith.Application.Sessions.Services;
 using Hexalith.DaprIdentityStore.Actors;
 using Hexalith.DaprIdentityStore.Services;
 using Hexalith.Infrastructure.DaprRuntime.Actors;
@@ -40,6 +41,7 @@ public static class DaprIdentityStoreHelper
         services.TryAddSingleton<IRoleCollectionService, RoleCollectionService>();
         services.TryAddSingleton<IRoleNameIndexService, RoleNameIndexService>();
         services.TryAddSingleton<IRoleClaimsIndexService, RoleClaimsIndexService>();
+        services.TryAddScoped<IUserPartitionService, UserPartitionService>();
         return services;
     }
 

@@ -16,9 +16,11 @@
   </ItemGroup>
   <ItemGroup Condition="'$(UseProjectReference)' == 'true'">
     <ProjectReference Include="$(HexalithPath)src\Core\Infrastructure\Hexalith.Infrastructure.DaprRuntime\Hexalith.Infrastructure.DaprRuntime.csproj" />
+    <ProjectReference Include="$(HexalithPath)src\Core\Application\Hexalith.Application.Sessions.Abstractions\Hexalith.Application.Sessions.Abstractions.csproj" />
   </ItemGroup>
   <ItemGroup Condition="'$(UseProjectReference)' != 'true'">
     <PackageReference Include="Hexalith.Infrastructure.DaprRuntime" Version="$(HexalithVersion)" />
+    <PackageReference Include="Hexalith.Application.Sessions.Abstractions" Version="$(HexalithVersion)" />
   </ItemGroup>
 
 

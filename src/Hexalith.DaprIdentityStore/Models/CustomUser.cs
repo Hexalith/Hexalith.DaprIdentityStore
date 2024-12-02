@@ -15,6 +15,11 @@ using Microsoft.AspNetCore.Identity;
 public class CustomUser : IdentityUser
 {
     /// <summary>
+    /// Gets or sets the default partition for the user.
+    /// </summary>
+    public string? DefaultPartition { get; set; }
+
+    /// <summary>
     /// Gets or sets a value indicating whether the user is disabled.
     /// </summary>
     public bool Disabled { get; set; }
@@ -30,4 +35,10 @@ public class CustomUser : IdentityUser
     /// This can be used to link the user to an external system.
     /// </summary>
     public string? ExternalId { get; set; }
+
+    /// <summary>
+    /// Gets or sets the partitions associated with the user.
+    /// This can be used to store partition information for the user.
+    /// </summary>
+    public IEnumerable<string> Partitions { get; set; } = [];
 }

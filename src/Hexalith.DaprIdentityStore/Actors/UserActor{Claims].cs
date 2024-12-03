@@ -17,18 +17,18 @@ using Hexalith.Infrastructure.DaprRuntime.Helpers;
 public partial class UserActor
 {
     /// <inheritdoc/>
-    public async Task AddClaimsAsync(IEnumerable<CustomUserClaim> claims)
+    public async Task AddClaimsAsync(IEnumerable<CustomUserClaim> userClaims)
     {
         string userId = Id.ToUnescapeString();
         _state = await GetStateAsync(CancellationToken.None);
         if (_state is null)
         {
-            throw new InvalidOperationException($"Add {nameof(claims)} failed : User '{userId}' not found.");
+            throw new InvalidOperationException($"Add {nameof(userClaims)} failed : User '{userId}' not found.");
         }
 
-        _state.Claims = _state.Claims.Union(claims.Where(p => p.ClaimType is not null));
+        _state.Claims = _state.Claims.Union(userClaims.Where(p => p.ClaimType is not null));
 
-        foreach (CustomUserClaim claim in claims.Where(p => p.ClaimType is not null))
+        foreach (CustomUserClaim claim in userClaims.Where(p => p.ClaimType is not null))
         {
             await _claimIndexService.AddAsync(claim.ClaimType!, claim.ClaimValue, userId, CancellationToken.None);
         }

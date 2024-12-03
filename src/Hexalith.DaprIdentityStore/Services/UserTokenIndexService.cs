@@ -11,7 +11,6 @@ using System.Threading.Tasks;
 using Dapr.Actors.Client;
 
 using Hexalith.DaprIdentityStore.Helpers;
-using Hexalith.DaprIdentityStore.Models;
 using Hexalith.Infrastructure.DaprRuntime.Actors;
 
 /// <summary>
@@ -27,14 +26,6 @@ public class UserTokenIndexService(IActorProxyFactory factory) : IUserTokenIndex
     private readonly Func<string, string, IKeyValueActor> _keyValueActor = factory.CreateUserTokenIndexProxy;
 
     /// <inheritdoc/>
-    public Task AddAsync(CustomUserToken token, string userId)
-    {
-        ArgumentNullException.ThrowIfNull(token);
-        ArgumentNullException.ThrowIfNull(userId);
-        return _keyValueActor(token.LoginProvider, token.Name).SetAsync(userId);
-    }
-
-    /// <inheritdoc/>
     public Task AddAsync(string loginProvider, string name, string userId)
     {
         ArgumentNullException.ThrowIfNull(loginProvider);
@@ -44,25 +35,11 @@ public class UserTokenIndexService(IActorProxyFactory factory) : IUserTokenIndex
     }
 
     /// <inheritdoc/>
-    public Task<string?> FindUserIdAsync(CustomUserToken token)
-    {
-        ArgumentNullException.ThrowIfNull(token);
-        return _keyValueActor(token.LoginProvider, token.Name).GetAsync();
-    }
-
-    /// <inheritdoc/>
     public Task<string?> FindUserIdAsync(string loginProvider, string name)
     {
         ArgumentNullException.ThrowIfNull(loginProvider);
         ArgumentNullException.ThrowIfNull(name);
         return _keyValueActor(loginProvider, name).GetAsync();
-    }
-
-    /// <inheritdoc/>
-    public Task RemoveAsync(CustomUserToken token)
-    {
-        ArgumentNullException.ThrowIfNull(token);
-        return _keyValueActor(token.LoginProvider, token.Name).RemoveAsync();
     }
 
     /// <inheritdoc/>

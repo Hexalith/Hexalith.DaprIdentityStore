@@ -19,36 +19,49 @@ using Microsoft.AspNetCore.Identity;
 /// </summary>
 public class UserPartitionService : IUserPartitionService
 {
+    private readonly UserManager<CustomUser> _userManager;
     private readonly IUserStore<CustomUser> _userStore;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="UserPartitionService"/> class.
     /// </summary>
     /// <param name="userStore">The user store.</param>
-    public UserPartitionService(IUserStore<CustomUser> userStore)
+    /// <param name="userManager">The user manager.</param>
+    public UserPartitionService(IUserStore<CustomUser> userStore, UserManager<CustomUser> userManager)
     {
         ArgumentNullException.ThrowIfNull(userStore);
+        ArgumentNullException.ThrowIfNull(userManager);
         _userStore = userStore;
+        _userManager = userManager;
     }
 
     /// <inheritdoc/>
-    public async Task<string?> GetDefaultPartitionAsync(string userId, CancellationToken cancellationToken)
+    public async Task<string?> GetDefaultPartitionAsync(string userName, CancellationToken cancellationToken)
     {
-        CustomUser? user = await _userStore.FindByIdAsync(userId, cancellationToken);
+        CustomUser? user = await FindUserAsync(userName, cancellationToken);
         return user is null ? null : user.DefaultPartition ?? user.Partitions.FirstOrDefault();
     }
 
     /// <inheritdoc/>
-    public async Task<IEnumerable<string>> GetPartitionsAsync(string userId, CancellationToken cancellationToken)
+    public async Task<IEnumerable<string>> GetPartitionsAsync(string userName, CancellationToken cancellationToken)
     {
-        CustomUser? user = await _userStore.FindByIdAsync(userId, cancellationToken);
+        CustomUser? user = await FindUserAsync(userName, cancellationToken);
         return user?.Partitions ?? [];
     }
 
     /// <inheritdoc/>
-    public async Task<bool> InPartitionAsync(string userId, string partitionId, CancellationToken cancellationToken)
+    public async Task<bool> InPartitionAsync(string userName, string partitionId, CancellationToken cancellationToken)
     {
-        CustomUser? user = await _userStore.FindByIdAsync(userId, cancellationToken);
+        CustomUser? user = await FindUserAsync(userName, cancellationToken);
         return user?.Partitions.Contains(partitionId) ?? false;
+    }
+
+    private async Task<CustomUser> FindUserAsync(string userName, CancellationToken cancellationToken)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(userName);
+        string normalized = _userManager.NormalizeName(userName)
+            ?? throw new InvalidOperationException($"User with name '{userName}' has an empty normalized name.");
+        return await _userStore.FindByNameAsync(normalized, cancellationToken)
+            ?? throw new InvalidOperationException($"User with name '{userName}' (Normalized:{normalized}) not found.");
     }
 }

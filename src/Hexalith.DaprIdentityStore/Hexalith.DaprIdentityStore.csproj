@@ -12,6 +12,7 @@
     <PackageReference Include="Microsoft.Extensions.Identity.Stores" Version="$(MicrosoftExtensionsPackagesVersion)" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\Hexalith\src\Core\Application\Hexalith.Application.Partitions.Abstractions\Hexalith.Application.Partitions.Abstractions.csproj" />
     <ProjectReference Include="..\Hexalith.DaprIdentityStore.Abstractions\Hexalith.DaprIdentityStore.Abstractions.csproj" />
   </ItemGroup>
   <ItemGroup Condition="'$(UseProjectReference)' == 'true'">

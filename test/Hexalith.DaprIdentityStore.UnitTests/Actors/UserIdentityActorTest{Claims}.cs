@@ -180,14 +180,14 @@ public partial class UserIdentityActorTest
             stateManagerMoq.Object);
 
         // Act
-        IEnumerable<Claim> claims = (IEnumerable<Claim>)await actor.GetClaimsAsync();
+        IEnumerable<CustomUserClaim> claims = await actor.GetClaimsAsync();
 
         // Assert
         stateManagerMoq.Verify();
         Assert.NotNull(claims);
         Assert.Equal(3, claims.Count());
-        Assert.Contains(claims, c => c.Type == "role" && c.Value == "admin");
-        Assert.Contains(claims, c => c.Type == "permission" && c.Value == "read");
-        Assert.Contains(claims, c => c.Type == "department" && c.Value == "IT");
+        Assert.Contains(claims, c => c.ClaimType == "role" && c.ClaimValue == "admin");
+        Assert.Contains(claims, c => c.ClaimType == "permission" && c.ClaimValue == "read");
+        Assert.Contains(claims, c => c.ClaimType == "department" && c.ClaimValue == "IT");
     }
 }

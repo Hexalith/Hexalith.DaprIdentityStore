@@ -44,7 +44,7 @@ public partial class DaprActorRoleStore : RoleStoreBase<CustomRole, string, Cust
         ThrowIfDisposed();
 
         IRoleActor actor = ActorProxy.DefaultProxyFactory.CreateRoleIdentityActor(role.Id);
-        return (await actor.GetClaimsAsync()).ToList();
+        return [.. await actor.GetClaimsAsync()];
     }
 
     /// <inheritdoc/>

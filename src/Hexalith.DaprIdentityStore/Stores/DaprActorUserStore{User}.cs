@@ -150,6 +150,6 @@ public partial class DaprActorUserStore
             tasks.Add(userProxy.FindAsync());
         }
 
-        return (await Task.WhenAll(tasks)).Where(p => p != null).OfType<CustomUser>().ToList();
+        return [.. (await Task.WhenAll(tasks)).Where(p => p != null).OfType<CustomUser>()];
     }
 }

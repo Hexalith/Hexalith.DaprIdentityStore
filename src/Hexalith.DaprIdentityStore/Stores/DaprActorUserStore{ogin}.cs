@@ -45,7 +45,7 @@ public partial class DaprActorUserStore
 
         ThrowIfDisposed();
         IUserActor actor = ActorProxy.DefaultProxyFactory.CreateUserActor(user.Id);
-        return (await actor.GetLoginsAsync()).ToList();
+        return [.. await actor.GetLoginsAsync()];
     }
 
     /// <inheritdoc/>

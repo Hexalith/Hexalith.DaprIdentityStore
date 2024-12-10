@@ -43,7 +43,7 @@ public partial class DaprActorUserStore
         ThrowIfDisposed();
 
         IUserActor actor = ActorProxy.DefaultProxyFactory.CreateUserActor(user.Id);
-        return (await actor.GetClaimsAsync()).Select(p => p.ToClaim()).ToList();
+        return [.. (await actor.GetClaimsAsync()).Select(p => p.ToClaim())];
     }
 
     /// <inheritdoc/>
@@ -60,10 +60,9 @@ public partial class DaprActorUserStore
             userTasks.Add(GetUserIfHasClaimAsync(claim, userId));
         }
 
-        return (await Task.WhenAll(userTasks))
+        return [.. (await Task.WhenAll(userTasks))
             .Where(p => p != null)
-            .Select(p => p!)
-            .ToList();
+            .Select(p => p!)];
     }
 
     /// <inheritdoc/>

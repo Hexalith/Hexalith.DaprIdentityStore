@@ -139,9 +139,8 @@ public partial class DaprActorRoleStore(IRoleCollectionService roleCollection, I
             tasks.Add(roleProxy.FindAsync());
         }
 
-        return (await Task.WhenAll(tasks))
+        return [.. (await Task.WhenAll(tasks))
             .Where(p => p != null)
-            .OfType<CustomRole>()
-            .ToList();
+            .OfType<CustomRole>()];
     }
 }

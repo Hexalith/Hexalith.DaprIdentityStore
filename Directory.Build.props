@@ -14,6 +14,11 @@
     <HexalithDaprIdentityStoreVersion Condition="'$(HexalithDaprIdentityStoreVersion)' == ''">*</HexalithDaprIdentityStoreVersion>
   </PropertyGroup>
   <PropertyGroup>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>portable</DebugType>
+    <EmbedAllSources>true</EmbedAllSources>
+  </PropertyGroup>
+  <PropertyGroup>
     <Authors>Jérôme Piquot</Authors>
     <Company>Itaneo</Company>
     <Product>Hexalith</Product>

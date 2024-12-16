@@ -1,9 +1,0 @@
-﻿@inject NavigationManager NavigationManager
-@inject Hexalith.DaprIdentityStore.Services.ILoginRedirectUrlService LoginRedirectUrlService
-
-@code {
-    protected override void OnInitialized()
-    {
-        NavigationManager.NavigateTo(LoginRedirectUrlService.GetRedirectUrl(new Uri(NavigationManager.Uri)).AbsolutePath, forceLoad: true);
-    }
-}

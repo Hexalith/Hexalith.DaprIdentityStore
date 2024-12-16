@@ -33,7 +33,7 @@ public static class IdentityStoreUIExtensions
         services.TryAddScoped<IUserStore<CustomUser>, DaprActorUserStore>();
         services.TryAddScoped<IRoleStore<CustomRole>, DaprActorRoleStore>();
         _ = services
-            .AddDaprIdentityStore()
+            .AddDaprIdentityStoreServer()
             .AddScoped<IEmailSender<CustomUser>, EmailSender>()
             .AddScoped<IdentityUserAccessor>()
             .AddScoped<IdentityRedirectManager>()

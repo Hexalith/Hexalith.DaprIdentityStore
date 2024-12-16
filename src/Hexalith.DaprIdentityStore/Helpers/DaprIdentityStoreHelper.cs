@@ -23,11 +23,11 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 public static class DaprIdentityStoreHelper
 {
     /// <summary>
-    /// Adds Dapr identity store services to the specified IServiceCollection.
+    /// Adds Dapr identity store services to the specified server IServiceCollection.
     /// </summary>
     /// <param name="services">The IServiceCollection to add services to.</param>
     /// <returns>The IServiceCollection with the added services.</returns>
-    public static IServiceCollection AddDaprIdentityStore(this IServiceCollection services)
+    public static IServiceCollection AddDaprIdentityStoreServer(this IServiceCollection services)
     {
         _ = services
             .AddControllers()

@@ -48,10 +48,17 @@ public sealed class IdentityRedirectManager(NavigationManager navigationManager)
     {
         uri ??= string.Empty;
 
-        // Prevent open redirects.
-        if (!Uri.IsWellFormedUriString(uri, UriKind.Relative))
+        // Prevent open redirects by ensuring the URI is relative or matches the base URI scheme
+        if (Uri.IsWellFormedUriString(uri, UriKind.Absolute))
         {
-            uri = _navigationManager.ToBaseRelativePath(uri);
+            Uri absoluteUri = new(uri);
+            Uri baseUri = _navigationManager.ToAbsoluteUri(_navigationManager.BaseUri);
+
+            // If schemes don't match (http vs https), convert to relative path
+            if (absoluteUri.Scheme != baseUri.Scheme || !uri.StartsWith(baseUri.GetLeftPart(UriPartial.Authority), StringComparison.OrdinalIgnoreCase))
+            {
+                uri = absoluteUri.PathAndQuery;
+            }
         }
 
         // During static rendering, NavigateTo throws a NavigationException which is handled by the framework as a redirect.

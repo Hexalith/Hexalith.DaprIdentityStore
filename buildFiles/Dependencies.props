@@ -17,10 +17,10 @@
     <BlazorGeolocationVersion>8.0.0</BlazorGeolocationVersion>
     <CoconaVersion>2.2.0</CoconaVersion>
     <CompareNETObjectsVersion>4.83.0</CompareNETObjectsVersion>
-    <CoverletCollectorVersion>6.0.2</CoverletCollectorVersion>
+    <CoverletCollectorVersion>6.0.3</CoverletCollectorVersion>
     <DaprVersion>1.14.*</DaprVersion>
     <DocFxConsoleVersion>2.59.4</DocFxConsoleVersion>
-    <FluentAssertionsVersion>7.0.0</FluentAssertionsVersion>
+    <FluentAssertionsVersion>8.0.0</FluentAssertionsVersion>
     <FluentValidationVersion>11.11.0</FluentValidationVersion>
     <FluentValidationAspNetCoreVersion>11.3.0</FluentValidationAspNetCoreVersion>
     <GitHubActionsTestLoggerVersion>2.4.1</GitHubActionsTestLoggerVersion>
@@ -43,14 +43,13 @@
     <MicrosoftTypescriptMSBuild>5.7.1</MicrosoftTypescriptMSBuild>
     <MicrosoftGraphVersion>5.12.*</MicrosoftGraphVersion>
     <MicrosoftVisualStudioThreadingAnalyzersVersion>17.12.19</MicrosoftVisualStudioThreadingAnalyzersVersion>
-    <MinverVersion>5.0.0</MinverVersion>
     <MoqVersion>4.20.72</MoqVersion>
     <MoqContribHttpClientVersion>1.4.0</MoqContribHttpClientVersion>
     <OpenTelemetryVersion>1.*</OpenTelemetryVersion>
     <OpenTelemetryBetaVersion>1.8.0-beta.1</OpenTelemetryBetaVersion>
     <OrchardCoreLocalizationCoreVersion>1.8.3</OrchardCoreLocalizationCoreVersion>
     <RadzenBlazorVersion>4.23.4</RadzenBlazorVersion>
-    <SonarAnalyzerCSharpVersion>10.3.0.106239</SonarAnalyzerCSharpVersion>
+    <SonarAnalyzerCSharpVersion>10.5.0.109200</SonarAnalyzerCSharpVersion>
     <SendGridExtensionsDependencyInjectionVersion>1.0.1</SendGridExtensionsDependencyInjectionVersion>
     <SerilogVersion>8.0.*</SerilogVersion>
     <SerilogEnrichersEnvironmentVersion>3.0.*</SerilogEnrichersEnvironmentVersion>
@@ -64,7 +63,7 @@
     <StyleCopAnalyzersVersion>1.2.0-beta.556</StyleCopAnalyzersVersion>
     <SwashbuckleAspNetCoreVersion>7.0.0</SwashbuckleAspNetCoreVersion>
     <SystemIdentityModelTokensJwtVersion>8.2.0</SystemIdentityModelTokensJwtVersion>
-    <XUnitRunnerVisualStudioVersion>2.8.2</XUnitRunnerVisualStudioVersion>
-    <XUnitVersion>2.9.2</XUnitVersion>
+    <XUnitRunnerVisualStudioVersion>3.0.1</XUnitRunnerVisualStudioVersion>
+    <XUnitVersion>2.9.3</XUnitVersion>
   </PropertyGroup>
 </Project>

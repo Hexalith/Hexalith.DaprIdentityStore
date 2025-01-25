@@ -64,7 +64,7 @@
 }
 
 @code {
-    public const string LinkLoginCallbackAction = "LinkLoginCallback";
+    public static string LinkLoginCallbackAction => "LinkLoginCallback";
 
     private CustomUser user = default!;
     private IList<UserLoginInfo>? currentLogins;

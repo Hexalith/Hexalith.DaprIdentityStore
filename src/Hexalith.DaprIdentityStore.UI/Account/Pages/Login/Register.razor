@@ -22,7 +22,7 @@
 <FluentGrid>
     <FluentGridItem xs="8" sm="4">
         <StatusMessage Message="@Message" />
-        <EditForm Model="Input" asp-route-returnUrl="@ReturnUrl" method="post" OnValidSubmit="RegisterUser" FormName="register">
+        <EditForm Model="Input" asp-route-returnUrl="@ReturnUrl" method="post" OnValidSubmit="RegisterUserAsync" FormName="register">
             <DataAnnotationsValidator />
             <h2>Create a new account.</h2>
             <hr />
@@ -56,7 +56,7 @@
 
     private string? Message => identityErrors is null ? null : $"Error: {string.Join(", ", identityErrors.Select(error => error.Description))}";
 
-    public async Task RegisterUser(EditContext editContext)
+    public async Task RegisterUserAsync(EditContext editContext)
     {
         var user = CreateUser();
 
@@ -92,7 +92,7 @@
         RedirectManager.RedirectTo(ReturnUrl);
     }
 
-    private CustomUser CreateUser()
+    private static CustomUser CreateUser()
     {
         try
         {

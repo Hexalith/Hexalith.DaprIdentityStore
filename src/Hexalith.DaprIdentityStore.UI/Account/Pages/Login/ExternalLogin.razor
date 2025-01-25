@@ -42,7 +42,7 @@
 </FluentGrid>
 
 @code {
-    public const string LoginCallbackAction = "LoginCallback";
+    public static string LoginCallbackAction => "LoginCallback";
 
     private string? message;
     private ExternalLoginInfo? externalLoginInfo;

@@ -31,12 +31,15 @@
                 <p>You can <a href="Account/Manage/GenerateRecoveryCodes">generate a new set of recovery codes</a>.</p>
             </div>
         }
-        else if (recoveryCodesLeft <= 3)
+        else
         {
-            <div class="alert alert-warning">
-                <strong>You have @recoveryCodesLeft recovery codes left.</strong>
-                <p>You should <a href="Account/Manage/GenerateRecoveryCodes">generate a new set of recovery codes</a>.</p>
-            </div>
+            if (recoveryCodesLeft <= 3)
+            {
+                <div class="alert alert-warning">
+                    <strong>You have @recoveryCodesLeft recovery codes left.</strong>
+                    <p>You should <a href="Account/Manage/GenerateRecoveryCodes">generate a new set of recovery codes</a>.</p>
+                </div>
+            }
         }
 
         if (isMachineRemembered)

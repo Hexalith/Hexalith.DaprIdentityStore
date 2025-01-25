@@ -5,7 +5,7 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <LangVersion>latest</LangVersion>
-        <NoWarn>$(NoWarn);S3353;S3996;</NoWarn>
+        <NoWarn>$(NoWarn);S3353;S3996;S134;S3995;</NoWarn>
     </PropertyGroup>
 
     <ItemGroup>

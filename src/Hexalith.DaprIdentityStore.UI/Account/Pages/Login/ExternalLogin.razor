@@ -115,9 +115,12 @@
                 externalLoginInfo.LoginProvider);
             RedirectManager.RedirectTo(ReturnUrl);
         }
-        else if (result.IsLockedOut)
+        else
         {
-            RedirectManager.RedirectTo("Account/Lockout");
+            if (result.IsLockedOut)
+            {
+                RedirectManager.RedirectTo("Account/Lockout");
+            }
         }
 
         // If the user does not have an account, then ask the user to create an account.
@@ -171,7 +174,7 @@
         message = $"Error: {string.Join(",", result.Errors.Select(error => error.Description))}";
     }
 
-    private CustomUser CreateUser()
+    private static CustomUser CreateUser()
     {
         try
         {

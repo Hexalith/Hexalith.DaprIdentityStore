@@ -29,7 +29,7 @@
     <ISO3166Version>1.0.4</ISO3166Version>
     <HexalithVersion>1.*</HexalithVersion>
     <HumanizerVersion>2.14.1</HumanizerVersion>
-    <MailKitVersion>4.8.0</MailKitVersion>
+    <MailKitVersion>4.10.0</MailKitVersion>
     <MicrosoftAzureCosmosVersion>3.45.2</MicrosoftAzureCosmosVersion>
     <MicrosoftBotBuilderVersion>4.22.7</MicrosoftBotBuilderVersion>
     <MicrosoftCodeAnalysisCSharpVersion>4.11.0</MicrosoftCodeAnalysisCSharpVersion>
@@ -49,7 +49,7 @@
     <OpenTelemetryBetaVersion>1.8.0-beta.1</OpenTelemetryBetaVersion>
     <OrchardCoreLocalizationCoreVersion>1.8.3</OrchardCoreLocalizationCoreVersion>
     <RadzenBlazorVersion>4.23.4</RadzenBlazorVersion>
-    <SonarAnalyzerCSharpVersion>10.5.0.109200</SonarAnalyzerCSharpVersion>
+    <SonarAnalyzerCSharpVersion>10.6.0.109712</SonarAnalyzerCSharpVersion>
     <SendGridExtensionsDependencyInjectionVersion>1.0.1</SendGridExtensionsDependencyInjectionVersion>
     <SerilogVersion>8.0.*</SerilogVersion>
     <SerilogEnrichersEnvironmentVersion>3.0.*</SerilogEnrichersEnvironmentVersion>
@@ -62,7 +62,7 @@
     <SerilogSinksDebugVersion>3.0.*</SerilogSinksDebugVersion>
     <StyleCopAnalyzersVersion>1.2.0-beta.556</StyleCopAnalyzersVersion>
     <SwashbuckleAspNetCoreVersion>7.0.0</SwashbuckleAspNetCoreVersion>
-    <SystemIdentityModelTokensJwtVersion>8.2.0</SystemIdentityModelTokensJwtVersion>
+    <SystemIdentityModelTokensJwtVersion>8.3.1</SystemIdentityModelTokensJwtVersion>
     <XUnitRunnerVisualStudioVersion>3.0.1</XUnitRunnerVisualStudioVersion>
     <XUnitVersion>2.9.3</XUnitVersion>
   </PropertyGroup>

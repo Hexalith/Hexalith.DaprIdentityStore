@@ -57,7 +57,7 @@ public class RoleClaimsIndexService(
         ArgumentNullException.ThrowIfNull(claimType);
         ArgumentNullException.ThrowIfNull(claimValue);
 
-        return await _keyValueActor(claimType, claimValue).AllAsync();
+        return await _keyValueActor(claimType, claimValue).AllAsync(0, 0);
     }
 
     /// <inheritdoc/>

@@ -36,7 +36,7 @@ public class UserClaimsIndexService(
     {
         ArgumentNullException.ThrowIfNull(claimType);
 
-        return await _keyValueActor(claimType, claimValue).AllAsync();
+        return await _keyValueActor(claimType, claimValue).AllAsync(0, 0);
     }
 
     /// <inheritdoc/>

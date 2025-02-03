@@ -29,7 +29,7 @@ public class UserCollectionService(IActorProxyFactory actorHost) : IUserCollecti
     public async Task<int> AddAsync(string id) => await _keyHashActor.AddAsync(id);
 
     /// <inheritdoc/>
-    public async Task<IEnumerable<string>> AllAsync() => await _keyHashActor.AllAsync();
+    public async Task<IEnumerable<string>> AllAsync() => await _keyHashActor.AllAsync(0, 0);
 
     /// <inheritdoc/>
     public async Task RemoveAsync(string id) => await _keyHashActor.RemoveAsync(id);

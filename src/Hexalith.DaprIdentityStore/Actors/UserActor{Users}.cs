@@ -112,14 +112,12 @@ public partial class UserActor(
             return false;
         }
 
-        int count = await _collectionService.AddAsync(user.Id);
+        _ = await _collectionService.AddAsync(user.Id);
 
         _state = new UserActorState
         {
             User = user,
-            Claims = count == 1
-                ? [new CustomUserClaim { ClaimType = ClaimTypes.Role, ClaimValue = ApplicationRoles.GlobalAdministrator }]
-                : [],
+            Claims = [new CustomUserClaim { ClaimType = ClaimTypes.Role, ClaimValue = ApplicationRoles.GlobalAdministrator }],
         };
 
         // Create email index if email exists

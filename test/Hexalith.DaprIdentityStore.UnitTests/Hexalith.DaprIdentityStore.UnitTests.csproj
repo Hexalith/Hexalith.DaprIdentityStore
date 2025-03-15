@@ -2,6 +2,7 @@
   <PropertyGroup>
     <TargetFramework>$(DefaultTargetFramework)</TargetFramework>
     <NoWarn>$(NoWarn);CA1515;</NoWarn>
+    <UserSecretsId>f60465cb-5739-4b15-ab7d-27730bb530cb</UserSecretsId>
   </PropertyGroup>
   <ItemGroup>
     <None Include="..\..\.editorconfig" Link=".editorconfig" />

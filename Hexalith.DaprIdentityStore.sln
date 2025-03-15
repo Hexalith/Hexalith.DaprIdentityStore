@@ -29,7 +29,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hexalith.DaprIdentityStore.
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
 	ProjectSection(SolutionItems) = preProject
-		src\Directory.Build.props = src\Directory.Build.props
+		test\Directory.Build.props = test\Directory.Build.props
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hexalith.DaprIdentityStore.UnitTests", "test\Hexalith.DaprIdentityStore.UnitTests\Hexalith.DaprIdentityStore.UnitTests.csproj", "{46AFDC3E-B0A2-3985-F10A-9ABBA391E529}"
@@ -37,6 +37,9 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hexalith.DaprIdentityStore.UI", "src\Hexalith.DaprIdentityStore.UI\Hexalith.DaprIdentityStore.UI.csproj", "{59377085-EB1E-1865-060E-2167CB7354A7}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Hexalith", "Hexalith", "{0F3CFBB7-5219-4238-BE06-A86E30C5F295}"
+	ProjectSection(SolutionItems) = preProject
+		Hexalith\src\Directory.Build.props = Hexalith\src\Directory.Build.props
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hexalith.Infrastructure.DaprRuntime", "Hexalith\src\Core\Infrastructure\Hexalith.Infrastructure.DaprRuntime\Hexalith.Infrastructure.DaprRuntime.csproj", "{5CDD948D-D964-4875-BADA-50AB3BDCAC06}"
 EndProject

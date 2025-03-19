@@ -52,7 +52,7 @@ public static class IdentityStoreMapExtensions
                 return Results.BadRequest("Invalid provider.");
             }
 
-            provider = provider.Split(",").First();
+            provider = TemporaryFluentButtonFix(provider);
             IEnumerable<KeyValuePair<string, StringValues>> query = [
                 new("ReturnUrl", returnUrl),
                 new("Action", ExternalLogin.LoginCallbackAction)];
@@ -86,6 +86,8 @@ public static class IdentityStoreMapExtensions
             [FromServices] SignInManager<CustomUser> signInManager,
             [FromForm] string provider) =>
         {
+            provider = TemporaryFluentButtonFix(provider);
+
             // Clear the existing external cookie to ensure a clean login process
             await context.SignOutAsync(IdentityConstants.ExternalScheme);
 
@@ -139,5 +141,19 @@ public static class IdentityStoreMapExtensions
         });
 
         return accountGroup;
+    }
+
+    private static string TemporaryFluentButtonFix(string provider)
+    {
+        // Temporary workaround for FluentButton returning a provider value twice
+        // Split the comma-separated list of strings
+        string[] providers = provider.Split(',');
+
+        // Find the value that appears twice in the list
+        provider = providers.GroupBy(p => p)
+                            .Where(g => g.Count() == 2)
+                            .Select(g => g.Key)
+                            .First();
+        return provider;
     }
 }

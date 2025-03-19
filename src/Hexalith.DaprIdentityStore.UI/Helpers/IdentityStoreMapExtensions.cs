@@ -47,6 +47,12 @@ public static class IdentityStoreMapExtensions
             [FromForm] string provider,
             [FromForm] string returnUrl) =>
         {
+            if (string.IsNullOrWhiteSpace(provider))
+            {
+                return Results.BadRequest("Invalid provider.");
+            }
+
+            provider = provider.Split(",").First();
             IEnumerable<KeyValuePair<string, StringValues>> query = [
                 new("ReturnUrl", returnUrl),
                 new("Action", ExternalLogin.LoginCallbackAction)];

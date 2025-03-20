@@ -10,8 +10,6 @@ using System.Collections.Generic;
 using Hexalith.DaprIdentityStore.Models;
 using Hexalith.Infrastructure.DaprRuntime.Helpers;
 
-using Microsoft.AspNetCore.Identity;
-
 /// <summary>
 /// Actor responsible for managing user identity operations in a Dapr-based identity store.
 /// This actor handles CRUD operations for user identities and maintains associated indexes.
@@ -23,7 +21,7 @@ public partial class UserActor
     /// </summary>
     /// <param name="login">Login information containing provider and key.</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    public async Task AddLoginAsync(UserLoginInfo login)
+    public async Task AddLoginAsync(CustomUserLoginInfo login)
     {
         string userId = Id.ToUnescapeString();
         _state = await GetStateAsync(CancellationToken.None);
@@ -62,12 +60,12 @@ public partial class UserActor
     /// </summary>
     /// <returns>Collection of login provider information.</returns>
     /// <exception cref="InvalidOperationException">When user not found.</exception>
-    public async Task<IEnumerable<UserLoginInfo>> GetLoginsAsync()
+    public async Task<IEnumerable<CustomUserLoginInfo>> GetLoginsAsync()
     {
         _state = await GetStateAsync(CancellationToken.None);
         return (_state ?? throw new InvalidOperationException($"Get logins failed : User '{Id.ToUnescapeString()}' not found."))
             .Logins
-            .Select(p => new UserLoginInfo(p.LoginProvider, p.ProviderKey, p.ProviderDisplayName));
+            .Select(p => new CustomUserLoginInfo(p.LoginProvider, p.ProviderKey, p.ProviderDisplayName));
     }
 
     /// <summary>

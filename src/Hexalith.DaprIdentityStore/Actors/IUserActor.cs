@@ -11,8 +11,6 @@ using Dapr.Actors;
 
 using Hexalith.DaprIdentityStore.Models;
 
-using Microsoft.AspNetCore.Identity;
-
 /// <summary>
 /// Represents a Dapr actor interface for managing user identity operations.
 /// </summary>
@@ -30,7 +28,7 @@ public interface IUserActor : IActor
     /// </summary>
     /// <param name="login">The login information to add.</param>
     /// <returns>A task representing the asynchronous operation.</returns>
-    Task AddLoginAsync(UserLoginInfo login);
+    Task AddLoginAsync(CustomUserLoginInfo login);
 
     /// <summary>
     /// Adds a token to the user identity asynchronously.
@@ -82,7 +80,7 @@ public interface IUserActor : IActor
     /// Retrieves all logins associated with the user identity asynchronously.
     /// </summary>
     /// <returns>A collection of user login information.</returns>
-    Task<IEnumerable<UserLoginInfo>> GetLoginsAsync();
+    Task<IEnumerable<CustomUserLoginInfo>> GetLoginsAsync();
 
     /// <summary>
     /// Retrieves a token associated with the user identity asynchronously.

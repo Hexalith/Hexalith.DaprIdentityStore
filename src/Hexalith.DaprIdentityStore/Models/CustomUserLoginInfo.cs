@@ -4,6 +4,8 @@ using System.Runtime.Serialization;
 
 using Microsoft.AspNetCore.Identity;
 
+using Newtonsoft.Json;
+
 /// <summary>
 /// Represents login information and source for a user record.
 /// </summary>
@@ -24,4 +26,11 @@ public record CustomUserLoginInfo(
               info.ProviderDisplayName)
     {
     }
+
+    /// <summary>
+    /// Gets the <see cref="UserLoginInfo"/> instance.
+    /// </summary>
+    [IgnoreDataMember]
+    [JsonIgnore]
+    public UserLoginInfo UserLoginInfo => new(LoginProvider, ProviderKey, DisplayName);
 }

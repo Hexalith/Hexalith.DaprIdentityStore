@@ -13,6 +13,7 @@ using Hexalith.DaprIdentityStore.UI.Account.Pages.Login;
 using Hexalith.DaprIdentityStore.UI.Account.Pages.Manage;
 
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -41,7 +42,10 @@ public static class IdentityStoreMapExtensions
 
         RouteGroupBuilder accountGroup = endpoints.MapGroup("/Account");
 
-        _ = accountGroup.MapPost("/PerformExternalLogin", (
+        _ = accountGroup.MapPost(
+            "/PerformExternalLogin",
+    [AllowAnonymous]
+        (
             HttpContext context,
             [FromServices] SignInManager<CustomUser> signInManager,
             [FromForm] string provider,
@@ -66,7 +70,10 @@ public static class IdentityStoreMapExtensions
             return TypedResults.Challenge(properties, [provider]);
         });
 
-        _ = accountGroup.MapPost("/Logout", async (
+        _ = accountGroup.MapPost(
+            "/Logout",
+    [AllowAnonymous]
+        async (
             ClaimsPrincipal user,
             SignInManager<CustomUser> signInManager,
             [FromForm] string returnUrl) =>

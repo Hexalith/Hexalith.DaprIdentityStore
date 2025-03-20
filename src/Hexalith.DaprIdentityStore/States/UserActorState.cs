@@ -37,7 +37,7 @@ public class UserActorState
     /// <value>
     /// A collection of <see cref="UserLoginInfo"/> representing the user's logins.
     /// </value>
-    public IEnumerable<CustomUserLogin> Logins { get; set; } = [];
+    public IEnumerable<CustomUserLoginInfo> Logins { get; set; } = [];
 
     /// <summary>
     /// Gets or sets the tokens associated with the user.

@@ -33,12 +33,7 @@ public partial class UserActor
         _state.Logins = _state
             .Logins
             .Where(p => p.LoginProvider != login.LoginProvider || p.ProviderKey != login.ProviderKey)
-            .Union([new CustomUserLogin
-            {
-                LoginProvider = login.LoginProvider,
-                ProviderDisplayName = login.DisplayName,
-                ProviderKey = login.ProviderKey
-            }]);
+            .Append(login);
 
         await StateManager.SetStateAsync(DaprIdentityStoreConstants.UserStateName, _state, CancellationToken.None);
         await StateManager.SaveStateAsync(CancellationToken.None);
@@ -57,7 +52,10 @@ public partial class UserActor
         _state = await GetStateAsync(CancellationToken.None);
         return _state is null
             ? throw new InvalidOperationException($"Find login failed : User '{Id.ToUnescapeString()}' not found.")
-            : _state.Logins.FirstOrDefault(p => p.LoginProvider == loginProvider && p.ProviderKey == providerKey);
+            : _state.Logins
+                .Where(p => p.LoginProvider == loginProvider && p.ProviderKey == providerKey)
+                .Select(p => new CustomUserLogin(p, _state.User.Id))
+                .FirstOrDefault();
     }
 
     /// <summary>
@@ -68,9 +66,9 @@ public partial class UserActor
     public async Task<IEnumerable<CustomUserLoginInfo>> GetLoginsAsync()
     {
         _state = await GetStateAsync(CancellationToken.None);
-        return (_state ?? throw new InvalidOperationException($"Get logins failed : User '{Id.ToUnescapeString()}' not found."))
-            .Logins
-            .Select(p => new CustomUserLoginInfo(p.LoginProvider, p.ProviderKey, p.ProviderDisplayName));
+        return (_state
+                ?? throw new InvalidOperationException($"Get logins failed : User '{Id.ToUnescapeString()}' not found."))
+            .Logins;
     }
 
     /// <summary>

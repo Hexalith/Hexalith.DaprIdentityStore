@@ -14,6 +14,26 @@ using Microsoft.AspNetCore.Identity;
 public class CustomUserLogin : IdentityUserLogin<string>
 {
     /// <summary>
+    /// Initializes a new instance of the <see cref="CustomUserLogin"/> class.
+    /// </summary>
+    public CustomUserLogin()
+    {
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="CustomUserLogin"/> class with specified login information and user ID.
+    /// </summary>
+    /// <param name="loginInfo">The login information.</param>
+    /// <param name="userId">The user ID.</param>
+    public CustomUserLogin(CustomUserLoginInfo loginInfo, string userId)
+    {
+        LoginProvider = loginInfo.LoginProvider;
+        ProviderKey = loginInfo.ProviderKey;
+        ProviderDisplayName = loginInfo.DisplayName;
+        UserId = userId;
+    }
+
+    /// <summary>
     /// Gets or sets the external data associated with the user's login.
     /// </summary>
     public string? ExternalData { get; set; }

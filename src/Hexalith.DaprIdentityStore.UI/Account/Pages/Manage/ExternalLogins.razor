@@ -55,13 +55,16 @@
 			<p>
 				@foreach (var provider in otherLogins)
 				{
-					<FluentButton Appearance="Appearance.Accent"
-								  Name="provider"
-								  Value="@provider.Name"
-								  Title="@($"Add {provider.DisplayName} authentication provider to the account")"
-								  Type="ButtonType.Submit">
-						@provider.DisplayName
-					</FluentButton>
+					<div>
+						<FluentButton Appearance="Appearance.Accent"
+									  Name="provider"
+									  Value="@provider.Name"
+									  Title="@($"Add {provider.DisplayName} authentication provider to the account")"
+									  Type="ButtonType.Submit">
+							@provider.DisplayName
+						</FluentButton>
+					</div>
+					<br/>
 				}
 			</p>
 		</div>

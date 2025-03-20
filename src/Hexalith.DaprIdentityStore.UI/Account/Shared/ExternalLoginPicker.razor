@@ -23,13 +23,17 @@ else
             <p>
                 @foreach (var provider in externalLogins)
                 {
+                    <div>
+
                     <FluentButton 
                         Type="ButtonType.Submit" 
                         Appearance="Appearance.Accent" 
                         Name="provider" Value="@provider.Name" 
                         Title="@($"Log in using your {provider.DisplayName} account")">
                         @provider.DisplayName
-                    </FluentButton>                    
+                    </FluentButton>
+                    </div>
+                    <br/>
                 }
             </p>
         </div>

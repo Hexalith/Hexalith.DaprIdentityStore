@@ -47,48 +47,48 @@ public static class DaprIdentityStoreHelper
             options.ExpireTimeSpan = TimeSpan.FromHours(12);
             options.SlidingExpiration = true;
         });
-        if (config.Google.Enabled)
+        if (config.Google?.Enabled == true)
         {
             authentication = authentication.AddGoogleOpenIdConnect(options =>
                 {
-                    options.ClientId = config.Google.Id;
-                    options.ClientSecret = config.Google.Secret;
+                    options.ClientId = config.Google.Id!;
+                    options.ClientSecret = config.Google.Secret!;
                 });
         }
 
-        if (config.Microsoft.Enabled)
+        if (config.Microsoft?.Enabled == true)
         {
             authentication = authentication.AddMicrosoftAccount(options =>
                 {
-                    options.ClientId = config.Microsoft.Id;
-                    options.ClientSecret = config.Microsoft.Secret;
+                    options.ClientId = config.Microsoft.Id!;
+                    options.ClientSecret = config.Microsoft.Secret!;
                 });
         }
 
-        if (config.Github.Enabled)
+        if (config.Github?.Enabled == true)
         {
             authentication = authentication.AddGitHub(options =>
                 {
-                    options.ClientId = config.Github.Id;
-                    options.ClientSecret = config.Github.Secret;
+                    options.ClientId = config.Github.Id!;
+                    options.ClientSecret = config.Github.Secret!;
                 });
         }
 
-        if (config.Facebook.Enabled)
+        if (config.Facebook?.Enabled == true)
         {
             authentication = authentication.AddFacebook(options =>
                 {
-                    options.AppId = config.Facebook.Id;
-                    options.AppSecret = config.Facebook.Secret;
+                    options.AppId = config.Facebook.Id!;
+                    options.AppSecret = config.Facebook.Secret!;
                 });
         }
 
-        if (config.X.Enabled)
+        if (config.X?.Enabled == true)
         {
             authentication = authentication.AddTwitter(options =>
                 {
-                    options.ClientId = config.X.Id;
-                    options.ClientSecret = config.X.Secret;
+                    options.ClientId = config.X.Id!;
+                    options.ClientSecret = config.X.Secret!;
                 });
         }
 

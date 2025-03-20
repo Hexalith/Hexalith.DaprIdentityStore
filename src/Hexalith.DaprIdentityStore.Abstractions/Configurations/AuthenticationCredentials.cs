@@ -11,15 +11,17 @@ using System.Text.Json.Serialization;
 /// <summary>
 /// Represents the authentication credentials.
 /// </summary>
-[DataContract]
-public record class AuthenticationCredentials(
-    [property: DataMember(Order = 1)] string? Id,
-    [property: DataMember(Order = 2)] string? Secret)
+public class AuthenticationCredentials(
+    string? id,
+    string? secret)
 {
     /// <summary>
-    /// Gets an empty instance of <see cref="AuthenticationCredentials"/>.
+    /// Initializes a new instance of the <see cref="AuthenticationCredentials"/> class.
     /// </summary>
-    public static AuthenticationCredentials Empty => new(string.Empty, string.Empty);
+    public AuthenticationCredentials()
+        : this(null, null)
+    {
+    }
 
     /// <summary>
     /// Gets a value indicating whether the credentials are enabled.
@@ -27,4 +29,14 @@ public record class AuthenticationCredentials(
     [IgnoreDataMember]
     [JsonIgnore]
     public bool Enabled => !string.IsNullOrWhiteSpace(Id) && !string.IsNullOrWhiteSpace(Secret);
+
+    /// <summary>
+    /// Gets or sets the identifier.
+    /// </summary>
+    public string? Id { get; set; } = id;
+
+    /// <summary>
+    /// Gets or sets the secret.
+    /// </summary>
+    public string? Secret { get; set; } = secret;
 }

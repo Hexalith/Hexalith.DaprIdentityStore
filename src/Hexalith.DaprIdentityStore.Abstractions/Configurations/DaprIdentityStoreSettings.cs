@@ -5,20 +5,17 @@
 
 namespace Hexalith.DaprIdentityStore.Configurations;
 
-using System.Runtime.Serialization;
-
 using Hexalith.Extensions.Configuration;
 
 /// <summary>
 /// Security settings.
 /// </summary>
-[DataContract]
 public class DaprIdentityStoreSettings(
-    [property: DataMember(Order = 1)] AuthenticationCredentials? microsoft,
-    [property: DataMember(Order = 2)] AuthenticationCredentials? github,
-    [property: DataMember(Order = 3)] AuthenticationCredentials? google,
-    [property: DataMember(Order = 4)] AuthenticationCredentials? facebook,
-    [property: DataMember(Order = 5)] AuthenticationCredentials? x) : ISettings
+    AuthenticationCredentials? microsoft,
+    AuthenticationCredentials? github,
+    AuthenticationCredentials? google,
+    AuthenticationCredentials? facebook,
+    AuthenticationCredentials? x) : ISettings
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="DaprIdentityStoreSettings"/> class.
@@ -29,29 +26,29 @@ public class DaprIdentityStoreSettings(
     }
 
     /// <summary>
-    /// Gets the Facebook authentication credentials.
+    /// Gets or sets the Facebook authentication credentials.
     /// </summary>
-    public AuthenticationCredentials? Facebook { get; } = facebook;
+    public AuthenticationCredentials? Facebook { get; set; } = facebook;
 
     /// <summary>
-    /// Gets the GitHub authentication credentials.
+    /// Gets or sets the GitHub authentication credentials.
     /// </summary>
-    public AuthenticationCredentials? Github { get; } = github;
+    public AuthenticationCredentials? Github { get; set; } = github;
 
     /// <summary>
-    /// Gets the Google authentication credentials.
+    /// Gets or sets the Google authentication credentials.
     /// </summary>
-    public AuthenticationCredentials? Google { get; } = google;
+    public AuthenticationCredentials? Google { get; set; } = google;
 
     /// <summary>
-    /// Gets the Microsoft authentication credentials.
+    /// Gets or sets the Microsoft authentication credentials.
     /// </summary>
-    public AuthenticationCredentials? Microsoft { get; } = microsoft;
+    public AuthenticationCredentials? Microsoft { get; set; } = microsoft;
 
     /// <summary>
-    /// Gets the X authentication credentials.
+    /// Gets or sets the X authentication credentials.
     /// </summary>
-    public AuthenticationCredentials? X { get; } = x;
+    public AuthenticationCredentials? X { get; set; } = x;
 
     /// <summary>
     /// The name of the configuration.

@@ -13,6 +13,7 @@ using Hexalith.DaprIdentityStore.UI.Services;
 
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
@@ -25,15 +26,16 @@ public static class IdentityStoreUIExtensions
     /// Adds the Dapr Identity Store UI services to the specified IServiceCollection.
     /// </summary>
     /// <param name="services">The IServiceCollection to add the services to.</param>
+    /// <param name="configuration">The configuration containing the Dapr Identity Store settings.</param>
     /// <returns>The IServiceCollection with the services added.</returns>
-    public static IServiceCollection AddDaprIdentityStoreUI(this IServiceCollection services)
+    public static IServiceCollection AddDaprIdentityStoreUI(this IServiceCollection services, IConfiguration configuration)
     {
         services.TryAddScoped<IUserClaimStore<CustomUser>, DaprActorUserStore>();
         services.TryAddScoped<IRoleClaimStore<CustomRole>, DaprActorRoleStore>();
         services.TryAddScoped<IUserStore<CustomUser>, DaprActorUserStore>();
         services.TryAddScoped<IRoleStore<CustomRole>, DaprActorRoleStore>();
         _ = services
-            .AddDaprIdentityStoreServer()
+            .AddDaprIdentityStoreServer(configuration)
             .AddScoped<IEmailSender<CustomUser>, EmailSender>()
             .AddScoped<IdentityUserAccessor>()
             .AddScoped<IdentityRedirectManager>()

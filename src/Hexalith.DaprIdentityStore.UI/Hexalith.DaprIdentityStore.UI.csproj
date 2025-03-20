@@ -9,7 +9,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="$(AspNetCorePackagesVersion)" />
+        <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" />
     </ItemGroup>
 
     <ItemGroup>
@@ -20,7 +20,7 @@
         <ProjectReference Include="$(HexalithPath)src\Core\UI\Hexalith.UI.Components\Hexalith.UI.Components.csproj" />
     </ItemGroup>
     <ItemGroup Condition="'$(UseProjectReference)' != 'true'">
-        <PackageReference Include="Hexalith.UI.Components" Version="$(HexalithVersion)" />
+        <PackageReference Include="Hexalith.UI.Components"/>
     </ItemGroup>
 
 </Project>

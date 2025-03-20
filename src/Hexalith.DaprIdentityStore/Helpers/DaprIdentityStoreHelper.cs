@@ -16,6 +16,7 @@ using Hexalith.DaprIdentityStore.Services;
 using Hexalith.Infrastructure.DaprRuntime.Actors;
 
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;

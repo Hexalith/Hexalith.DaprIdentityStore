@@ -53,7 +53,7 @@ public partial class DaprActorUserStore
     {
         ArgumentNullException.ThrowIfNull(user);
         ArgumentException.ThrowIfNullOrWhiteSpace(loginProvider);
-        ArgumentException.ThrowIfNullOrWhiteSpace(providerKey);
+        //        ArgumentException.ThrowIfNullOrWhiteSpace(providerKey);
         ArgumentException.ThrowIfNullOrWhiteSpace(user.Id);
         ThrowIfDisposed();
         IUserActor actor = ActorProxy.DefaultProxyFactory.CreateUserActor(user.Id);

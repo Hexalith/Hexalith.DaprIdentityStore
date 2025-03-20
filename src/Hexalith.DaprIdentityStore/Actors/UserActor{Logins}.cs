@@ -33,7 +33,12 @@ public partial class UserActor
         _state.Logins = _state
             .Logins
             .Where(p => p.LoginProvider != login.LoginProvider || p.ProviderKey != login.ProviderKey)
-            .Union([new CustomUserLogin { LoginProvider = login.LoginProvider }]);
+            .Union([new CustomUserLogin
+            {
+                LoginProvider = login.LoginProvider,
+                ProviderDisplayName = login.DisplayName,
+                ProviderKey = login.ProviderKey
+            }]);
 
         await StateManager.SetStateAsync(DaprIdentityStoreConstants.UserStateName, _state, CancellationToken.None);
         await StateManager.SaveStateAsync(CancellationToken.None);

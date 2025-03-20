@@ -7,31 +7,51 @@ namespace Hexalith.DaprIdentityStore.Configurations;
 
 using System.Runtime.Serialization;
 
+using Hexalith.Extensions.Configuration;
+
 /// <summary>
 /// Security settings.
 /// </summary>
 [DataContract]
-public record DaprIdentityStoreSettings(
-    [property: DataMember(Order = 1)] AuthenticationCredentials Microsoft,
-    [property: DataMember(Order = 2)] AuthenticationCredentials Github,
-    [property: DataMember(Order = 3)] AuthenticationCredentials Google,
-    [property: DataMember(Order = 4)] AuthenticationCredentials Facebook,
-    [property: DataMember(Order = 5)] AuthenticationCredentials X,
-    [property: DataMember(Order = 7)] bool Disabled)
+public class DaprIdentityStoreSettings(
+    [property: DataMember(Order = 1)] AuthenticationCredentials? microsoft,
+    [property: DataMember(Order = 2)] AuthenticationCredentials? github,
+    [property: DataMember(Order = 3)] AuthenticationCredentials? google,
+    [property: DataMember(Order = 4)] AuthenticationCredentials? facebook,
+    [property: DataMember(Order = 5)] AuthenticationCredentials? x) : ISettings
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="DaprIdentityStoreSettings"/> class.
     /// </summary>
     public DaprIdentityStoreSettings()
-        : this(
-              AuthenticationCredentials.Empty,
-              AuthenticationCredentials.Empty,
-              AuthenticationCredentials.Empty,
-              AuthenticationCredentials.Empty,
-              AuthenticationCredentials.Empty,
-              false)
+        : this(null, null, null, null, null)
     {
     }
+
+    /// <summary>
+    /// Gets the Facebook authentication credentials.
+    /// </summary>
+    public AuthenticationCredentials? Facebook { get; } = facebook;
+
+    /// <summary>
+    /// Gets the GitHub authentication credentials.
+    /// </summary>
+    public AuthenticationCredentials? Github { get; } = github;
+
+    /// <summary>
+    /// Gets the Google authentication credentials.
+    /// </summary>
+    public AuthenticationCredentials? Google { get; } = google;
+
+    /// <summary>
+    /// Gets the Microsoft authentication credentials.
+    /// </summary>
+    public AuthenticationCredentials? Microsoft { get; } = microsoft;
+
+    /// <summary>
+    /// Gets the X authentication credentials.
+    /// </summary>
+    public AuthenticationCredentials? X { get; } = x;
 
     /// <summary>
     /// The name of the configuration.

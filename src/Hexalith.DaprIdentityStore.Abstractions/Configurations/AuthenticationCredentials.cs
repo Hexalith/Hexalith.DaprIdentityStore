@@ -13,8 +13,8 @@ using System.Text.Json.Serialization;
 /// </summary>
 [DataContract]
 public record class AuthenticationCredentials(
-    [property: DataMember(Order = 1)] string Id,
-    [property: DataMember(Order = 2)] string Secret)
+    [property: DataMember(Order = 1)] string? Id,
+    [property: DataMember(Order = 2)] string? Secret)
 {
     /// <summary>
     /// Gets an empty instance of <see cref="AuthenticationCredentials"/>.

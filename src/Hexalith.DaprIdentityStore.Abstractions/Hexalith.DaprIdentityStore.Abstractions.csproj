@@ -8,4 +8,14 @@
     <RootNamespace>Hexalith.DaprIdentityStore</RootNamespace>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Hexalith\src\Core\Common\Hexalith.Extensions\Hexalith.Extensions.csproj" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(UseProjectReference)' == 'true'">
+    <ProjectReference Include="$(HexalithPath)src\Core\Common\Hexalith.Extensions\Hexalith.Extensions.csproj" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(UseProjectReference)' != 'true'">
+    <PackageReference Include="Hexalith.Extensions" />
+  </ItemGroup>
+
 </Project>

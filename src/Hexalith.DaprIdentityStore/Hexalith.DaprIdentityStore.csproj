@@ -9,26 +9,16 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.Identity.Stores"/>
     <PackageReference Include="Google.Apis.Auth.AspNetCore3" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.MicrosoftAccount" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Facebook" />
-    <PackageReference Include="AspNet.Security.OAuth.GitHub"/>
-    <PackageReference Include="AspNet.Security.OAuth.Twitter"/>
+    <PackageReference Include="AspNet.Security.OAuth.GitHub" />
+    <PackageReference Include="AspNet.Security.OAuth.Twitter" />
+    <PackageReference Include="Hexalith.Infrastructure.DaprRuntime" />
+    <PackageReference Include="Hexalith.Application.Sessions.Abstractions" />
+    <PackageReference Include="Hexalith.Application.Partitions.Abstractions" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Hexalith.DaprIdentityStore.Abstractions\Hexalith.DaprIdentityStore.Abstractions.csproj" />
   </ItemGroup>
-  <ItemGroup Condition="'$(UseProjectReference)' == 'true'">
-    <ProjectReference Include="$(HexalithPath)src\Core\Infrastructure\Hexalith.Infrastructure.DaprRuntime\Hexalith.Infrastructure.DaprRuntime.csproj" />
-    <ProjectReference Include="$(HexalithPath)src\Core\Application\Hexalith.Application.Sessions.Abstractions\Hexalith.Application.Sessions.Abstractions.csproj" />
-    <ProjectReference Include="$(HexalithPath)src\Core\Application\Hexalith.Application.Partitions.Abstractions\Hexalith.Application.Partitions.Abstractions.csproj" />
-  </ItemGroup>
-  <ItemGroup Condition="'$(UseProjectReference)' != 'true'">
-    <PackageReference Include="Hexalith.Infrastructure.DaprRuntime" Version="$(HexalithVersion)" />
-    <PackageReference Include="Hexalith.Application.Sessions.Abstractions" Version="$(HexalithVersion)" />
-    <PackageReference Include="Hexalith.Application.Partitions.Abstractions" Version="$(HexalithVersion)" />
-  </ItemGroup>
-
-
 </Project>

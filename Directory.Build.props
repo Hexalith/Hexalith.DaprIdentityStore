@@ -6,7 +6,6 @@
     <HexalithProps>$([MSBuild]::GetPathOfFileAbove('Hexalith.props', '$(MSBuildThisFileDirectory)..'))</HexalithProps>
   </PropertyGroup>
   <Import Project="$(HexalithProps)" Condition=" '$(HexalithProps)' != '' " />
-  <Import Project="buildFiles\Project.Common.props" />
   <PropertyGroup>
     <HexalithPath Condition="'$(HexalithPath)' == ''">$(MSBuildThisFileDirectory)Hexalith\</HexalithPath>
     <HexalithVersion Condition="'$(HexalithVersion)' == ''">1.*</HexalithVersion>

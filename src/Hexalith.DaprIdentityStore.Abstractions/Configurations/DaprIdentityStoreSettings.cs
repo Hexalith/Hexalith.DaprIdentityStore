@@ -5,7 +5,7 @@
 
 namespace Hexalith.DaprIdentityStore.Configurations;
 
-using Hexalith.Extensions.Configuration;
+using Hexalith.Commons.Configurations;
 
 /// <summary>
 /// Security settings.

@@ -46,10 +46,10 @@ public static class IdentityStoreMapExtensions
             "/PerformExternalLogin",
     [AllowAnonymous]
         (
-            HttpContext context,
-            [FromServices] SignInManager<CustomUser> signInManager,
-            [FromForm] string provider,
-            [FromForm] string returnUrl) =>
+                HttpContext context,
+                [FromServices] SignInManager<CustomUser> signInManager,
+                [FromForm] string provider,
+                [FromForm] string returnUrl) =>
         {
             if (string.IsNullOrWhiteSpace(provider))
             {

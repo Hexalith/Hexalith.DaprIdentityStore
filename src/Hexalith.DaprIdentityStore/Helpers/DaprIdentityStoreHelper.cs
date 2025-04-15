@@ -85,7 +85,7 @@ public static class DaprIdentityStoreHelper
 
         if (config.X?.Enabled == true)
         {
-            authentication = authentication.AddTwitter(options =>
+            _ = authentication.AddTwitter(options =>
                 {
                     options.ClientId = config.X.Id!;
                     options.ClientSecret = config.X.Secret!;

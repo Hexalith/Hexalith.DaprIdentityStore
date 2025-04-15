@@ -17,7 +17,7 @@
     <PackageVersion Include="Aspire.Hosting.Redis" Version="9.2.0" />
     <PackageVersion Include="Aspire.Hosting.Azure.CosmosDB" Version="9.2.0" />
     <PackageVersion Include="Aspire.Microsoft.Azure.Cosmos" Version="9.2.0" />
-    <PackageVersion Include="AspNet.Security.OAuth.Github" Version="9.2.0" />
+    <PackageVersion Include="AspNet.Security.OAuth.Github" Version="9.1.0" />
     <PackageVersion Include="AspNet.Security.OAuth.Twitter" Version="9.2.0" />
     <PackageVersion Include="Azure.Bicep.Core" Version="0.26.54" />
     <PackageVersion Include="Azure.Identity" Version="1.13.2" />

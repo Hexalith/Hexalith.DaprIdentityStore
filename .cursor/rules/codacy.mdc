@@ -22,6 +22,12 @@ alwaysApply: true
         "file set to the edited file path",
         "If issues are found, propose fixes for them"
       ]
+    },
+    {
+      "when": "using any tool that has either one of the following arguments: provider, organization or repository",
+      "enforce": [
+        "use gh for provider, Hexalith for organization and Hexalith.DaprIdentityStore for repository, and avoid calling 'git remote -v' unless really necessary"
+      ]
     }
   ]
 }

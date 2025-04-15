@@ -1,4 +1,9 @@
-﻿namespace Hexalith.DaprIdentityStore.Models;
+﻿// <copyright file="CustomUserLoginInfo.cs" company="ITANEO">
+// Copyright (c) ITANEO (https://www.itaneo.com). All rights reserved.
+// Licensed under the MIT license. See LICENSE file in the project root for full license information.
+// </copyright>
+
+namespace Hexalith.DaprIdentityStore.Models;
 
 using System.Runtime.Serialization;
 
@@ -16,7 +21,7 @@ public record CustomUserLoginInfo(
     [property: DataMember(Order = 3)] string? DisplayName)
 {
     /// <summary>
-    /// Creates a new instance of <see cref="CustomUserLoginInfo"/>
+    /// Initializes a new instance of the <see cref="CustomUserLoginInfo"/> class.
     /// </summary>
     /// <param name="info">The <see cref="UserLoginInfo"/> to copy.</param>
     public CustomUserLoginInfo(UserLoginInfo info)

@@ -2,6 +2,7 @@
 
 @using Microsoft.AspNetCore.Authentication
 @using Microsoft.AspNetCore.Identity
+@using Hexalith.DaprIdentityStore.Extensions
 
 
 @inject UserManager<CustomUser> UserManager
@@ -139,6 +140,9 @@
 		{
 			RedirectManager.RedirectToCurrentPageWithStatus("Error: The external login was not added. External logins can only be associated with one account.", HttpContext);
 		}
+
+		// Sync roles from the external provider
+		await UserManager.SyncExternalProviderRolesAsync(user, info);
 
 		// Clear the existing external cookie to ensure a clean login process
 		await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);

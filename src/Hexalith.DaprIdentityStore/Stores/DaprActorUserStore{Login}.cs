@@ -1,4 +1,4 @@
-// <copyright file="DaprActorUserStore{ogin}.cs" company="ITANEO">
+// <copyright file="DaprActorUserStore{Login}.cs" company="ITANEO">
 // Copyright (c) ITANEO (https://www.itaneo.com). All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 // </copyright>
@@ -34,7 +34,7 @@ public partial class DaprActorUserStore
 
         ThrowIfDisposed();
         IUserActor actor = ActorProxy.DefaultProxyFactory.CreateUserActor(user.Id);
-        await actor.AddLoginAsync(new(login));
+        await actor.AddLoginAsync(CustomUserLoginInfo.Create(login));
     }
 
     /// <inheritdoc/>

@@ -6,10 +6,9 @@
 namespace Hexalith.DaprIdentityStore.Models;
 
 using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
 
 using Microsoft.AspNetCore.Identity;
-
-using Newtonsoft.Json;
 
 /// <summary>
 /// Represents login information and source for a user record.

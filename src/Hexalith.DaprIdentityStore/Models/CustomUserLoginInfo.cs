@@ -21,21 +21,21 @@ public record CustomUserLoginInfo(
     [property: DataMember(Order = 3)] string? DisplayName)
 {
     /// <summary>
-    /// Initializes a new instance of the <see cref="CustomUserLoginInfo"/> class.
-    /// </summary>
-    /// <param name="info">The <see cref="UserLoginInfo"/> to copy.</param>
-    public CustomUserLoginInfo(UserLoginInfo info)
-        : this(
-              (info ?? throw new ArgumentNullException(nameof(info))).LoginProvider,
-              info.ProviderKey,
-              info.ProviderDisplayName)
-    {
-    }
-
-    /// <summary>
     /// Gets the <see cref="UserLoginInfo"/> instance.
     /// </summary>
     [IgnoreDataMember]
     [JsonIgnore]
     public UserLoginInfo UserLoginInfo => new(LoginProvider, ProviderKey, DisplayName);
+
+    /// <summary>
+    /// Creates a new instance of <see cref="CustomUserLoginInfo"/> from a <see cref="UserLoginInfo"/> instance.
+    /// </summary>
+    /// <param name="info">The <see cref="UserLoginInfo"/> instance to convert.</param>
+    /// <returns>A new <see cref="CustomUserLoginInfo"/> instance.</returns>
+    /// <exception cref="ArgumentNullException">Thrown when the <paramref name="info"/> is null.</exception>
+    public static CustomUserLoginInfo Create(UserLoginInfo info)
+        => new(
+              (info ?? throw new ArgumentNullException(nameof(info))).LoginProvider,
+              info.ProviderKey,
+              info.ProviderDisplayName);
 }
